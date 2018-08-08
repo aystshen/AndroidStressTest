@@ -60,9 +60,9 @@
     <string name="wifi_test_authenticating">Authenticating</string>
     <string name="wifi_test_disconnected">Disconnected</string>
     <string name="wifi_test_obtaining_ipaddr">Obtaining ip</string>
-    <string name="wifi_test_opening">Opening WiFi</string>
-    <string name="wifi_test_closing">Closing WiFi</string>
-    <string name="wifi_test_closed">Closed WiFi</string>
+    <string name="wifi_test_opening">Opening</string>
+    <string name="wifi_test_closing">Closing</string>
+    <string name="wifi_test_closed">Closed</string>
 
     <!--Sleep Test-->
     <string name="sleep_test_intro">The sleep test will continue to sleep and wake up the device. Manually observe whether sleep and wakeup are normal.</string>

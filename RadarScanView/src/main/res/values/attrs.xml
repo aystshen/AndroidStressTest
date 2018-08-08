@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RadarScanView">
+        <!-- 设置雷达扫描一圈时间 -->
+        <attr name="radarScanTime" format="integer|reference" />
+        <!-- 设置雷达背景圆圈数 -->
+        <attr name="radarBackgroundLinesNumber" format="integer|reference" />
+        <!-- 设置底盘圆圈宽度 -->
+        <attr name="radarBackgroundLinesWidth" format="float|reference" />
+        <!-- 设置雷达圆圈颜色 -->
+        <attr name="radarBackgroundLinesColor" format="color|reference" />
+        <!-- 设置雷达背景颜色 -->
+        <attr name="radarBackgroundColor" format="color|reference" />
+        <!-- 设置雷达扫描颜色 -->
+        <attr name="radarScanColor" format="color|reference" />
+        <!-- 设置雷达扫描透明度 -->
+        <attr name="radarScanAlpha" format="integer|reference" />
+    </declare-styleable>
+</resources>

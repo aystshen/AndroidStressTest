@@ -1,0 +1,121 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    tools:context="com.ayst.stresstest.test.MemoryTestFragment">
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="130dp"
+        android:layout_height="130dp">
+
+        <com.github.lzyzsd.circleprogress.ArcProgress
+            android:id="@+id/arc_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:arc_finished_color="@color/colorAccent"
+            app:arc_progress="30"
+            app:arc_show_text="false"
+            app:arc_stroke_width="3dp"
+            app:arc_unfinished_color="@color/black_50" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.ayst.stresstest.view.DincondFontTextView
+                android:id="@+id/tv_free_memory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="30"
+                android:textColor="@color/colorPrimary"
+                android:textSize="45sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/tv_free_memory"
+                android:layout_centerHorizontal="true"
+                android:text="Free Memory"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_free_memory"
+                android:layout_centerHorizontal="true"
+                android:text="MB"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_small" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:id="@+id/tv_total_memory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="800"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_small" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="MB"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_small" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/black_70"
+            android:text="@string/memory_test_intro" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/memory_test_fill_percent"
+                android:textColor="@color/black" />
+
+            <Spinner
+                android:id="@+id/spinner_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/memory_fill_percent_label"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

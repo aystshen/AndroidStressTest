@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">StressTest</string>
+    <string name="sec">秒</string>
+    <string name="exit">退出</string>
+    <string name="exit_test_tips">确定要退出测试吗？</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="stop">停止</string>
+    <string name="start">开始</string>
+    <string name="exit_app_tips">还有正在进行的测试，请先结束这些测试项！</string>
+    <string name="at_least_one_test_case">至少选择一种测试方案</string>
+    <string name="set_time_tips">请设置测试次数（单位：次）</string>
+    <string name="set_duration_tips">请设置测试时长（单位：小时）</string>
+    <string name="stop_test_tips">确定要停止测试吗？</string>
+
+    <!--Title-->
+    <string name="cpu_test">CPU测试</string>
+    <string name="memory_test">内存测试</string>
+    <string name="video_test">视频测试</string>
+    <string name="wifi_test">WiFi测试</string>
+    <string name="bluetooth_test">蓝牙测试</string>
+    <string name="fly_mode_test">飞行模式测试</string>
+    <string name="reboot_test">重启测试</string>
+    <string name="sleep_test">休眠测试</string>
+    <string name="recovery_test">恢复出厂测试</string>
+
+    <!--Bluetooth Test-->
+    <string name="bt_test_intro">蓝牙测试将持续打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙，支持自动判别测试结果。</string>
+    <string name="bt_test_retry">连续3次不能搜索到任何蓝牙设备结束测试</string>
+    <string name="bt_test_ble">蓝牙4.0+</string>
+    <string name="bt_test_valid_device_tips">请确定附近至少能搜索到一个有效的蓝牙设备！</string>
+    <string name="bt_test_bt_opening">蓝牙打开中</string>
+    <string name="bt_test_bt_closing">蓝牙关闭中</string>
+    <string name="bt_test_bt_closed">蓝牙已关闭</string>
+
+    <!--CPU Test-->
+    <string name="cpu_test_intro">CPU测试支持固定频率、随机变频和指定CPU占用率3种方式。</string>
+    <string name="cpu_test_fix_freq">固定主频</string>
+    <string name="cpu_test_set_freq">设置主频：</string>
+    <string name="cpu_test_random_freq">随机主频</string>
+    <string name="cpu_test_set_interval">设置间隔：</string>
+    <string name="cpu_test_percent">CPU占用率</string>
+    <string name="cpu_test_set_percent">设置占用率：</string>
+    <string name="cpu_test_cur_freq">当前频率</string>
+    <string name="cpu_test_not_support">此设备不支持CPU压力测试！</string>
+    <string name="cpu_test_userspace_mode_not_support">设置【USERSPACE_MODE】失败，该产品可能无法进行CPU变频测试！</string>
+    <string name="cpu_test_set_freq_fail">设置CPU频率失败，该产品可能无法进行CPU变频测试！</string>
+    <string name="cpu_test_invalid_interval">无效间隔时间，请重新设置！</string>
+    <string name="cpu_test_invalid_percent">无效CPU占用率，请重新设置！</string>
+    <string name="cpu_test_set_random_freq_fail">设置随机CPU频率失败，该产品可能无法进行CPU变频测试！</string>
+
+    <!--WiFi Test-->
+    <string name="wifi_test_intro">WiFi测试将持续打开、关闭、并扫描附近WiFi热点，支持自动判别测试结果。</string>
+    <string name="wifi_test_retry">连续3次连接失败结束测试</string>
+    <string name="wifi_test_connect_tips">请先到系统设置打开并连接一个有效的WIFI热点！</string>
+    <string name="wifi_test_connected">已连接</string>
+    <string name="wifi_test_connecting">连接中</string>
+    <string name="wifi_test_authenticating">验证中</string>
+    <string name="wifi_test_disconnected">已断开</string>
+    <string name="wifi_test_obtaining_ipaddr">正在获取IP</string>
+    <string name="wifi_test_opening">打开WiFi</string>
+    <string name="wifi_test_closing">关闭WiFi</string>
+    <string name="wifi_test_closed">WiFi已关闭</string>
+
+    <!--Sleep Test-->
+    <string name="sleep_test_intro">休眠测试将对设备进行持续休眠和唤醒操作，测试时需要人工观察休眠与唤醒是否正常。</string>
+    <string name="sleep_test_wakeup_duration">唤醒时间：</string>
+    <string name="sleep_test_sleep_duration">睡眠时间：</string>
+    <string name="sleep_test_set_wakeup_duration_tips">请设置唤醒时间！</string>
+    <string name="sleep_test_set_sleep_duration_tips">请设置睡眠时间！</string>
+
+    <!--Video Test-->
+    <string name="video_test_intro">视频测试将反复播放指定视频文件，测试过程中请关注视频画面是否黑屏、花屏、卡顿、音视频是否同步。</string>
+    <string name="video_test_video_file">被测视频：</string>
+    <string name="video_test_play_error">播放出错：</string>
+    <string name="video_test_select_file_tips">请选择视频文件</string>
+    <string name="video_test_select_file">选择视频文件</string>
+    <string name="video_test_invalid_file">文件无效！</string>
+
+    <!--Memory Test-->
+    <string name="memory_test_intro">内存测试将内存占用率自动填充到选择的比例，验证系统在低内存下的稳定性。</string>
+    <string name="memory_test_fill_percent">填充比例：</string>
+
+    <!--Reboot Test-->
+    <string name="reboot_test_intro">重启测试验证设备重启可靠性，如果重启中断说明测试失败。</string>
+    <string name="reboot_test_check_sdcard">重启后检查SD卡状态</string>
+    <string name="reboot_test_check_wifi">重启后检查WIFI连接状态</string>
+    <string name="reboot_test_count_down">秒后开始重启系统</string>
+    <string name="reboot_test_insert_sdcard_tips">请插入SD卡!</string>
+    <string name="reboot_test_connect_wifi_tips">请连接WIFI!</string>
+    <string name="reboot_test_reboot_tips">确定要重启测试吗？确定后将在 %d 秒后重启系统。</string>
+
+    <!--Fly Mode Test-->
+    <string name="fly_mode_test_intro">飞行模式测试将持续打开、关闭飞行模式，同时扫描附近WiFi热点，支持自动判别测试结果。</string>
+    <string name="fly_mode_test_check_wifi">通过WIFI连接状态判断结果</string>
+    <string name="fly_mode_test_close">关闭飞行模式</string>
+    <string name="fly_mode_test_open">打开飞行模式</string>
+    <string name="fly_mode_test_opened">飞行模式已打开</string>
+
+    <!--Recovery Test-->
+    <string name="recovery_test_intro">恢复出厂测试将会擦除所有数据，请先插入U盘用于保存状态。</string>
+    <string name="recovery_test_format_sdcard">格式化SD卡</string>
+    <string name="recovery_test_wipe_all">擦除所有数据</string>
+    <string name="recovery_test_count_down">秒后开始恢复出厂设置</string>
+    <string name="recovery_test_insert_sdcard_tips">请插入SD卡！</string>
+    <string name="recovery_test_insert_udisk_tips">请先插入U盘！</string>
+    <string name="recovery_test_recovery_tips">确定要恢复出厂设置测试吗？确定后将在 %d 秒后恢复出厂设置。</string>
+
+
+</resources>

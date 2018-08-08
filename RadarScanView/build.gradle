@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        // Defines the minimum API level required to run the app.
+        minSdkVersion rootProject.ext.minSdkVersion
+
+        // Specifies the API level used to test the app.
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
+        // Defines the version number of your app.
+        versionCode 1
+
+        // Defines a user-friendly version name for your app.
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.3.0'
+}

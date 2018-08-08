@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string-array name="cpu_random_freq_interval_labels">
+        <item>100ms</item>
+        <item>200ms</item>
+        <item>1s</item>
+        <item>30s</item>
+        <item>1min</item>
+        <item>5min</item>
+        <item>15min</item>
+        <item>30min</item>
+        <item>45min</item>
+        <item>1h</item>
+    </string-array>
+
+    <integer-array name="cpu_random_freq_interval">
+        <item>100</item>
+        <item>200</item>
+        <item>1000</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>300000</item>
+        <item>900000</item>
+        <item>1800000</item>
+        <item>2700000</item>
+        <item>3600000</item>
+    </integer-array>
+
+    <string-array name="cpu_rate_label">
+        <item>100%</item>
+        <item>90%</item>
+        <item>80%</item>
+        <item>70%</item>
+        <item>60%</item>
+        <item>50%</item>
+        <item>40%</item>
+        <item>30%</item>
+    </string-array>
+
+    <integer-array name="cpu_rate">
+        <item>100</item>
+        <item>90</item>
+        <item>80</item>
+        <item>70</item>
+        <item>60</item>
+        <item>50</item>
+        <item>40</item>
+        <item>30</item>
+    </integer-array>
+
+    <string-array name="memory_fill_percent_label">
+        <item>95%</item>
+        <item>90%</item>
+        <item>80%</item>
+        <item>70%</item>
+        <item>60%</item>
+        <item>50%</item>
+        <item>40%</item>
+        <item>30%</item>
+    </string-array>
+
+    <integer-array name="memory_fill_percent">
+        <item>95</item>
+        <item>90</item>
+        <item>80</item>
+        <item>70</item>
+        <item>60</item>
+        <item>50</item>
+        <item>40</item>
+        <item>30</item>
+    </integer-array>
+    
+
+</resources>

@@ -1,0 +1,181 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "com.ayst.stresstest"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode
+        versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+    }
+
+    signingConfigs {
+        release {
+            File strFile = new File(rootProject.ext.keyStorePath)
+            storeFile file(strFile)
+            keyAlias rootProject.ext.keyStoreAlias
+            keyPassword rootProject.ext.keyStoreKeyPassword
+            storePassword rootProject.ext.keyStorePassword
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+//            applicationVariants.all { variant ->
+//                variant.outputs.each { output ->
+//                    def oldFile = output.outputFile
+//                    if (variant.buildType.name.equals('release')) {
+//                        def releaseApkName = "AndroidStressTest_${variant.buildType.name}_v${variant.versionName}_${releaseTime()}.apk"
+//                        output.outputFile = new File(oldFile.parent, releaseApkName)
+//                    }
+//                    if (variant.buildType.name.equals('debug')) {
+//
+//                    }
+//                }
+//            }
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def fileName = "AndroidStressTest_${variant.buildType.name}_v${variant.versionName}_${releaseTime()}.apk"
+                    outputFileName = fileName
+                }
+            }
+        }
+
+        debug {
+            applicationIdSuffix ".BETA"
+            versionNameSuffix "-BETA"
+            minifyEnabled false
+            shrinkResources false
+            debuggable true
+            testCoverageEnabled true
+            signingConfig signingConfigs.release
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':RadarScanView')
+
+    compile 'com.android.support:cardview-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-annotations:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    compile 'cc.cloudist.acplibrary:library:1.2.1'
+
+    //DebugOverlay-Android
+//    debugCompile 'com.ms-square:debugoverlay:1.1.3'
+//    releaseCompile 'com.ms-square:debugoverlay-no-op:1.1.3'
+//    testCompile 'com.ms-square:debugoverlay-no-op:1.1.3'
+
+    //Logger
+    compile 'com.orhanobut:logger:2.1.1'
+
+    //libaums USB Mass Storage
+    compile 'com.github.mjdev:libaums:0.5.5'
+}
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
+updateVersion()
+
+def updateVersion() {
+    def propertiesFile = file('build.properties')
+    Properties properties = readProperties(propertiesFile)
+
+    def versionMajor = properties['version_major'].toString().toInteger()
+    def versionMinor = properties['version_minor'].toString().toInteger()
+    def versionPatch = properties['version_patch'].toString().toInteger()
+    def versionBuild = properties['version_build'].toString().toInteger()
+    def versionStore = properties['version_store'].toString().toInteger()
+
+    if (isReleaseTask()) {
+        System.out.println(">>> Building Release...")
+        versionPatch++
+        versionStore++
+        versionBuild = 0
+        properties['version_patch'] = versionPatch.toString()
+        properties['version_store'] = versionStore.toString()
+        properties['version_build'] = versionBuild.toString()
+        writeProperties(propertiesFile, properties)
+    }
+    if (isCompileTask()) {
+        System.out.println(">>> Compiling Source...")
+        versionBuild++
+        properties['version_build'] = versionBuild.toString()
+        writeProperties(propertiesFile, properties)
+    }
+
+    def versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
+    def applicationId = android.defaultConfig.applicationId
+    if (!isReleaseTask()) {
+        versionName = versionName + ".${versionBuild}"
+        applicationId = applicationId + android.buildTypes.debug.applicationIdSuffix
+    }
+    System.out.println(">>> " + project.parent.name + " " + versionName + " (" + versionStore + ") '" + applicationId + "'")
+    android.defaultConfig.versionCode = versionStore
+    android.defaultConfig.versionName = versionName
+}
+
+def isCompileTask() {
+    def tasks = gradle.getStartParameter().getTaskNames()
+    return ':app:generateDebugSources' in tasks || ':app:generateReleaseSources' in tasks ||
+            'generateDebugSources' in tasks || 'generateReleaseSources' in tasks
+}
+
+def isReleaseTask() {
+    def tasks = gradle.getStartParameter().getTaskNames()
+    return ':app:assembleRelease' in tasks || 'assembleRelease' in tasks
+}
+
+static Properties readProperties(propertiesFile) {
+    if (propertiesFile.canRead()) {
+        Properties properties = new Properties()
+        def inputStream = new FileInputStream(propertiesFile)
+        properties.load(inputStream)
+        inputStream.close()
+        return properties
+    } else {
+        def message = ">>> Could not read " + propertiesFile.name + " file!"
+        System.err.println(message)
+        throw new GradleException(message)
+    }
+}
+
+def static writeProperties(propertiesFile, properties) {
+    def writer = propertiesFile.newWriter()
+    properties.store(writer, "Build Properties")
+    writer.close()
+}

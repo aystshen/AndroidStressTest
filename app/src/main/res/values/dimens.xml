@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Font-->
+    <dimen name="text_big">18sp</dimen>
+    <dimen name="text_normal">14sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_small_small">8sp</dimen>
+
+    <dimen name="test_item_height">210dp</dimen>
+
+</resources>

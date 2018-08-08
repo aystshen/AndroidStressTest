@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">StressTest</string>
+    <string name="sec">s</string>
+    <string name="exit">Exit</string>
+    <string name="exit_test_tips">Are you want to exit the test?</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="exit_app_tips">There are ongoing tests, please exit these tests first!</string>
+    <string name="at_least_one_test_case">Choose at least one test case!</string>
+    <string name="set_time_tips">Please set the number of tests (unit: times)</string>
+    <string name="set_duration_tips">Please set the test duration (unit: hour)</string>
+    <string name="stop_test_tips">Are you want to stop testing?</string>
+
+    <!--Title-->
+    <string name="cpu_test">CPU TEST</string>
+    <string name="memory_test">MEMORY TEST</string>
+    <string name="video_test">VIDEO TEST</string>
+    <string name="wifi_test">WIFI TEST</string>
+    <string name="bluetooth_test">BLUETOOTH TEST</string>
+    <string name="fly_mode_test">FLY MODE TEST</string>
+    <string name="reboot_test">REBOOT TEST</string>
+    <string name="sleep_test">SLEEP TEST</string>
+    <string name="recovery_test">RECOVERY TEST</string>
+
+    <!--Bluetooth Test-->
+    <string name="bt_test_intro">The Bluetooth test will continue to turn on, off, and scan nearby Bluetooth devices, support classic Bluetooth and low-power Bluetooth, and support automatic identification of test results.</string>
+    <string name="bt_test_retry">Cannot search for any Bluetooth device end test for 3 consecutive times</string>
+    <string name="bt_test_ble">Bluetooth Ble</string>
+    <string name="bt_test_valid_device_tips">Please be sure to find at least one valid Bluetooth device nearby!</string>
+    <string name="bt_test_bt_opening">Opening</string>
+    <string name="bt_test_bt_closing">Closing</string>
+    <string name="bt_test_bt_closed">Closed</string>
+
+    <!--CPU Test-->
+    <string name="cpu_test_intro">The CPU test supports three modes: fixed frequency, random frequency, and specified CPU usage.</string>
+    <string name="cpu_test_fix_freq">Fixed frequency</string>
+    <string name="cpu_test_set_freq">Set frequency:</string>
+    <string name="cpu_test_random_freq">Random frequency</string>
+    <string name="cpu_test_set_interval">Set interval:</string>
+    <string name="cpu_test_percent">CPU usage</string>
+    <string name="cpu_test_set_percent">Set usage:</string>
+    <string name="cpu_test_cur_freq">Current frequency</string>
+    <string name="cpu_test_not_support">This device does not support CPU stress testing!</string>
+    <string name="cpu_test_userspace_mode_not_support">Failed to set [USERSPACE_MODE], the product may not be able to perform CPU frequency conversion test!</string>
+    <string name="cpu_test_set_freq_fail">Failed to set the CPU frequency, the product may not be able to perform CPU frequency conversion test!</string>
+    <string name="cpu_test_invalid_interval">Invalid interval, please reset!</string>
+    <string name="cpu_test_invalid_percent">Invalid CPU usage, please reset!</string>
+    <string name="cpu_test_set_random_freq_fail">Failed to set the random CPU frequency, the product may not be able to perform CPU frequency conversion test!</string>
+
+    <!--WiFi Test-->
+    <string name="wifi_test_intro">The WiFi test will continue to turn on, off, and scan nearby WiFi hotspots to support automatic identification of test results.</string>
+    <string name="wifi_test_retry">3 consecutive connection failures end the test</string>
+    <string name="wifi_test_connect_tips">Please go to the system settings and open a valid WIFI hotspot!</string>
+    <string name="wifi_test_connected">Connected</string>
+    <string name="wifi_test_connecting">Connecting</string>
+    <string name="wifi_test_authenticating">Authenticating</string>
+    <string name="wifi_test_disconnected">Disconnected</string>
+    <string name="wifi_test_obtaining_ipaddr">Obtaining ip</string>
+    <string name="wifi_test_opening">Opening WiFi</string>
+    <string name="wifi_test_closing">Closing WiFi</string>
+    <string name="wifi_test_closed">Closed WiFi</string>
+
+    <!--Sleep Test-->
+    <string name="sleep_test_intro">The sleep test will continue to sleep and wake up the device. Manually observe whether sleep and wakeup are normal.</string>
+    <string name="sleep_test_wakeup_duration">Wake time:</string>
+    <string name="sleep_test_sleep_duration">Sleep time:</string>
+    <string name="sleep_test_set_wakeup_duration_tips">Please set the wake up time!</string>
+    <string name="sleep_test_set_sleep_duration_tips">Please set the sleep time!</string>
+
+    <!--Video Test-->
+    <string name="video_test_intro">The video test will play the video file repeatedly. During the test, please observe the video is black, is blurred, is stuck, the audio and video are synchronized.</string>
+    <string name="video_test_video_file">Tested video:</string>
+    <string name="video_test_play_error">Playback error:</string>
+    <string name="video_test_select_file_tips">Please select a video file</string>
+    <string name="video_test_select_file">Select video file</string>
+    <string name="video_test_invalid_file">Invalid file!</string>
+
+    <!--Memory Test-->
+    <string name="memory_test_intro">The memory test automatically malloc the memory usage to the selected percent, verifying the strong of the system under low memory.</string>
+    <string name="memory_test_fill_percent">Fill percent:</string>
+
+    <!--Reboot Test-->
+    <string name="reboot_test_intro">Reboot the test to verify the reliability of the device restart. If the restart interrupt indicates that the test failed.</string>
+    <string name="reboot_test_check_sdcard">Check the SD card status after rebooting</string>
+    <string name="reboot_test_check_wifi">Check the WIFI connection status after rebooting</string>
+    <string name="reboot_test_count_down">seconds, Start rebooting the system</string>
+    <string name="reboot_test_insert_sdcard_tips">Please insert the SD card!</string>
+    <string name="reboot_test_connect_wifi_tips">Please connect to WIFI!</string>
+    <string name="reboot_test_reboot_tips">Are you want to restart the test? After confirming, the system will be restarted after %d seconds.</string>
+
+    <!--Fly Mode Test-->
+    <string name="fly_mode_test_intro">The flight mode test will continue to turn on and off the flight mode, while scanning nearby WiFi hotspots to support automatic identification of test results.</string>
+    <string name="fly_mode_test_check_wifi">Judging result by WIFI connection status</string>
+    <string name="fly_mode_test_close">Closing</string>
+    <string name="fly_mode_test_open">Opening</string>
+    <string name="fly_mode_test_opened">Opened</string>
+
+    <!--Recovery Test-->
+    <string name="recovery_test_intro">Restoring the factory will erase all data, please insert UDisk to save the state.</string>
+    <string name="recovery_test_format_sdcard">Format SD card</string>
+    <string name="recovery_test_wipe_all">Erase all data</string>
+    <string name="recovery_test_count_down">seconds, Start factory reset</string>
+    <string name="recovery_test_insert_sdcard_tips">Please insert the SD card!</string>
+    <string name="recovery_test_insert_udisk_tips">Please insert the UDisk!</string>
+    <string name="recovery_test_recovery_tips">Are you want to restore the factory settings test? After confirming, the factory settings will be restored after %d seconds.</string>
+
+</resources>

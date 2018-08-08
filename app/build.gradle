@@ -103,6 +103,9 @@ dependencies {
 
     //libaums USB Mass Storage
     compile 'com.github.mjdev:libaums:0.5.5'
+
+    //PermissionGen
+    compile 'com.lovedise:permissiongen:0.1.1'
 }
 
 def releaseTime() {

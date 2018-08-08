@@ -1,10 +1,12 @@
 package com.ayst.stresstest.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.ayst.stresstest.R;
@@ -23,8 +25,9 @@ import com.ayst.stresstest.test.WifiTestFragment;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
+import kr.co.namee.permissiongen.PermissionGen;
 
-public class MainActivity extends Activity implements BaseTestFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements BaseTestFragment.OnFragmentInteractionListener {
     private static final String TAG = "MainActivity";
 
     private FragmentManager mFragmentManager;
@@ -47,6 +50,17 @@ public class MainActivity extends Activity implements BaseTestFragment.OnFragmen
         mFragmentManager = getFragmentManager();
 
         initView();
+
+        PermissionGen.with(MainActivity.this)
+                .addRequestCode(100)
+                .permissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.CAMERA)
+                .request();
     }
 
     private void initView() {

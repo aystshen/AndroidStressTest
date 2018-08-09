@@ -43,7 +43,7 @@
     <string name="cpu_test_set_interval">Set interval:</string>
     <string name="cpu_test_percent">CPU usage</string>
     <string name="cpu_test_set_percent">Set usage:</string>
-    <string name="cpu_test_cur_freq">Current frequency</string>
+    <string name="cpu_test_cur_freq">Current freq</string>
     <string name="cpu_test_not_support">This device does not support CPU stress testing!</string>
     <string name="cpu_test_userspace_mode_not_support">Failed to set [USERSPACE_MODE], the product may not be able to perform CPU frequency conversion test!</string>
     <string name="cpu_test_set_freq_fail">Failed to set the CPU frequency, the product may not be able to perform CPU frequency conversion test!</string>

@@ -37,21 +37,21 @@
         android:layout_height="match_parent"
         android:visibility="invisible">
 
-        <com.github.ybq.android.spinkit.SpinKitView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.WanderingCubes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:SpinKit_Color="@color/colorAccent" />
-
         <ListView
             android:id="@+id/lv_device"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/transparent"
             android:dividerHeight="1px" />
+
+        <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.WanderingCubes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            app:SpinKit_Color="@color/colorAccent" />
 
         <TextView
             android:id="@+id/tv_tips"

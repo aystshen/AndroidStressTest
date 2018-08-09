@@ -37,18 +37,14 @@
         android:layout_height="match_parent"
         android:visibility="invisible">
 
-        <com.kongqw.radarscanviewlibrary.RadarScanView
-            android:id="@+id/radarScanView"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+        <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.WanderingCubes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:radarBackgroundColor="@color/transparent"
-            app:radarBackgroundLinesColor="@color/colorAccent"
-            app:radarBackgroundLinesNumber="5"
-            app:radarBackgroundLinesWidth="1"
-            app:radarScanAlpha="0x33"
-            app:radarScanColor="@color/colorAccent"
-            app:radarScanTime="2000" />
+            app:SpinKit_Color="@color/colorAccent" />
 
         <ListView
             android:id="@+id/lv_device"

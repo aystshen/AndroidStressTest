@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ayst.stresstest.R;
+import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.List;
 import java.util.Timer;
@@ -34,6 +35,7 @@ public class WifiTestFragment extends BaseTestFragment {
 
     private LinearLayout mSettingsContainer;
     private FrameLayout mRunningContainer;
+    private SpinKitView mSpinKitView;
     private TextView mTipsTv;
     private CheckBox mCheckAPCheckbox;
     private ListView mWifiLv;
@@ -79,6 +81,7 @@ public class WifiTestFragment extends BaseTestFragment {
     private void initView(View view) {
         mSettingsContainer = (LinearLayout) view.findViewById(R.id.container_settings);
         mRunningContainer = (FrameLayout) view.findViewById(R.id.container_running);
+        mSpinKitView = (SpinKitView) view.findViewById(R.id.spin_kit);
         mWifiLv = (ListView) view.findViewById(R.id.lv_wifi);
         mTipsTv = (TextView) view.findViewById(R.id.tv_tips);
         mCheckAPCheckbox = (CheckBox) view.findViewById(R.id.chbox_check_ap);
@@ -109,6 +112,13 @@ public class WifiTestFragment extends BaseTestFragment {
         }
     }
 
+    private void scan() {
+        if (mWifiManager.isWifiEnabled()) {
+            mSpinKitView.setVisibility(View.VISIBLE);
+            mWifiManager.startScan();
+        }
+    }
+
     @Override
     public void start() {
         super.start();
@@ -127,7 +137,7 @@ public class WifiTestFragment extends BaseTestFragment {
         //mHandler.postDelayed(mRunnable, SCAN_PERIOD);
 
         if (mWifiManager.isWifiEnabled()) {
-            mWifiManager.startScan();
+            scan();
             mWifiList = mWifiManager.getScanResults();
             mWifiInfo = mWifiManager.getConnectionInfo();
         }
@@ -194,7 +204,7 @@ public class WifiTestFragment extends BaseTestFragment {
         @Override
         public void run() {
             if (mWifiManager.isWifiEnabled() && !mIsScanPause) {
-                mWifiManager.startScan();
+                scan();
             }
             mHandler.postDelayed(this, SCAN_PERIOD);
         }
@@ -226,34 +236,35 @@ public class WifiTestFragment extends BaseTestFragment {
     private void updateWifiState(int state) {
         switch (state) {
             case WifiManager.WIFI_STATE_ENABLED:
-                mWifiManager.startScan();
-                mTipsTv.setVisibility(View.INVISIBLE);
+                scan();
+                hideTips();
                 break;
 
             case WifiManager.WIFI_STATE_ENABLING:
-                mTipsTv.setText(R.string.wifi_test_opening);
-                mTipsTv.setVisibility(View.VISIBLE);
+                showTips(R.string.wifi_test_opening);
                 break;
 
             case WifiManager.WIFI_STATE_DISABLING:
                 mWifiAdapter.updateList(null);
                 mWifiAdapter.notifyDataSetChanged();
-                mTipsTv.setText(R.string.wifi_test_closing);
-                mTipsTv.setVisibility(View.VISIBLE);
+                showTips(R.string.wifi_test_closing);
                 break;
 
             case WifiManager.WIFI_STATE_DISABLED:
-                mTipsTv.setText(R.string.wifi_test_closed);
-                mTipsTv.setVisibility(View.VISIBLE);
+                showTips(R.string.wifi_test_closed);
                 break;
         }
     }
 
     private void updateAccessPoints() {
-        mTipsTv.setVisibility(View.INVISIBLE);
+        hideTips();
         mWifiList = mWifiManager.getScanResults();
         mWifiAdapter.updateList(mWifiList);
         mWifiAdapter.notifyDataSetChanged();
+
+        if (!mWifiList.isEmpty()) {
+            mSpinKitView.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void updateConnectionState(NetworkInfo.DetailedState state) {
@@ -277,11 +288,21 @@ public class WifiTestFragment extends BaseTestFragment {
         }
     }
 
-    public boolean isWifiConnected(Context context) {
+    private boolean isWifiConnected(Context context) {
         if (null == mConnManager) {
             mConnManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         }
         NetworkInfo wifiNetworkInfo = mConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         return ((wifiNetworkInfo != null) && wifiNetworkInfo.isConnected());
+    }
+
+    private void showTips(int strId) {
+        mTipsTv.setText(strId);
+        mTipsTv.setVisibility(View.VISIBLE);
+        mSpinKitView.setVisibility(View.INVISIBLE);
+    }
+
+    private void hideTips() {
+        mTipsTv.setVisibility(View.INVISIBLE);
     }
 }

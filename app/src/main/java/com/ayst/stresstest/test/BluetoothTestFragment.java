@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kongqw.radarscanviewlibrary.RadarScanView;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.ayst.stresstest.R;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class BluetoothTestFragment extends BaseTestFragment {
 
     private LinearLayout mSettingsContainer;
     private FrameLayout mRunningContainer;
-    private RadarScanView mRadarScanView;
+    private SpinKitView mSpinKitView;
     private ListView mDeviceLv = null;
     private TextView mTipsTv;
     private CheckBox mCheckConnectCheckbox;
@@ -83,7 +83,7 @@ public class BluetoothTestFragment extends BaseTestFragment {
     private void initView(View view) {
         mSettingsContainer = (LinearLayout) view.findViewById(R.id.container_settings);
         mRunningContainer = (FrameLayout) view.findViewById(R.id.container_running);
-        mRadarScanView = (RadarScanView) view.findViewById(R.id.radarScanView);
+        mSpinKitView = (SpinKitView) view.findViewById(R.id.spin_kit);
         mDeviceLv = (ListView) view.findViewById(R.id.lv_device);
         mTipsTv = (TextView) view.findViewById(R.id.tv_tips);
         mBleCheckbox = (CheckBox) view.findViewById(R.id.chbox_ble);
@@ -173,16 +173,13 @@ public class BluetoothTestFragment extends BaseTestFragment {
             mRunningContainer.setVisibility(View.VISIBLE);
 
             if (mScanning) {
-                mRadarScanView.setVisibility(View.VISIBLE);
-                mRadarScanView.startScan();
+                mSpinKitView.setVisibility(View.VISIBLE);
             } else {
-                mRadarScanView.setVisibility(View.INVISIBLE);
-                mRadarScanView.stopScan();
+                mSpinKitView.setVisibility(View.INVISIBLE);
             }
         } else {
             mSettingsContainer.setVisibility(View.VISIBLE);
             mRunningContainer.setVisibility(View.INVISIBLE);
-            mRadarScanView.stopScan();
         }
     }
 
@@ -219,6 +216,16 @@ public class BluetoothTestFragment extends BaseTestFragment {
         }
     }
 
+    private void showTips(int strId) {
+        mTipsTv.setText(strId);
+        mTipsTv.setVisibility(View.VISIBLE);
+        mSpinKitView.setVisibility(View.INVISIBLE);
+    }
+
+    private void hideTips() {
+        mTipsTv.setVisibility(View.INVISIBLE);
+    }
+
     // Device scan callback.
     private ScanCallback mLeScanCallback = new ScanCallback() {
         @Override
@@ -242,6 +249,10 @@ public class BluetoothTestFragment extends BaseTestFragment {
                     }
                     mData.add(new ScanResult(device, result.getRssi()));
                     mDeviceListAdapter.notifyDataSetChanged();
+
+                    if (!mData.isEmpty()) {
+                        mSpinKitView.setVisibility(View.INVISIBLE);
+                    }
                 }
             });
         }
@@ -284,26 +295,23 @@ public class BluetoothTestFragment extends BaseTestFragment {
                 switch (btState) {
                     case BluetoothAdapter.STATE_TURNING_ON:
                         Log.i(TAG, "onReceive, STATE_TURNING_ON");
-                        mTipsTv.setText(R.string.bt_test_bt_opening);
-                        mTipsTv.setVisibility(View.VISIBLE);
+                        showTips(R.string.bt_test_bt_opening);
                         break;
                     case BluetoothAdapter.STATE_ON:
                         Log.i(TAG, "onReceive, STATE_ON");
                         scan(true);
-                        mTipsTv.setVisibility(View.INVISIBLE);
+                        hideTips();
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         Log.i(TAG, "onReceive, STATE_TURNING_OFF");
                         scan(false);
                         mData.clear();
                         mDeviceListAdapter.notifyDataSetChanged();
-                        mTipsTv.setText(R.string.bt_test_bt_closing);
-                        mTipsTv.setVisibility(View.VISIBLE);
+                        showTips(R.string.bt_test_bt_closing);
                         break;
                     case BluetoothAdapter.STATE_OFF:
                         Log.i(TAG, "onReceive, STATE_OFF");
-                        mTipsTv.setText(R.string.bt_test_bt_closed);
-                        mTipsTv.setVisibility(View.VISIBLE);
+                        showTips(R.string.bt_test_bt_closed);
                         break;
                 }
             } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
@@ -326,6 +334,10 @@ public class BluetoothTestFragment extends BaseTestFragment {
                 }
                 mData.add(new ScanResult(device, rssi));
                 mDeviceListAdapter.notifyDataSetChanged();
+
+                if (!mData.isEmpty()) {
+                    mSpinKitView.setVisibility(View.INVISIBLE);
+                }
             }
         }
     };

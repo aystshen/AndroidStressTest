@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ayst.stresstest.R;
+import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.List;
 import java.util.Timer;
@@ -35,6 +36,7 @@ public class FlyModeTestFragment extends BaseTestFragment {
 
     private LinearLayout mSettingsContainer;
     private FrameLayout mRunningContainer;
+    private SpinKitView mSpinKitView;
     private TextView mTipsTv;
     private CheckBox mCheckAPCheckbox;
     private ListView mWifiLv;
@@ -80,6 +82,7 @@ public class FlyModeTestFragment extends BaseTestFragment {
     private void initView(View view) {
         mSettingsContainer = (LinearLayout) view.findViewById(R.id.container_settings);
         mRunningContainer = (FrameLayout) view.findViewById(R.id.container_running);
+        mSpinKitView = (SpinKitView) view.findViewById(R.id.spin_kit);
         mWifiLv = (ListView) view.findViewById(R.id.lv_wifi);
         mTipsTv = (TextView) view.findViewById(R.id.tv_tips);
         mCheckAPCheckbox = (CheckBox) view.findViewById(R.id.chbox_check_ap);
@@ -128,7 +131,7 @@ public class FlyModeTestFragment extends BaseTestFragment {
         //mHandler.postDelayed(mRunnable, SCAN_PERIOD);
 
         if (mWifiManager.isWifiEnabled()) {
-            mWifiManager.startScan();
+            scan();
             mWifiList = mWifiManager.getScanResults();
             mWifiInfo = mWifiManager.getConnectionInfo();
         }
@@ -184,6 +187,13 @@ public class FlyModeTestFragment extends BaseTestFragment {
         mActivity.unregisterReceiver(mWifiReceiver);
     }
 
+    private void scan() {
+        if (mWifiManager.isWifiEnabled()) {
+            mSpinKitView.setVisibility(View.VISIBLE);
+            mWifiManager.startScan();
+        }
+    }
+
     class WifiReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
             handleEvent(context, intent);
@@ -194,7 +204,7 @@ public class FlyModeTestFragment extends BaseTestFragment {
         @Override
         public void run() {
             if (mWifiManager.isWifiEnabled() && !mIsScanPause) {
-                mWifiManager.startScan();
+                scan();
             }
             mHandler.postDelayed(this, SCAN_PERIOD);
         }
@@ -226,34 +236,35 @@ public class FlyModeTestFragment extends BaseTestFragment {
     private void updateWifiState(int state) {
         switch (state) {
             case WifiManager.WIFI_STATE_ENABLED:
-                mWifiManager.startScan();
-                mTipsTv.setVisibility(View.INVISIBLE);
+                scan();
+                hideTips();
                 break;
 
             case WifiManager.WIFI_STATE_ENABLING:
-                mTipsTv.setText(R.string.fly_mode_test_close);
-                mTipsTv.setVisibility(View.VISIBLE);
+                showTips(R.string.fly_mode_test_close);
                 break;
 
             case WifiManager.WIFI_STATE_DISABLING:
                 mWifiAdapter.updateList(null);
                 mWifiAdapter.notifyDataSetChanged();
-                mTipsTv.setText(R.string.fly_mode_test_open);
-                mTipsTv.setVisibility(View.VISIBLE);
+                showTips(R.string.fly_mode_test_open);
                 break;
 
             case WifiManager.WIFI_STATE_DISABLED:
-                mTipsTv.setText(R.string.fly_mode_test_opened);
-                mTipsTv.setVisibility(View.VISIBLE);
+                showTips(R.string.fly_mode_test_opened);
                 break;
         }
     }
 
     private void updateAccessPoints() {
-        mTipsTv.setVisibility(View.INVISIBLE);
+        hideTips();
         mWifiList = mWifiManager.getScanResults();
         mWifiAdapter.updateList(mWifiList);
         mWifiAdapter.notifyDataSetChanged();
+
+        if (!mWifiList.isEmpty()) {
+            mSpinKitView.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void updateConnectionState(NetworkInfo.DetailedState state) {
@@ -295,5 +306,15 @@ public class FlyModeTestFragment extends BaseTestFragment {
         Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
         intent.putExtra("state", enabling);
         mActivity.sendBroadcast(intent);
+    }
+
+    private void showTips(int strId) {
+        mTipsTv.setText(strId);
+        mTipsTv.setVisibility(View.VISIBLE);
+        mSpinKitView.setVisibility(View.INVISIBLE);
+    }
+
+    private void hideTips() {
+        mTipsTv.setVisibility(View.INVISIBLE);
     }
 }

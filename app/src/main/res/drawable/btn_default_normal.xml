@@ -4,8 +4,8 @@
 
     <padding android:left="5dp" android:top="0dp"
         android:right="5dp" android:bottom="0dp" />
-    <solid android:color="@android:color/transparent" />
-    <stroke android:color="@color/colorAccent"
+    <solid android:color="@color/colorPrimary" />
+    <stroke android:color="@color/colorPrimary"
         android:width="1dp"/>
     <corners android:radius="0dp"/>
 

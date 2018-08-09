@@ -15,9 +15,9 @@ This is an Android system stress test app that verifies the reliability of the m
 * Restore factory test
 
 ## Preview
-![image](screenshots/device-2018-08-08-104341.png)
+![image](screenshots/device-2018-08-09-175845.png)
 
-![image](screenshots/device-2018-08-08-105157.png)
+![image](screenshots/device-2018-08-09-180308.png)
 
 
 ## Using AndroidStressTest in your device

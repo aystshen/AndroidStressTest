@@ -31,9 +31,9 @@
     <string name="bt_test_retry">Cannot search for any Bluetooth device end test for 3 consecutive times</string>
     <string name="bt_test_ble">Bluetooth Ble</string>
     <string name="bt_test_valid_device_tips">Please be sure to find at least one valid Bluetooth device nearby!</string>
-    <string name="bt_test_bt_opening">Opening</string>
-    <string name="bt_test_bt_closing">Closing</string>
-    <string name="bt_test_bt_closed">Closed</string>
+    <string name="bt_test_bt_opening">OPENING</string>
+    <string name="bt_test_bt_closing">CLOSING</string>
+    <string name="bt_test_bt_closed">CLOSED</string>
 
     <!--CPU Test-->
     <string name="cpu_test_intro">The CPU test supports three modes: fixed frequency, random frequency, and specified CPU usage.</string>
@@ -60,9 +60,9 @@
     <string name="wifi_test_authenticating">Authenticating</string>
     <string name="wifi_test_disconnected">Disconnected</string>
     <string name="wifi_test_obtaining_ipaddr">Obtaining ip</string>
-    <string name="wifi_test_opening">Opening</string>
-    <string name="wifi_test_closing">Closing</string>
-    <string name="wifi_test_closed">Closed</string>
+    <string name="wifi_test_opening">OPENING</string>
+    <string name="wifi_test_closing">CLOSING</string>
+    <string name="wifi_test_closed">CLOSED</string>
 
     <!--Sleep Test-->
     <string name="sleep_test_intro">The sleep test will continue to sleep and wake up the device. Manually observe whether sleep and wakeup are normal.</string>
@@ -95,9 +95,9 @@
     <!--Fly Mode Test-->
     <string name="fly_mode_test_intro">The flight mode test will continue to turn on and off the flight mode, while scanning nearby WiFi hotspots to support automatic identification of test results.</string>
     <string name="fly_mode_test_check_wifi">Judging result by WIFI connection status</string>
-    <string name="fly_mode_test_close">Closing</string>
-    <string name="fly_mode_test_open">Opening</string>
-    <string name="fly_mode_test_opened">Opened</string>
+    <string name="fly_mode_test_close">CLOSING</string>
+    <string name="fly_mode_test_open">OPENING</string>
+    <string name="fly_mode_test_opened">OPENED</string>
 
     <!--Recovery Test-->
     <string name="recovery_test_intro">Restoring the factory will erase all data, please insert UDisk to save the state.</string>

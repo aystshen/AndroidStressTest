@@ -37,7 +37,7 @@ NOTE:
 * ayst.shen@foxmail.com
 
 ## License
-	Copyright 2012-2014 Jeremy Feinstein
+	Copyright(c) 2018 Habo Shen <ayst.shen@foxmail.com>
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.

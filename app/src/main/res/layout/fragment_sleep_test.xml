@@ -92,7 +92,37 @@
                 android:textColor="@color/black"/>
 
         </LinearLayout>
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/container_time"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_30"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_sleep_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="12:30:59"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_wakeup_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="12:35:59"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
+
 </FrameLayout>

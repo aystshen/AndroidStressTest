@@ -31,15 +31,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ayst.stresstest.R;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class SleepTestFragment extends BaseTestFragment {
     private static final String ACTION_TEST_CASE_SLEEP = "com.topband.stresstest.sleep.ACTION_TEST_CASE_SLEEP";
 
+    public static String DATE_TO_STRING_PATTERN = "MM-dd HH:mm:ss";
+
     private EditText mWakeupEdt;
     private EditText mSleepEdt;
+    private LinearLayout mTimeContainer;
+    private TextView mSleepTimeTv;
+    private TextView mWakeupTimeTv;
 
     private PowerManager mPowerManager;
     private AlarmManager mAlarmManager;
@@ -49,6 +61,9 @@ public class SleepTestFragment extends BaseTestFragment {
 
     private PowerManager mPm;
     private PowerManager.WakeLock mWakeLock;
+
+    private long mEnterSleepTime;
+    private SimpleDateFormat mSimpleDateFormat;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +75,8 @@ public class SleepTestFragment extends BaseTestFragment {
         mWakeLock.acquire();
 
         mActivity.registerReceiver(mSleepTestReceiver, new IntentFilter(ACTION_TEST_CASE_SLEEP));
+
+        mSimpleDateFormat = new SimpleDateFormat(DATE_TO_STRING_PATTERN);
     }
 
     @Override
@@ -82,6 +99,9 @@ public class SleepTestFragment extends BaseTestFragment {
     private void initView(View view) {
         mWakeupEdt = (EditText) view.findViewById(R.id.edt_wakeup_time);
         mSleepEdt = (EditText) view.findViewById(R.id.edt_sleep_time);
+        mTimeContainer = (LinearLayout) view.findViewById(R.id.container_time);
+        mSleepTimeTv = (TextView) view.findViewById(R.id.tv_sleep_time);
+        mWakeupTimeTv = (TextView) view.findViewById(R.id.tv_wakeup_time);
 
         mWakeupEdt.setText(mWakeTime / 1000 + "");
         mSleepEdt.setText(mSleepTime / 1000 + "");
@@ -147,11 +167,16 @@ public class SleepTestFragment extends BaseTestFragment {
 
         mDefaultScreenOffTime = Settings.System.getInt(mActivity.getContentResolver(), "screen_off_timeout", -1);
         Settings.System.putInt(mActivity.getContentResolver(), "screen_off_timeout", (int)mWakeTime);
-        setAlarm(mActivity, mWakeTime+mSleepTime, true);
+        setAlarm(mActivity, mWakeTime+mSleepTime, false);
 
         if(null != mWakeLock){
             mWakeLock.release();
         }
+
+        mEnterSleepTime = System.currentTimeMillis() + mWakeTime;
+        mSleepTimeTv.setText(mSimpleDateFormat.format(new Date(mEnterSleepTime)));
+        mWakeupTimeTv.setText("--:--:--");
+        mTimeContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -164,6 +189,8 @@ public class SleepTestFragment extends BaseTestFragment {
         mWakeLock = mPm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
                 | PowerManager.ON_AFTER_RELEASE, TAG);
         mWakeLock.acquire();
+
+        mTimeContainer.setVisibility(View.GONE);
     }
 
     private BroadcastReceiver mSleepTestReceiver = new BroadcastReceiver() {
@@ -171,6 +198,10 @@ public class SleepTestFragment extends BaseTestFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "SleepTestReceiver onReceive...");
+
+            mSleepTimeTv.setText(mSimpleDateFormat.format(new Date(mEnterSleepTime)));
+            mWakeupTimeTv.setText(mSimpleDateFormat.format(new Date(System.currentTimeMillis())));
+            mEnterSleepTime = System.currentTimeMillis() + mWakeTime;
 
             if (null == mPowerManager) {
                 mPowerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -182,6 +213,8 @@ public class SleepTestFragment extends BaseTestFragment {
                 Log.d(TAG, "run, Sleep test finish!");
                 mResult = RESULT_SUCCESS;
                 stop();
+            } else {
+                setAlarm(mActivity, mWakeTime+mSleepTime, false);
             }
         }
 

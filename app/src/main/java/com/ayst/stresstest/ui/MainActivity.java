@@ -35,6 +35,7 @@ import com.ayst.stresstest.test.RebootTestFragment;
 import com.ayst.stresstest.test.RecoveryTestFragment;
 import com.ayst.stresstest.test.SleepTestFragment;
 import com.ayst.stresstest.test.TestType;
+import com.ayst.stresstest.test.TimingBootTestFragment;
 import com.ayst.stresstest.test.VideoTestFragment;
 import com.ayst.stresstest.test.WifiTestFragment;
 
@@ -51,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
     private ArrayList<BaseTestFragment> mTestFragments = new ArrayList<>();
     private int mContainerIds[] = {R.id.container1, R.id.container2, R.id.container3,
             R.id.container4, R.id.container5, R.id.container6,
-            R.id.container7, R.id.container8, R.id.container9};
+            R.id.container7, R.id.container8, R.id.container9,
+            R.id.container10};
     private ArrayList<TestType[]> mMutexTests = new ArrayList<>();
 
     @Override
@@ -89,21 +91,23 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         mTestFragments.add(TestType.TYPE_REBOOT_TEST.ordinal(), new RebootTestFragment());
         mTestFragments.add(TestType.TYPE_SLEEP_TEST.ordinal(), new SleepTestFragment());
         mTestFragments.add(TestType.TYPE_RECOVERY_TEST.ordinal(), new RecoveryTestFragment());
+        mTestFragments.add(TestType.TYPE_TIMING_BOOT_TEST.ordinal(), new TimingBootTestFragment());
 
         for (int i = 0; i < mTestFragments.size(); i++) {
             mFragmentManager.beginTransaction().add(mContainerIds[i], mTestFragments.get(i)).commit();
         }
 
         // 建立互斥表
-        mMutexTests.add(TestType.TYPE_CPU_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST});
-        mMutexTests.add(TestType.TYPE_MEMORY_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST});
-        mMutexTests.add(TestType.TYPE_VIDEO_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST});
-        mMutexTests.add(TestType.TYPE_WIFI_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_FLY_MODE_TEST});
-        mMutexTests.add(TestType.TYPE_BT_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_FLY_MODE_TEST});
-        mMutexTests.add(TestType.TYPE_FLY_MODE_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST});
-        mMutexTests.add(TestType.TYPE_REBOOT_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_FLY_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST});
-        mMutexTests.add(TestType.TYPE_SLEEP_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_FLY_MODE_TEST, TestType.TYPE_REBOOT_TEST, TestType.TYPE_RECOVERY_TEST});
-        mMutexTests.add(TestType.TYPE_RECOVERY_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_FLY_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_REBOOT_TEST});
+        mMutexTests.add(TestType.TYPE_CPU_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
+        mMutexTests.add(TestType.TYPE_MEMORY_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
+        mMutexTests.add(TestType.TYPE_VIDEO_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
+        mMutexTests.add(TestType.TYPE_WIFI_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_FLY_MODE_TEST});
+        mMutexTests.add(TestType.TYPE_BT_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_FLY_MODE_TEST});
+        mMutexTests.add(TestType.TYPE_FLY_MODE_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST});
+        mMutexTests.add(TestType.TYPE_REBOOT_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_FLY_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
+        mMutexTests.add(TestType.TYPE_SLEEP_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_FLY_MODE_TEST, TestType.TYPE_REBOOT_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
+        mMutexTests.add(TestType.TYPE_RECOVERY_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_FLY_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_REBOOT_TEST, TestType.TYPE_TIMING_BOOT_TEST});
+        mMutexTests.add(TestType.TYPE_TIMING_BOOT_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_FLY_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_REBOOT_TEST, TestType.TYPE_RECOVERY_TEST});
 
     }
 

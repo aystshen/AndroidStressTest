@@ -29,5 +29,6 @@ public enum TestType{
     TYPE_FLY_MODE_TEST,             // Flymode Test
     TYPE_REBOOT_TEST,               // Reboot Test
     TYPE_SLEEP_TEST,                // Sleep Test
-    TYPE_RECOVERY_TEST              // Recovery Test
+    TYPE_RECOVERY_TEST,             // Recovery Test
+    TYPE_TIMING_BOOT_TEST           // Timing boot Test
 }

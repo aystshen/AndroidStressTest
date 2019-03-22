@@ -34,7 +34,7 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/container1"
@@ -112,7 +112,7 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/container7"
@@ -138,6 +138,23 @@
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/container9"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/test_item_height"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="10dp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/container10"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/test_item_height"
                     android:layout_weight="1"

@@ -20,6 +20,7 @@ package com.ayst.stresstest.receiver;
 import com.ayst.stresstest.service.WorkService;
 import com.ayst.stresstest.test.BaseTestFragment;
 import com.ayst.stresstest.test.RebootTestFragment;
+import com.ayst.stresstest.test.TimingBootTestFragment;
 import com.ayst.stresstest.ui.MainActivity;
 import com.ayst.stresstest.util.SPUtils;
 
@@ -36,8 +37,10 @@ public class RebootReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
             int rebootFlag = SPUtils.getInstance(context).getData(RebootTestFragment.SP_REBOOT_FLAG, BaseTestFragment.STATE_STOP);
+            int timingBootFlag = SPUtils.getInstance(context).getData(TimingBootTestFragment.SP_TIMING_BOOT_FLAG, BaseTestFragment.STATE_STOP);
             Log.d(TAG, "RebootReceiver, rebootFlag:" + rebootFlag);
-            if (rebootFlag == BaseTestFragment.STATE_RUNNING) {
+            if (rebootFlag == BaseTestFragment.STATE_RUNNING
+                    || timingBootFlag == BaseTestFragment.STATE_RUNNING) {
                 Intent intent1 = new Intent(context, MainActivity.class);
                 intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent1);

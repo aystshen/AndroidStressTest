@@ -40,106 +40,52 @@ public class SPUtils {
         return instance;
     }
 
-    /**
-     * 保存数据
-     *
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
     public void saveData(String key, String value) {
         Editor editor = mSp.edit();
         editor.putString(key, value);
         editor.commit();
     }
 
-    /**
-     * 保存数据
-     *
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
     public void saveData(String key, boolean value) {
         Editor editor = mSp.edit();
         editor.putBoolean(key, value);
         editor.commit();
     }
 
-    /**
-     * 保存数据
-     *
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
     public void saveData(String key, int value) {
         Editor editor = mSp.edit();
         editor.putInt(key, value);
         editor.commit();
     }
 
-    /**
-     * 保存数据
-     *
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
+    public void saveData(String key, long value) {
+        Editor editor = mSp.edit();
+        editor.putLong(key, value);
+        editor.commit();
+    }
+
     public void saveData(String key, float value) {
         Editor editor = mSp.edit();
         editor.putFloat(key, value);
         editor.commit();
     }
 
-    /**
-     * 取出数据
-     *
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
     public String getData(String key, String defValue) {
         return mSp.getString(key, defValue);
     }
 
-    /**
-     * 取出数据
-     *
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
     public boolean getData(String key, boolean defValue) {
         return mSp.getBoolean(key, defValue);
     }
 
-    /**
-     * 取出数据
-     *
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
     public int getData(String key, int defValue) {
         return mSp.getInt(key, defValue);
     }
 
-    /**
-     * 取出数据
-     *
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
+    public long getData(String key, long defValue) {
+        return mSp.getLong(key, defValue);
+    }
+
     public float getData(String key, float defValue) {
         return mSp.getFloat(key, defValue);
     }

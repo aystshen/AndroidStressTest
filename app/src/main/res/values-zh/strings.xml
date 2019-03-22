@@ -41,6 +41,7 @@
     <string name="reboot_test">重启测试</string>
     <string name="sleep_test">休眠测试</string>
     <string name="recovery_test">恢复出厂测试</string>
+    <string name="timing_boot_test">定时开关机测试</string>
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">蓝牙测试将持续打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙，支持自动判别测试结果。</string>
@@ -124,5 +125,12 @@
     <string name="recovery_test_insert_udisk_tips">请先插入U盘！</string>
     <string name="recovery_test_recovery_tips">确定要恢复出厂设置测试吗？确定后将在 %d 秒后恢复出厂设置。</string>
 
+    <!--Timing boot Test-->
+    <string name="timing_boot_test_intro">定时开关机测试将反复开机、关机，开机后检测当前时间与设定时间时间是否一致。</string>
+    <string name="timing_boot_test_shutdown_count_down">秒后关机</string>
+    <string name="timing_boot_test_startup_count_down">秒后开机</string>
+    <string name="timing_boot_test_shutdown_tips">确定要定时开关机测试吗？确定后将在 %d 秒后关机。</string>
+    <string name="timing_boot_test_set_shutdown_delay_tips">请设置关机时间！</string>
+    <string name="timing_boot_test_set_startup_delay_tips">请设置开机时间！</string>
 
 </resources>

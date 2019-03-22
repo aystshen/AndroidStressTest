@@ -41,6 +41,7 @@
     <string name="reboot_test">REBOOT TEST</string>
     <string name="sleep_test">SLEEP TEST</string>
     <string name="recovery_test">RECOVERY TEST</string>
+    <string name="timing_boot_test">TIMING BOOT TEST</string>
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">The Bluetooth test will continue to turn on, off, and scan nearby Bluetooth devices, support classic Bluetooth and low-power Bluetooth, and support automatic identification of test results.</string>
@@ -123,5 +124,13 @@
     <string name="recovery_test_insert_sdcard_tips">Please insert the SD card!</string>
     <string name="recovery_test_insert_udisk_tips">Please insert the UDisk!</string>
     <string name="recovery_test_recovery_tips">Are you want to restore the factory settings test? After confirming, the factory settings will be restored after %d seconds.</string>
+
+    <!--Timing boot Test-->
+    <string name="timing_boot_test_intro">The timing boot test will be turned on and off repeatedly. Check whether the current time is consistent with the set time after power on..</string>
+    <string name="timing_boot_test_shutdown_count_down">seconds, Shutdown</string>
+    <string name="timing_boot_test_startup_count_down">seconds, Startup</string>
+    <string name="timing_boot_test_shutdown_tips">Are you sure you want to timing boot test? After confirming, it will shutdown after %d seconds.</string>
+    <string name="timing_boot_test_set_shutdown_delay_tips">Please set the shutdown time！</string>
+    <string name="timing_boot_test_set_startup_delay_tips">Please set the startup time！</string>
 
 </resources>

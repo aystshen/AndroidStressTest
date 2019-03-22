@@ -73,7 +73,7 @@ android {
         }
 
         debug {
-//            applicationIdSuffix ".BETA"
+            applicationIdSuffix ".BETA"
             versionNameSuffix "-BETA"
             minifyEnabled false
             shrinkResources false

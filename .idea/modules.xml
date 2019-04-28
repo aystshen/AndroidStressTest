@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.ayst.stresstest.iml" filepath="$PROJECT_DIR$/com.ayst.stresstest.iml" />
-      <module fileurl="file://D:\code\topband_AndroidStressTest\topband_StressTest.iml" filepath="D:\code\topband_AndroidStressTest\topband_StressTest.iml" />
     </modules>
   </component>
 </project>

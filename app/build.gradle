@@ -18,7 +18,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.ayst.stresstest"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -95,7 +94,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Android Support
     implementation 'com.android.support:cardview-v7:25.4.0'
@@ -124,7 +123,7 @@ dependencies {
     implementation 'com.lovedise:permissiongen:0.1.1'
 
     //Android-SpinKit
-    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
+    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
 }
 
 def releaseTime() {

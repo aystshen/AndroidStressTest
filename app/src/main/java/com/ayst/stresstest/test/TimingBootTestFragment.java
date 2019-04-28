@@ -118,7 +118,7 @@ public class TimingBootTestFragment extends BaseTestFragment {
         if (isRunning()) {
             long diffTime = (System.currentTimeMillis() - mStartupTime)/1000;
             Log.d(TAG, "check, diffTime=" + diffTime);
-            if (diffTime > 60) {
+            if (Math.abs(diffTime) > 60) {
                 Log.d(TAG, "check, Timing boot test failed!");
                 mResult = RESULT_FAIL;
                 stop();

@@ -313,14 +313,14 @@ public class CPUTestFragment extends BaseTestFragment {
         }
 
         // 启动读CPU占用率线程
-        if(Build.VERSION.SDK_INT >= 26) {
-            Log.w(TAG, "start, Read CPU state is not supported on Android O and above and will be no-op.");
-        } else {
+//        if(Build.VERSION.SDK_INT >= 26) {
+//            Log.w(TAG, "start, Read CPU state is not supported on Android O and above and will be no-op.");
+//        } else {
             if(this.mCpuReaderThread == null) {
                 this.mCpuReaderThread = new ReaderThread();
                 this.mCpuReaderThread.start();
             }
-        }
+//        }
 
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {

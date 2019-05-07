@@ -53,14 +53,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/spinner_freq"
-                android:text="@string/cpu_test_set_freq"
-                android:textColor="@color/black" />
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -82,14 +74,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:entries="@array/cpu_random_freq_interval_labels" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/spinner_interval"
-                android:text="@string/cpu_test_set_interval"
-                android:textColor="@color/black" />
 
         </RelativeLayout>
 
@@ -113,14 +97,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:entries="@array/cpu_rate_label" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/spinner_cpu_rate"
-                android:text="@string/cpu_test_set_percent"
-                android:textColor="@color/black" />
 
         </RelativeLayout>
 

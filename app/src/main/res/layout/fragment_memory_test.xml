@@ -118,12 +118,6 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/memory_test_fill_percent"
-                android:textColor="@color/black" />
-
             <Spinner
                 android:id="@+id/spinner_percent"
                 android:layout_width="wrap_content"

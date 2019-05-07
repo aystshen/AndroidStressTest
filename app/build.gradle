@@ -72,7 +72,7 @@ android {
         }
 
         debug {
-            applicationIdSuffix ".BETA"
+            //applicationIdSuffix ".BETA"
             versionNameSuffix "-BETA"
             minifyEnabled false
             shrinkResources false
@@ -124,6 +124,9 @@ dependencies {
 
     //Android-SpinKit
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+
+    // FlexboxLayout
+    implementation 'com.google.android:flexbox:1.0.0'
 }
 
 def releaseTime() {

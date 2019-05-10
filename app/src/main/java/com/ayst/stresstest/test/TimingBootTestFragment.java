@@ -48,6 +48,8 @@ public class TimingBootTestFragment extends BaseTestFragment {
 
     private final static int MSG_TIMING_BOOT_COUNTDOWN = 1001;
 
+    private final static int TIME_DEVIATION = 300; // unit: seconds
+
     private EditText mShutdownDelayEdt;
     private EditText mStartupDelayEdt;
     private TextView mCountdownTv;
@@ -118,7 +120,7 @@ public class TimingBootTestFragment extends BaseTestFragment {
         if (isRunning()) {
             long diffTime = (System.currentTimeMillis() - mStartupTime)/1000;
             Log.d(TAG, "check, diffTime=" + diffTime);
-            if (Math.abs(diffTime) > 60) {
+            if (Math.abs(diffTime) > TIME_DEVIATION) {
                 Log.d(TAG, "check, Timing boot test failed!");
                 mResult = RESULT_FAIL;
                 stop();

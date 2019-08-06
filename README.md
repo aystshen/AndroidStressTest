@@ -37,7 +37,7 @@ NOTE:
 * ayst.shen@foxmail.com
 
 ## License
-	Copyright(c) 2018 Habo Shen <ayst.shen@foxmail.com>
+	Copyright 2019 Bob Shen.
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.

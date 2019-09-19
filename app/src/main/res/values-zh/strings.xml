@@ -42,6 +42,7 @@
     <string name="sleep_test">休眠测试</string>
     <string name="recovery_test">恢复出厂测试</string>
     <string name="timing_boot_test">定时开关机测试</string>
+    <string name="network_test">网络测试</string>
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">蓝牙测试将持续打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙，支持自动判别测试结果。</string>
@@ -132,5 +133,13 @@
     <string name="timing_boot_test_shutdown_tips">确定要定时开关机测试吗？确定后将在 %d 秒后关机。</string>
     <string name="timing_boot_test_set_shutdown_delay_tips">请设置关机时间！</string>
     <string name="timing_boot_test_set_startup_delay_tips">请设置开机时间！</string>
+
+    <!--Network Test-->
+    <string name="network_test_intro">网络测试将反复 ping 指定的网址，记录失败次数。</string>
+    <string name="network_test_url_empty_tips">请设置测试网址！</string>
+    <string name="network_test_url">测试网址：</string>
+    <string name="network_test_retry_count">重试次数：</string>
+    <string name="network_test_failure_count">失败计数：</string>
+
 
 </resources>

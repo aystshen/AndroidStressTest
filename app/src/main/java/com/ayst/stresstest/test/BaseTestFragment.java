@@ -16,6 +16,7 @@
 
 package com.ayst.stresstest.test;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -66,24 +67,14 @@ public class BaseTestFragment extends Fragment {
 
     protected static final int MSG_UPDATE = 1;
 
-    @BindView(R.id.progressbar)
-    ProgressBar mProgressbar;
-    @BindView(R.id.tv_title)
-    TextView mTitleTv;
-    @BindView(R.id.tv_count)
-    TextView mCountTv;
-    @BindView(R.id.container_title)
-    FrameLayout mTitleContainer;
-    @BindView(R.id.container)
-    RelativeLayout mContentContainer;
-    @BindView(R.id.btn_start)
-    Button mStartBtn;
-    @BindView(R.id.iv_logo)
-    ImageView mLogoIv;
-    @BindView(R.id.container_full)
-    RelativeLayout mFullContainer;
-
-    Unbinder unbinder;
+    protected ProgressBar mProgressbar;
+    protected TextView mTitleTv;
+    protected TextView mCountTv;
+    protected FrameLayout mTitleContainer;
+    protected RelativeLayout mContentContainer;
+    protected Button mStartBtn;
+    protected ImageView mLogoIv;
+    protected RelativeLayout mFullContainer;
 
     protected Activity mActivity;
 
@@ -157,8 +148,26 @@ public class BaseTestFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_base_test, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        initView(view);
         return view;
+    }
+
+    private void initView(View view) {
+        mProgressbar = (ProgressBar) view.findViewById(R.id.progressbar);
+        mTitleTv = (TextView) view.findViewById(R.id.tv_title);
+        mCountTv = (TextView) view.findViewById(R.id.tv_count);
+        mTitleContainer = (FrameLayout) view.findViewById(R.id.container_title);
+        mContentContainer = (RelativeLayout) view.findViewById(R.id.container);
+        mStartBtn = (Button) view.findViewById(R.id.btn_start);
+        mLogoIv = (ImageView) view.findViewById(R.id.iv_logo);
+        mFullContainer = (RelativeLayout) view.findViewById(R.id.container_full);
+
+        mStartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onStartClicked();
+            }
+        });
     }
 
     @Override
@@ -199,7 +208,6 @@ public class BaseTestFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
 
         if (isRunning()) {
             stop();
@@ -251,8 +259,7 @@ public class BaseTestFragment extends Fragment {
         mHandler.sendEmptyMessage(MSG_UPDATE);
     }
 
-    @OnClick(R.id.btn_start)
-    public void onStartClicked() {
+    protected void onStartClicked() {
         if (isRunning()) {
             showStopDialog();
         } else {
@@ -383,6 +390,7 @@ public class BaseTestFragment extends Fragment {
         return isEnable;
     }
 
+    @SuppressLint("HandlerLeak")
     protected Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {

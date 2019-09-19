@@ -42,6 +42,7 @@
     <string name="sleep_test">SLEEP TEST</string>
     <string name="recovery_test">RECOVERY TEST</string>
     <string name="timing_boot_test">TIMING BOOT TEST</string>
+    <string name="network_test">NETWORK TEST</string>
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">The Bluetooth test will continue to turn on, off, and scan nearby Bluetooth devices, support classic Bluetooth and low-power Bluetooth, and support automatic identification of test results.</string>
@@ -132,5 +133,12 @@
     <string name="timing_boot_test_shutdown_tips">Are you sure you want to timing boot test? After confirming, it will shutdown after %d seconds.</string>
     <string name="timing_boot_test_set_shutdown_delay_tips">Please set the shutdown time！</string>
     <string name="timing_boot_test_set_startup_delay_tips">Please set the startup time！</string>
+
+    <!--Network Test-->
+    <string name="network_test_intro">The network test will repeatedly ping the specified URL and record the number of failures.</string>
+    <string name="network_test_url_empty_tips">Please set the test URL!</string>
+    <string name="network_test_url">Test URL:</string>
+    <string name="network_test_retry_count">Retry count:</string>
+    <string name="network_test_failure_count">Failure count:</string>
 
 </resources>

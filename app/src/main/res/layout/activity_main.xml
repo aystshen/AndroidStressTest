@@ -36,113 +36,47 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container1"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container2"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container3"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container4"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container5"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container6"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container7"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container8"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container9"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/container10"
-                android:layout_width="@dimen/test_item_width"
-                android:layout_height="@dimen/test_item_height"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="5dp" />
+                style="@style/CardView.TestItem" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/container11"
+                style="@style/CardView.TestItem" />
 
         </com.google.android.flexbox.FlexboxLayout>
 

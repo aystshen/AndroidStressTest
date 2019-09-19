@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright(c) 2018 Habo Shen <ayst.shen@foxmail.com>
+  ~ Copyright(c) 2018 Bob Shen <ayst.shen@foxmail.com>
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.ayst.stresstest"
     android:sharedUserId="android.uid.system">
 
@@ -48,7 +49,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:persistent="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name="com.ayst.stresstest.ui.MainActivity"
             android:label="@string/app_name"

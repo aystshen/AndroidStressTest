@@ -1,5 +1,5 @@
 /*
- * Copyright(c) 2018 Habo Shen <ayst.shen@foxmail.com>
+ * Copyright(c) 2018 Bob Shen <ayst.shen@foxmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 ext {
-    compileSdkVersion = 27
-    buildToolsVersion = "27.0.3"
+    compileSdkVersion = 28
+    buildToolsVersion = "28.0.3"
     minSdkVersion = 21
     targetSdkVersion = 26
 

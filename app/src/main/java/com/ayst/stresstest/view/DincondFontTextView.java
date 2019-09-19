@@ -1,5 +1,5 @@
 /*
- * Copyright(c) 2018 Habo Shen <ayst.shen@foxmail.com>
+ * Copyright(c) 2018 Bob Shen <ayst.shen@foxmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import android.util.AttributeSet;
 import com.ayst.stresstest.StressTestApplication;
 
 /**
- * Created by Habo Shen on 2017/1/2.
+ * Created by Bob Shen on 2017/1/2.
  */
 
-public class DincondFontTextView extends android.support.v7.widget.AppCompatTextView {
+public class DincondFontTextView extends androidx.appcompat.widget.AppCompatTextView {
     public DincondFontTextView(Context context) {
         super(context);
         setTypeface();

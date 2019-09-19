@@ -1,5 +1,5 @@
 /*
- * Copyright(c) 2018 Habo Shen <ayst.shen@foxmail.com>
+ * Copyright(c) 2018 Bob Shen <ayst.shen@foxmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package com.ayst.stresstest.test;
 
 /**
- * Created by Habo Shen on 2017/11/13.
+ * Created by Bob Shen on 2017/11/13.
  */
 
 public enum TestType{

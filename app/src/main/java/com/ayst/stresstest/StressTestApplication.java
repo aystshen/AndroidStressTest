@@ -1,5 +1,5 @@
 /*
- * Copyright(c) 2018 Habo Shen <ayst.shen@foxmail.com>
+ * Copyright(c) 2018 Bob Shen <ayst.shen@foxmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import com.orhanobut.logger.PrettyFormatStrategy;
 
 
 /**
- * Created by Habo Shen on 2017/11/3.
+ * Created by Bob Shen on 2017/11/3.
  */
 public class StressTestApplication extends Application {
     private static final String TAG = "StressTestApplication";
@@ -76,7 +76,6 @@ public class StressTestApplication extends Application {
 //                .position(Position.BOTTOM_START)
 //                .build()
 //                .install();
-
     }
 
 }

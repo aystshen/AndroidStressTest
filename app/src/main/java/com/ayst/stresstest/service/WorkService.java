@@ -1,5 +1,5 @@
 /*
- * Copyright(c) 2018 Habo Shen <ayst.shen@foxmail.com>
+ * Copyright(c) 2018 Bob Shen <ayst.shen@foxmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;

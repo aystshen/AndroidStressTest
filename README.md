@@ -13,6 +13,7 @@ This is an Android system stress test app that verifies the reliability of the m
 * Restart test
 * Sleep test
 * Restore factory test
+* Time power-on/off test
 
 ## Preview
 ![image](screenshots/device-2018-08-09-175845.png)
@@ -37,7 +38,7 @@ NOTE:
 * ayst.shen@foxmail.com
 
 ## License
-	Copyright(c) 2018 Bob Shen <ayst.shen@foxmail.com>
+	Copyright 2019 Bob Shen.
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.

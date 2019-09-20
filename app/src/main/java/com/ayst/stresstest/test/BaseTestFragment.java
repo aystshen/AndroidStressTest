@@ -22,12 +22,20 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import androidx.annotation.StringRes;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.ayst.stresstest.R;
@@ -455,6 +464,29 @@ public class BaseTestFragment extends Fragment {
                         dialog.cancel();
                     }
                 }).show();
+    }
+
+    /**
+     * A {@link Handler} for showing {@link Toast}s on the UI thread.
+     */
+    private final Handler mMessageHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            Toast.makeText(mActivity, (String) msg.obj, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    /**
+     * Shows a {@link Toast} on the UI thread.
+     *
+     * @param text The message to show.
+     */
+    protected void showToast(String text) {
+        // We show a Toast by sending request message to mMessageHandler. This makes sure that the
+        // Toast is shown on the UI thread.
+        Message message = Message.obtain();
+        message.obj = text;
+        mMessageHandler.sendMessage(message);
     }
 
     /**

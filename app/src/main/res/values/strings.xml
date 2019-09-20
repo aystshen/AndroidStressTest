@@ -43,6 +43,10 @@
     <string name="recovery_test">RECOVERY TEST</string>
     <string name="timing_boot_test">TIMING BOOT TEST</string>
     <string name="network_test">NETWORK TEST</string>
+    <string name="camera_test">CAMERA TEST</string>
+
+    <!--permission-->
+    <string name="request_permission">Failed to get camera permissions, the test will not work.</string>
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">The Bluetooth test will continue to turn on, off, and scan nearby Bluetooth devices, support classic Bluetooth and low-power Bluetooth, and support automatic identification of test results.</string>
@@ -140,5 +144,10 @@
     <string name="network_test_url">Test URL:</string>
     <string name="network_test_retry_count">Retry count:</string>
     <string name="network_test_failure_count">Failure count:</string>
+
+    <!--Camera Test-->
+    <string name="camera_test_intro">The camera test will repeatedly open the camera for preview and take a photo, recording the number of failures.</string>
+    <string name="camera_test_select_camera">Select camera:</string>
+    <string name="camera_test_failure_count">Failure count：</string>
 
 </resources>

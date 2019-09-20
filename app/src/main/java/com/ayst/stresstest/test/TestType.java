@@ -31,5 +31,6 @@ public enum TestType{
     TYPE_SLEEP_TEST,                // Sleep Test
     TYPE_RECOVERY_TEST,             // Recovery Test
     TYPE_TIMING_BOOT_TEST,          // Timing boot Test
-    TYPE_NETWORK_TEST               // Network Test
+    TYPE_NETWORK_TEST,              // Network Test
+    TYPE_CAMERA_TEST                // Camera Test
 }

@@ -43,6 +43,10 @@
     <string name="recovery_test">恢复出厂测试</string>
     <string name="timing_boot_test">定时开关机测试</string>
     <string name="network_test">网络测试</string>
+    <string name="camera_test">摄像头测试</string>
+
+    <!--permission-->
+    <string name="request_permission">获取相机权限失败，该项测试将无法进行。</string>
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">蓝牙测试将持续打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙，支持自动判别测试结果。</string>
@@ -141,5 +145,9 @@
     <string name="network_test_retry_count">重试次数：</string>
     <string name="network_test_failure_count">失败计数：</string>
 
+    <!--Camera Test-->
+    <string name="camera_test_intro">摄像头测试将反复打开摄像头进行预览并拍照，记录失败次数。</string>
+    <string name="camera_test_select_camera">被测摄像头：</string>
+    <string name="camera_test_failure_count">失败计数：</string>
 
 </resources>

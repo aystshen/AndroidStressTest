@@ -90,12 +90,11 @@ public class BluetoothTestFragment extends BaseTestFragment {
         setCountType(COUNT_TYPE_COUNT);
         setType(TestType.TYPE_BT_TEST);
 
-        initView(contentView);
-
         return view;
     }
 
-    private void initView(View view) {
+    @Override
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         mSettingsContainer = (LinearLayout) view.findViewById(R.id.container_settings);
         mRunningContainer = (FrameLayout) view.findViewById(R.id.container_running);
         mSpinKitView = (SpinKitView) view.findViewById(R.id.spin_kit);
@@ -112,6 +111,10 @@ public class BluetoothTestFragment extends BaseTestFragment {
                 }
             }
         });
+
+        if (null == mBluetoothAdapter) {
+            setEnable(false);
+        }
     }
 
     @Override

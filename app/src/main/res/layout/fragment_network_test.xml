@@ -83,31 +83,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/network_test_failure_count"
-                android:textColor="@color/black"/>
-
-            <TextView
-                android:id="@+id/tv_failure_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="50dp"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="0/0"/>
-
-        </LinearLayout>
-
     </LinearLayout>
 
 </FrameLayout>

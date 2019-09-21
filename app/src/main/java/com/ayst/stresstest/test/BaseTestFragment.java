@@ -32,7 +32,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
 import androidx.annotation.StringRes;
+
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -79,6 +81,7 @@ public class BaseTestFragment extends Fragment {
     protected ProgressBar mProgressbar;
     protected TextView mTitleTv;
     protected TextView mCountTv;
+    protected TextView mFailureCountTv;
     protected FrameLayout mTitleContainer;
     protected RelativeLayout mContentContainer;
     protected Button mStartBtn;
@@ -106,6 +109,7 @@ public class BaseTestFragment extends Fragment {
     protected int mMaxTestCount = 0;
     protected int mMaxTestTime = 0;
     protected int mCurrentCount = 0;
+    protected int mFailureCount = 0;
     protected int mCurrentTime = 0;
     private Timer mCountTimer;
 
@@ -165,6 +169,7 @@ public class BaseTestFragment extends Fragment {
         mProgressbar = (ProgressBar) view.findViewById(R.id.progressbar);
         mTitleTv = (TextView) view.findViewById(R.id.tv_title);
         mCountTv = (TextView) view.findViewById(R.id.tv_count);
+        mFailureCountTv = (TextView) view.findViewById(R.id.tv_failure_count);
         mTitleContainer = (FrameLayout) view.findViewById(R.id.container_title);
         mContentContainer = (RelativeLayout) view.findViewById(R.id.container);
         mStartBtn = (Button) view.findViewById(R.id.btn_start);
@@ -228,9 +233,12 @@ public class BaseTestFragment extends Fragment {
             if (mMaxTestCount > 0) {
                 mCountTv.setText(mCurrentCount + "/" + mMaxTestCount);
                 mCountTv.setVisibility(View.VISIBLE);
+                mFailureCountTv.setVisibility(View.VISIBLE);
             } else {
                 mCountTv.setVisibility(View.GONE);
+                mFailureCountTv.setVisibility(View.GONE);
             }
+            mFailureCountTv.setText(mFailureCount + "/" + mCurrentCount);
         } else if (mCountType == COUNT_TYPE_TIME) {
             if (mMaxTestTime > 0) {
                 int curHour = mCurrentTime / 3600;
@@ -317,7 +325,7 @@ public class BaseTestFragment extends Fragment {
     }
 
     public void start() {
-        Logger.t(TAG).d("Start %s", mCountType == COUNT_TYPE_COUNT ? mMaxTestCount : mMaxTestTime+"h");
+        Logger.t(TAG).d("Start %s", mCountType == COUNT_TYPE_COUNT ? mMaxTestCount : mMaxTestTime + "h");
 
         mState = STATE_RUNNING;
         mResult = RESULT_CANCEL;
@@ -357,13 +365,18 @@ public class BaseTestFragment extends Fragment {
         String message;
         if (mCountType == COUNT_TYPE_COUNT) {
             message = mCurrentCount + "/" + mMaxTestCount;
+            if (mFailureCount > 0) {
+                mResult = RESULT_FAIL;
+            } else {
+                mResult = RESULT_SUCCESS;
+            }
         } else {
             int curHour = mCurrentTime / 3600;
             int curMin = (mCurrentTime % 3600) / 60;
             int curSec = (mCurrentTime % 3600) % 60;
             message = curHour + ":" + curMin + ":" + curSec + "/" + mMaxTestTime + ":0:0";
         }
-        Logger.t(TAG).d("Stop %s %s", message, mResult==RESULT_SUCCESS?"SUCCESS":(mResult==RESULT_CANCEL?"CANCEL":"FAIL"));
+        Logger.t(TAG).d("Stop %s %s", message, mResult == RESULT_SUCCESS ? "SUCCESS" : (mResult == RESULT_CANCEL ? "CANCEL" : "FAIL"));
 
         mState = STATE_STOP;
         if (mListener != null) {
@@ -383,6 +396,10 @@ public class BaseTestFragment extends Fragment {
     protected void IncCurrentCount() {
         mCurrentCount++;
         Logger.t(TAG).d("Testing %d/%d", mCurrentCount, mMaxTestCount);
+    }
+
+    protected void incFailureCount() {
+        mFailureCount++;
     }
 
     public boolean isRunning() {

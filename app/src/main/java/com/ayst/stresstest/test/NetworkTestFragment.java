@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ayst.stresstest.R;
@@ -44,13 +43,10 @@ public class NetworkTestFragment extends BaseTestFragment {
     EditText mUrlEdt;
     @BindView(R.id.edt_retry_count)
     EditText mRetryCountEdt;
-    @BindView(R.id.tv_failure_count)
-    TextView mFailureCountTv;
     Unbinder unbinder;
 
     private String mTestUrl = "www.baidu.com";
     private int mRetryCount = 3;
-    private int mFailureCount = 0;
 
     private Timer mTimer;
 
@@ -80,7 +76,6 @@ public class NetworkTestFragment extends BaseTestFragment {
     private void initView() {
         mUrlEdt.setText(mTestUrl);
         mRetryCountEdt.setText(mRetryCount + "");
-        mFailureCountTv.setText(mFailureCount + "/" + mCurrentCount);
     }
 
     @Override
@@ -92,10 +87,6 @@ public class NetworkTestFragment extends BaseTestFragment {
     @Override
     protected void updateImpl() {
         super.updateImpl();
-        mFailureCountTv.setText(mFailureCount + "/" + mCurrentCount);
-        if (mFailureCount > 0) {
-            mFailureCountTv.setTextColor(getResources().getColor(R.color.red));
-        }
     }
 
     @Override
@@ -117,12 +108,6 @@ public class NetworkTestFragment extends BaseTestFragment {
             @Override
             public void run() {
                 if (!isRunning() || (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount)) {
-                    Log.d(TAG, "run, Network test finish!");
-                    if (mFailureCount > 0) {
-                        mResult = RESULT_FAIL;
-                    } else {
-                        mResult = RESULT_SUCCESS;
-                    }
                     stop();
                 } else {
                     int retry = 0;
@@ -145,7 +130,7 @@ public class NetworkTestFragment extends BaseTestFragment {
                     }
 
                     if (lostCnt >= mRetryCount) {
-                        mFailureCount++;
+                        incFailureCount();
                         mResult = RESULT_FAIL;
                     }
 

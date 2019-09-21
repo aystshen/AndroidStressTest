@@ -168,8 +168,6 @@ public class CameraTestFragment extends BaseTestFragment
 
     @BindView(R.id.spinner_camera)
     Spinner mCameraSpinner;
-    @BindView(R.id.tv_failure_count)
-    TextView mFailureCountTv;
     @BindView(R.id.texture)
     AutoFitTextureView mTextureView;
     Unbinder unbinder;
@@ -272,7 +270,6 @@ public class CameraTestFragment extends BaseTestFragment
      */
     private long mCaptureTimer;
 
-    private int mFailureCount = 0;
     private Timer mTimer;
     protected ArrayAdapter<String> mAdapter;
     private CameraManager mCameraManager;
@@ -320,7 +317,7 @@ public class CameraTestFragment extends BaseTestFragment
                 cameraDevice.close();
                 mCameraDevice = null;
             }
-            mFailureCount++;
+            incFailureCount();
         }
 
     };
@@ -474,7 +471,7 @@ public class CameraTestFragment extends BaseTestFragment
                 mJpegResultQueue.remove(requestId);
                 finishedCaptureLocked();
             }
-            mFailureCount++;
+            incFailureCount();
         }
 
     };
@@ -504,8 +501,6 @@ public class CameraTestFragment extends BaseTestFragment
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        mFailureCountTv.setText(mFailureCount + "/" + mCurrentCount);
-
         if (null == mCameraManager) {
             Log.e(TAG, "This device doesn't support Camera2 API.");
             setEnable(false);
@@ -558,10 +553,6 @@ public class CameraTestFragment extends BaseTestFragment
     @Override
     protected void updateImpl() {
         super.updateImpl();
-        mFailureCountTv.setText(mFailureCount + "/" + mCurrentCount);
-        if (mFailureCount > 0) {
-            mFailureCountTv.setTextColor(getResources().getColor(R.color.red));
-        }
     }
 
     @Override
@@ -594,11 +585,6 @@ public class CameraTestFragment extends BaseTestFragment
             @Override
             public void run() {
                 if (!isRunning() || (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount)) {
-                    if (mFailureCount > 0) {
-                        mResult = RESULT_FAIL;
-                    } else {
-                        mResult = RESULT_SUCCESS;
-                    }
                     stop();
                 } else if (null != mBackgroundThread) {
                     showCameraSurfaceView(true);
@@ -613,8 +599,6 @@ public class CameraTestFragment extends BaseTestFragment
                         closeCamera();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                        mFailureCount++;
-                        mResult = RESULT_FAIL;
                     }
 
                     showCameraSurfaceView(false);
@@ -694,8 +678,8 @@ public class CameraTestFragment extends BaseTestFragment
             mCameraManager.openCamera(cameraId, mStateCallback, backgroundHandler);
         } catch (Exception e) {
             e.printStackTrace();
-            mFailureCount++;
             mCameraOpenCloseLock.release();
+            incFailureCount();
         }
     }
 
@@ -855,14 +839,14 @@ public class CameraTestFragment extends BaseTestFragment
 
                         @Override
                         public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
-                            showToast("Failed to configure camera.");
-                            mFailureCount++;
+                            Log.e(TAG, "Failed to configure camera.");
+                            incFailureCount();
                         }
                     }, mBackgroundHandler
             );
         } catch (Exception e) {
             e.printStackTrace();
-            mFailureCount++;
+            incFailureCount();
         }
     }
 
@@ -1088,7 +1072,7 @@ public class CameraTestFragment extends BaseTestFragment
                         mBackgroundHandler);
             } catch (Exception e) {
                 e.printStackTrace();
-                mFailureCount++;
+                incFailureCount();
             }
         }
     }
@@ -1134,7 +1118,7 @@ public class CameraTestFragment extends BaseTestFragment
 
         } catch (Exception e) {
             e.printStackTrace();
-            mFailureCount++;
+            incFailureCount();
         }
     }
 
@@ -1159,7 +1143,7 @@ public class CameraTestFragment extends BaseTestFragment
             }
         } catch (Exception e) {
             e.printStackTrace();
-            mFailureCount++;
+            incFailureCount();
         }
     }
 

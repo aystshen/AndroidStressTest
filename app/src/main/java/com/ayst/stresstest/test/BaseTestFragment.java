@@ -22,6 +22,9 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -31,6 +34,7 @@ import androidx.annotation.StringRes;
 
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +50,7 @@ import android.widget.Toast;
 import com.orhanobut.logger.Logger;
 import com.ayst.stresstest.R;
 
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -87,7 +92,7 @@ public class BaseTestFragment extends Fragment {
     protected static final int RESULT_SUCCESS = 1;
     protected static final int RESULT_FAIL = 2;
     protected static final int RESULT_CANCEL = 3;
-    protected int mResult = RESULT_CANCEL;
+
 
     protected static final int COUNT_TYPE_COUNT = 1;
     protected static final int COUNT_TYPE_TIME = 2;
@@ -101,13 +106,29 @@ public class BaseTestFragment extends Fragment {
     protected int mCurrentTime = 0;
     private Timer mCountTimer;
 
+    protected int mFailThreshold = 1;
+    protected int mPoorThreshold = 3;
+
     private boolean isEnable = true;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     protected OnFragmentInteractionListener mListener;
+
+    protected enum RESULT {
+        GOOD,
+        FAIL,
+        POOR,
+        CANCEL
+    }
+    protected RESULT mResult = RESULT.GOOD;
+    protected HashMap<RESULT, ClipDrawable> sResultDrawableMap = new HashMap<>();
+    protected static HashMap<RESULT, String> sResultStringMap = new HashMap<>();
+
+    static {
+        sResultStringMap.put(RESULT.GOOD, "GOOD");
+        sResultStringMap.put(RESULT.FAIL, "FAIL");
+        sResultStringMap.put(RESULT.POOR, "POOR");
+        sResultStringMap.put(RESULT.CANCEL, "CANCEL");
+    }
 
     public BaseTestFragment() {
         // Required empty public constructor
@@ -136,12 +157,12 @@ public class BaseTestFragment extends Fragment {
         super.onCreate(savedInstanceState);
         TAG = getClass().getSimpleName();
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
         mActivity = this.getActivity();
+
+        sResultDrawableMap.put(RESULT.GOOD, new ClipDrawable(new ColorDrawable(Color.GREEN), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        sResultDrawableMap.put(RESULT.FAIL, new ClipDrawable(new ColorDrawable(Color.YELLOW), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        sResultDrawableMap.put(RESULT.POOR, new ClipDrawable(new ColorDrawable(Color.RED), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        sResultDrawableMap.put(RESULT.CANCEL, new ClipDrawable(new ColorDrawable(Color.GRAY), Gravity.LEFT, ClipDrawable.HORIZONTAL));
     }
 
     @Override
@@ -244,20 +265,15 @@ public class BaseTestFragment extends Fragment {
         if (isRunning()) {
             mStartBtn.setText(R.string.stop);
             mStartBtn.setSelected(true);
-            if (mCountType == COUNT_TYPE_NONE) {
-                mProgressbar.setVisibility(View.GONE);
-            } else {
-                mProgressbar.setProgress((mCountType == COUNT_TYPE_COUNT) ? (mCurrentCount * 100) / mMaxTestCount : (mCurrentTime * 100) / (mMaxTestTime * 3600));
-                mProgressbar.setVisibility(View.VISIBLE);
-            }
+            mProgressbar.setProgress((mCountType == COUNT_TYPE_COUNT) ? (mCurrentCount * 100) / mMaxTestCount : (mCurrentTime * 100) / (mMaxTestTime * 3600));
             mLogoIv.setVisibility(View.VISIBLE);
         } else {
             mStartBtn.setText(R.string.start);
             mStartBtn.setSelected(false);
-            mProgressbar.setVisibility(View.INVISIBLE);
-            updateTitleBg();
             mLogoIv.setVisibility(View.INVISIBLE);
         }
+
+        updateTitleBg();
     }
 
     protected void update() {
@@ -277,14 +293,17 @@ public class BaseTestFragment extends Fragment {
     }
 
     private void updateTitleBg() {
-        if (!isEnable()) {
-            mTitleContainer.setBackgroundColor(getResources().getColor(R.color.black_50));
-        } else if (mResult == RESULT_SUCCESS) {
-            mTitleContainer.setBackgroundColor(getResources().getColor(R.color.green));
-        } else if (mResult == RESULT_FAIL) {
-            mTitleContainer.setBackgroundColor(getResources().getColor(R.color.red));
+        if (isEnable()) {
+            if (mProgressbar.getVisibility() != View.VISIBLE) {
+                mProgressbar.setVisibility(View.VISIBLE);
+                mTitleContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
+            mProgressbar.setProgressDrawable(sResultDrawableMap.get(mResult));
         } else {
-            mTitleContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            if (mProgressbar.getVisibility() == View.VISIBLE) {
+                mProgressbar.setVisibility(View.INVISIBLE);
+                mTitleContainer.setBackgroundColor(getResources().getColor(R.color.black_50));
+            }
         }
     }
 
@@ -312,12 +331,22 @@ public class BaseTestFragment extends Fragment {
         mType = type;
     }
 
+    protected void setThreshold(int fail, int poor) {
+        if (poor > fail) {
+            mFailThreshold = fail;
+            mPoorThreshold = poor;
+        } else {
+            Log.w(TAG, "setThreshold, Poor threshold must be greater than the Fail threshold.");
+        }
+    }
+
     public void start() {
         Logger.t(TAG).d("Start %s", mCountType == COUNT_TYPE_COUNT ? mMaxTestCount : mMaxTestTime + "h");
 
         mState = STATE_RUNNING;
-        mResult = RESULT_CANCEL;
+        mResult = RESULT.GOOD;
         mCurrentCount = 0;
+        mFailureCount = 0;
         mCurrentTime = 0;
 
         if (mListener != null) {
@@ -336,7 +365,7 @@ public class BaseTestFragment extends Fragment {
                 public void run() {
                     if (!isRunning() || (mMaxTestTime != 0 && mCurrentTime >= mMaxTestTime * 3600)) {
                         Log.d(TAG, "CountTimer, " + TAG + " test finish!");
-                        mResult = RESULT_SUCCESS;
+                        mResult = RESULT.GOOD;
                         stop();
                     } else {
                         mCurrentTime++;
@@ -353,18 +382,13 @@ public class BaseTestFragment extends Fragment {
         String message;
         if (mCountType == COUNT_TYPE_COUNT) {
             message = mCurrentCount + "/" + mMaxTestCount;
-            if (mFailureCount > 0) {
-                mResult = RESULT_FAIL;
-            } else {
-                mResult = RESULT_SUCCESS;
-            }
         } else {
             int curHour = mCurrentTime / 3600;
             int curMin = (mCurrentTime % 3600) / 60;
             int curSec = (mCurrentTime % 3600) % 60;
             message = curHour + ":" + curMin + ":" + curSec + "/" + mMaxTestTime + ":0:0";
         }
-        Logger.t(TAG).d("Stop %s %s", message, mResult == RESULT_SUCCESS ? "SUCCESS" : (mResult == RESULT_CANCEL ? "CANCEL" : "FAIL"));
+        Logger.t(TAG).d("Stop %s %s", message, sResultStringMap.get(mResult));
 
         mState = STATE_STOP;
         if (mListener != null) {
@@ -388,6 +412,13 @@ public class BaseTestFragment extends Fragment {
 
     protected void incFailureCount() {
         mFailureCount++;
+        if (mFailureCount >= mPoorThreshold) {
+            mResult = RESULT.POOR;
+        } else if (mFailureCount >= mFailThreshold) {
+            mResult = RESULT.FAIL;
+        } else {
+            mResult = RESULT.GOOD;
+        }
     }
 
     public boolean isRunning() {
@@ -458,7 +489,7 @@ public class BaseTestFragment extends Fragment {
                 .setPositiveButton(R.string.stop, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mResult = RESULT_CANCEL;
+                        mResult = RESULT.CANCEL;
                         stop();
                     }
                 })

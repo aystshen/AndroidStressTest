@@ -143,8 +143,6 @@ public class RecoveryTestFragment extends BaseTestFragment {
     private void check() {
         if (isRunning()) {
             if (mMaxTestCount != 0 && mMaxTestCount <= mCurrentCount) {
-                Log.d(TAG, "run, Recovery test finish!");
-                mResult = RESULT_SUCCESS;
                 stop();
             } else {
                 mCountDownTime = mDelayTime; // DELAY_TIME/1000;

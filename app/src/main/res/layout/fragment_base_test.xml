@@ -47,9 +47,8 @@
                 android:layout_height="match_parent"
                 android:max="100"
                 android:minHeight="20dp"
-                android:progress="20"
-                android:progressDrawable="@drawable/progressbar"
-                android:visibility="invisible" />
+                android:progress="0"
+                android:progressDrawable="@drawable/progressbar" />
 
             <TextView
                 android:id="@+id/tv_title"

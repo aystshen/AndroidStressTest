@@ -156,7 +156,6 @@ public class RebootTestFragment extends BaseTestFragment {
 
             if (mMaxTestCount != 0 && mMaxTestCount <= mCurrentCount) {
                 Log.d(TAG, "run, Bluetooth test finish!");
-                mResult = RESULT_SUCCESS;
                 stop();
             } else {
                 mCountDownTime = mDelayTime; // DELAY_TIME/1000;

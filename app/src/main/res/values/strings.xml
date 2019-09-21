@@ -50,7 +50,7 @@
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">The Bluetooth test will continue to turn on, off, and scan nearby Bluetooth devices, support classic Bluetooth and low-power Bluetooth, and support automatic identification of test results.</string>
-    <string name="bt_test_retry">Cannot search for any Bluetooth device end test for 3 consecutive times</string>
+    <string name="bt_test_check_connect">Check the Bluetooth connection discrimination test result</string>
     <string name="bt_test_ble">Bluetooth Ble</string>
     <string name="bt_test_valid_device_tips">Please be sure to find at least one valid Bluetooth device nearby!</string>
     <string name="bt_test_bt_opening">OPENING</string>
@@ -75,7 +75,7 @@
 
     <!--WiFi Test-->
     <string name="wifi_test_intro">The WiFi test will continue to turn on, off, and scan nearby WiFi hotspots to support automatic identification of test results.</string>
-    <string name="wifi_test_retry">3 consecutive connection failures end the test</string>
+    <string name="wifi_test_check_connect">Check the WiFi connection discrimination test result</string>
     <string name="wifi_test_connect_tips">Please go to the system settings and open a valid WIFI hotspot!</string>
     <string name="wifi_test_connected">Connected</string>
     <string name="wifi_test_connecting">Connecting</string>

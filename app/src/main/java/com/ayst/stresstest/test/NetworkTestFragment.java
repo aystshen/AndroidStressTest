@@ -131,7 +131,6 @@ public class NetworkTestFragment extends BaseTestFragment {
 
                     if (lostCnt >= mRetryCount) {
                         incFailureCount();
-                        mResult = RESULT_FAIL;
                     }
 
                     incCurrentCount();

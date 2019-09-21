@@ -91,7 +91,7 @@ public class VideoTestFragment extends BaseTestFragment {
             mVideoContainer.setVisibility(View.INVISIBLE);
             mPathTv.setText(mPath);
             mContentContainer.setVisibility(View.VISIBLE);
-            if (mResult == RESULT_FAIL) {
+            if (mResult == RESULT.POOR || mResult == RESULT.FAIL) {
                 mErrorTv.setVisibility(View.VISIBLE);
             } else {
                 mErrorTv.setVisibility(View.GONE);
@@ -146,7 +146,7 @@ public class VideoTestFragment extends BaseTestFragment {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 mErrorTv.setText(getString(R.string.video_test_play_error) + "（" + what + "," + extra + ")");
-                mResult = RESULT_FAIL;
+                mResult = RESULT.POOR;
                 stop();
                 return false;
             }

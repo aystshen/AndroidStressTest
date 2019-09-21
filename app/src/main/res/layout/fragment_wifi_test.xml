@@ -33,11 +33,11 @@
             android:textColor="@color/black_70" />
 
         <CheckBox
-            android:id="@+id/chbox_check_ap"
+            android:id="@+id/chbox_check_connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/wifi_test_retry" />
+            android:text="@string/wifi_test_check_connect" />
 
     </LinearLayout>
 

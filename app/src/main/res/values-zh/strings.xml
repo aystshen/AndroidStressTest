@@ -50,7 +50,7 @@
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">蓝牙测试将持续打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙，支持自动判别测试结果。</string>
-    <string name="bt_test_retry">连续3次不能搜索到任何蓝牙设备结束测试</string>
+    <string name="bt_test_check_connect">通过检查蓝牙连接判别测试结果</string>
     <string name="bt_test_ble">蓝牙4.0+</string>
     <string name="bt_test_valid_device_tips">请确定附近至少能搜索到一个有效的蓝牙设备！</string>
     <string name="bt_test_bt_opening">蓝牙打开中</string>
@@ -75,7 +75,7 @@
 
     <!--WiFi Test-->
     <string name="wifi_test_intro">WiFi测试将持续打开、关闭、并扫描附近WiFi热点，支持自动判别测试结果。</string>
-    <string name="wifi_test_retry">连续3次连接失败结束测试</string>
+    <string name="wifi_test_check_connect">通过检查WiFi连接判别测试结果</string>
     <string name="wifi_test_connect_tips">请先到系统设置打开并连接一个有效的WIFI热点！</string>
     <string name="wifi_test_connected">已连接</string>
     <string name="wifi_test_connecting">连接中</string>

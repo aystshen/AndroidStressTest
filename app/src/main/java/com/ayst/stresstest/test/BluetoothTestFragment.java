@@ -63,7 +63,6 @@ public class BluetoothTestFragment extends BaseTestFragment {
     private CheckBox mCheckConnectCheckbox;
     private CheckBox mBleCheckbox;
 
-    private int mConnectCount;
     private boolean isCheckConnect = false;
     private boolean mScanning = true;
     private DeviceListAdapter mDeviceListAdapter = null;
@@ -136,7 +135,6 @@ public class BluetoothTestFragment extends BaseTestFragment {
             public void run() {
                 if (!isRunning() || (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount)) {
                     Log.d(TAG, "run, Bluetooth test finish!");
-                    mResult = RESULT_SUCCESS;
                     if (mBluetoothAdapter.getState() == mBluetoothAdapter.STATE_OFF) {
                         mBluetoothAdapter.enable();
                     }
@@ -148,13 +146,7 @@ public class BluetoothTestFragment extends BaseTestFragment {
                     } else if (mBluetoothAdapter.isEnabled()) {
                         if (isCheckConnect) {
                             if (!(mData.size() > 0)) {
-                                if (++mConnectCount > 2) {
-                                    mResult = RESULT_FAIL;
-                                    stop();
-                                    return;
-                                }
-                            } else {
-                                mConnectCount = 0;
+                                incFailureCount();
                             }
                         }
 

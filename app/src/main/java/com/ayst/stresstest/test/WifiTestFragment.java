@@ -63,7 +63,6 @@ public class WifiTestFragment extends BaseTestFragment {
     private NetworkInfo.DetailedState mLastState = null;
     private boolean mIsScanPause = false;
     private boolean isCheckConnect = false;
-    private int mConnectCount = 0;
 
     private ConnectivityManager mConnManager;
     private WifiManager mWifiManager;
@@ -100,7 +99,7 @@ public class WifiTestFragment extends BaseTestFragment {
         mSpinKitView = (SpinKitView) view.findViewById(R.id.spin_kit);
         mWifiLv = (ListView) view.findViewById(R.id.lv_wifi);
         mTipsTv = (TextView) view.findViewById(R.id.tv_tips);
-        mCheckAPCheckbox = (CheckBox) view.findViewById(R.id.chbox_check_ap);
+        mCheckAPCheckbox = (CheckBox) view.findViewById(R.id.chbox_check_connect);
 
         mCheckAPCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -165,8 +164,6 @@ public class WifiTestFragment extends BaseTestFragment {
             @Override
             public void run() {
                 if (!isRunning() || (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount)) {
-                    Log.d(TAG, "run, WIFI test finish!");
-                    mResult = RESULT_SUCCESS;
                     if (mWifiManager.getWifiState() == mWifiManager.WIFI_STATE_DISABLED) {
                         mWifiManager.setWifiEnabled(true);
                     }
@@ -178,13 +175,7 @@ public class WifiTestFragment extends BaseTestFragment {
                     } else if (mWifiManager.isWifiEnabled()) {
                         if (isCheckConnect) {
                             if (!isWifiConnected(mActivity)) {
-                                if (++mConnectCount > 2) {
-                                    mResult = RESULT_FAIL;
-                                    stop();
-                                    return;
-                                }
-                            } else {
-                                mConnectCount = 0;
+                                incFailureCount();
                             }
                         }
 

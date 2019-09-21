@@ -37,7 +37,7 @@
             android:id="@+id/chbox_check_connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bt_test_retry" />
+            android:text="@string/bt_test_check_connect" />
 
         <CheckBox
             android:id="@+id/chbox_ble"

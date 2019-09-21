@@ -329,8 +329,6 @@ public class CPUTestFragment extends BaseTestFragment {
                 if (isRunning()) {
                     update();
                 } else {
-                    Log.d(TAG, "run, CPU test finish!");
-                    mResult = RESULT_SUCCESS;
                     stop();
                 }
             }
@@ -385,7 +383,7 @@ public class CPUTestFragment extends BaseTestFragment {
                 .setPositiveButton(R.string.stop, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mResult = RESULT_FAIL;
+                        mResult = RESULT.POOR;
                         stop();
                     }
                 }).show();
@@ -399,7 +397,7 @@ public class CPUTestFragment extends BaseTestFragment {
             case MSG_RANDOM_SET_FREQ:
                 if (isRunning()) {
                     if (!setRandomFreq()) {
-                        mResult = RESULT_FAIL;
+                        mResult = RESULT.POOR;
                         stop();
                     }
                 }

@@ -208,8 +208,6 @@ public class SleepTestFragment extends BaseTestFragment {
 
             incCurrentCount();
             if (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount) {
-                Log.d(TAG, "run, Sleep test finish!");
-                mResult = RESULT_SUCCESS;
                 stop();
             } else {
                 setAlarm(mActivity, mWakeTime+mSleepTime, false);

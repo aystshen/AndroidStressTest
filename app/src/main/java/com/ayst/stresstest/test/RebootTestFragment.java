@@ -230,7 +230,7 @@ public class RebootTestFragment extends BaseTestFragment {
 
     private void reboot() {
         // save state
-        IncCurrentCount();
+        incCurrentCount();
         saveState();
 
         // 重启

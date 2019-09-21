@@ -160,7 +160,7 @@ public class BluetoothTestFragment extends BaseTestFragment {
 
                         mBluetoothAdapter.disable();
                         Log.d(TAG, "run, Bluetooth is opened, try close Bluetooth now!");
-                        IncCurrentCount();
+                        incCurrentCount();
                     }
                     mHandler.sendEmptyMessage(MSG_UPDATE);
                 }

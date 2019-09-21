@@ -190,7 +190,7 @@ public class WifiTestFragment extends BaseTestFragment {
 
                         mWifiManager.setWifiEnabled(false);
                         Log.d(TAG, "run, WIFI is opened, try close WIFI now!");
-                        IncCurrentCount();
+                        incCurrentCount();
                     }
                     mHandler.sendEmptyMessage(MSG_UPDATE);
                 }

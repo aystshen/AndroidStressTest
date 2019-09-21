@@ -60,7 +60,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 import androidx.legacy.app.FragmentCompat;
@@ -603,7 +602,7 @@ public class CameraTestFragment extends BaseTestFragment
 
                     showCameraSurfaceView(false);
 
-                    IncCurrentCount();
+                    incCurrentCount();
                     mHandler.sendEmptyMessage(MSG_UPDATE);
                 }
             }

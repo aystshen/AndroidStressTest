@@ -183,7 +183,7 @@ public class FlyModeTestFragment extends BaseTestFragment {
                     } else if (isAirplaneModeOn()) {
                         setAirplaneModeOn(false);
                         Log.d(TAG, "run, flymode is opened, try close flymode now!");
-                        IncCurrentCount();
+                        incCurrentCount();
                     }
                     mHandler.sendEmptyMessage(MSG_UPDATE);
                 }

@@ -230,7 +230,7 @@ public class RecoveryTestFragment extends BaseTestFragment {
 
     private void recovery() {
         // save state
-        IncCurrentCount();
+        incCurrentCount();
 
         if (saveState()) {
             // 恢复出厂设置

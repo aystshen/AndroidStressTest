@@ -37,8 +37,6 @@ import android.widget.Toast;
 
 import com.ayst.stresstest.R;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -208,7 +206,7 @@ public class SleepTestFragment extends BaseTestFragment {
             }
             mPowerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.FULL_WAKE_LOCK, "ScreenOnTimer").acquire(mWakeTime);
 
-            IncCurrentCount();
+            incCurrentCount();
             if (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount) {
                 Log.d(TAG, "run, Sleep test finish!");
                 mResult = RESULT_SUCCESS;

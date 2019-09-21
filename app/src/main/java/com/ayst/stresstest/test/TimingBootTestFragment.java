@@ -220,7 +220,7 @@ public class TimingBootTestFragment extends BaseTestFragment {
 
     private void powerOff() {
         // save state
-        IncCurrentCount();
+        incCurrentCount();
         saveState();
         setUptime(mStartupDelayTime);
 

@@ -22,12 +22,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
-import android.graphics.drawable.ClipDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,7 +31,6 @@ import androidx.annotation.StringRes;
 
 import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,11 +48,6 @@ import com.ayst.stresstest.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -393,7 +381,7 @@ public class BaseTestFragment extends Fragment {
         update();
     }
 
-    protected void IncCurrentCount() {
+    protected void incCurrentCount() {
         mCurrentCount++;
         Logger.t(TAG).d("Testing %d/%d", mCurrentCount, mMaxTestCount);
     }

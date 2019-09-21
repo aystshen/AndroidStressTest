@@ -134,7 +134,7 @@ public class NetworkTestFragment extends BaseTestFragment {
                         mResult = RESULT_FAIL;
                     }
 
-                    IncCurrentCount();
+                    incCurrentCount();
                     mHandler.sendEmptyMessage(MSG_UPDATE);
                 }
             }

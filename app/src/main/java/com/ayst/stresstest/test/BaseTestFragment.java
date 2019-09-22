@@ -89,11 +89,6 @@ public class BaseTestFragment extends Fragment {
     public static final int STATE_STOP = 2;
     protected int mState = STATE_STOP;
 
-    protected static final int RESULT_SUCCESS = 1;
-    protected static final int RESULT_FAIL = 2;
-    protected static final int RESULT_CANCEL = 3;
-
-
     protected static final int COUNT_TYPE_COUNT = 1;
     protected static final int COUNT_TYPE_TIME = 2;
     protected static final int COUNT_TYPE_NONE = 3;
@@ -120,7 +115,7 @@ public class BaseTestFragment extends Fragment {
         CANCEL
     }
     protected RESULT mResult = RESULT.GOOD;
-    protected HashMap<RESULT, ClipDrawable> sResultDrawableMap = new HashMap<>();
+    protected HashMap<RESULT, ClipDrawable> mResultDrawable = new HashMap<>();
     protected static HashMap<RESULT, String> sResultStringMap = new HashMap<>();
 
     static {
@@ -159,10 +154,10 @@ public class BaseTestFragment extends Fragment {
 
         mActivity = this.getActivity();
 
-        sResultDrawableMap.put(RESULT.GOOD, new ClipDrawable(new ColorDrawable(Color.GREEN), Gravity.LEFT, ClipDrawable.HORIZONTAL));
-        sResultDrawableMap.put(RESULT.FAIL, new ClipDrawable(new ColorDrawable(Color.YELLOW), Gravity.LEFT, ClipDrawable.HORIZONTAL));
-        sResultDrawableMap.put(RESULT.POOR, new ClipDrawable(new ColorDrawable(Color.RED), Gravity.LEFT, ClipDrawable.HORIZONTAL));
-        sResultDrawableMap.put(RESULT.CANCEL, new ClipDrawable(new ColorDrawable(Color.GRAY), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        mResultDrawable.put(RESULT.GOOD, new ClipDrawable(new ColorDrawable(Color.GREEN), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        mResultDrawable.put(RESULT.FAIL, new ClipDrawable(new ColorDrawable(Color.YELLOW), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        mResultDrawable.put(RESULT.POOR, new ClipDrawable(new ColorDrawable(Color.RED), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        mResultDrawable.put(RESULT.CANCEL, new ClipDrawable(new ColorDrawable(Color.GRAY), Gravity.LEFT, ClipDrawable.HORIZONTAL));
     }
 
     @Override
@@ -238,16 +233,18 @@ public class BaseTestFragment extends Fragment {
     }
 
     protected void updateImpl() {
+        // Updating test count.
         if (mCountType == COUNT_TYPE_COUNT) {
             if (mMaxTestCount > 0) {
                 mCountTv.setText(mCurrentCount + "/" + mMaxTestCount);
                 mCountTv.setVisibility(View.VISIBLE);
+
+                mFailureCountTv.setText(mFailureCount + "/" + mCurrentCount);
                 mFailureCountTv.setVisibility(View.VISIBLE);
             } else {
                 mCountTv.setVisibility(View.GONE);
                 mFailureCountTv.setVisibility(View.GONE);
             }
-            mFailureCountTv.setText(mFailureCount + "/" + mCurrentCount);
         } else if (mCountType == COUNT_TYPE_TIME) {
             if (mMaxTestTime > 0) {
                 int curHour = mCurrentTime / 3600;
@@ -260,20 +257,29 @@ public class BaseTestFragment extends Fragment {
             }
         } else {
             mCountTv.setVisibility(View.GONE);
+            mFailureCountTv.setVisibility(View.GONE);
         }
 
+        // Updating progressbar.
+        mProgressbar.setVisibility(isEnable() ? View.VISIBLE : View.INVISIBLE);
+        if (isRunning()) {
+            if (mProgressbar.getProgressDrawable() != mResultDrawable.get(mResult)) {
+                mProgressbar.setProgressDrawable(mResultDrawable.get(mResult));
+            }
+            mProgressbar.setProgress((mCountType == COUNT_TYPE_COUNT) ? (mCurrentCount * 100) / mMaxTestCount : (mCurrentTime * 100) / (mMaxTestTime * 3600));
+        }
+
+        // Updating other.
+        mStartBtn.setEnabled(isEnable());
         if (isRunning()) {
             mStartBtn.setText(R.string.stop);
             mStartBtn.setSelected(true);
-            mProgressbar.setProgress((mCountType == COUNT_TYPE_COUNT) ? (mCurrentCount * 100) / mMaxTestCount : (mCurrentTime * 100) / (mMaxTestTime * 3600));
             mLogoIv.setVisibility(View.VISIBLE);
         } else {
             mStartBtn.setText(R.string.start);
             mStartBtn.setSelected(false);
             mLogoIv.setVisibility(View.INVISIBLE);
         }
-
-        updateTitleBg();
     }
 
     protected void update() {
@@ -288,21 +294,6 @@ public class BaseTestFragment extends Fragment {
                 start();
             } else {
                 showSetMaxDialog();
-            }
-        }
-    }
-
-    private void updateTitleBg() {
-        if (isEnable()) {
-            if (mProgressbar.getVisibility() != View.VISIBLE) {
-                mProgressbar.setVisibility(View.VISIBLE);
-                mTitleContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-            }
-            mProgressbar.setProgressDrawable(sResultDrawableMap.get(mResult));
-        } else {
-            if (mProgressbar.getVisibility() == View.VISIBLE) {
-                mProgressbar.setVisibility(View.INVISIBLE);
-                mTitleContainer.setBackgroundColor(getResources().getColor(R.color.black_50));
             }
         }
     }
@@ -427,8 +418,7 @@ public class BaseTestFragment extends Fragment {
 
     public void setEnable(boolean enable) {
         isEnable = enable;
-        mStartBtn.setEnabled(enable);
-        updateTitleBg();
+        update();
     }
 
     public boolean isEnable() {

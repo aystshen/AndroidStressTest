@@ -18,7 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ayst.stresstest.test.BaseTestFragment">
+    tools:context="com.ayst.stresstest.test.base.BaseTestFragment">
 
     <ImageView
         android:id="@+id/iv_logo"

@@ -27,6 +27,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseCountTestWithTimerFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.util.NetworkUtils;
 
 import butterknife.BindView;

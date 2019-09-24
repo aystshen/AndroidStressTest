@@ -1,4 +1,4 @@
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.base;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -72,11 +72,11 @@ public abstract class BaseTimingTestFragment extends BaseTestFragment {
             mFailureCountTv.setVisibility(View.GONE);
         }
 
-        mProgressbar.setProgress((mCurrentTime * 100) / (mTargetTime * 3600));
+        mProgressbar.setProgress(mCurrentTime > 0 ? (mCurrentTime * 100) / mTargetTime : 0);
     }
 
     @Override
-    public void showSetMaxDialog() {
+    public void showSetTargetDialog() {
         final EditText editText = new EditText(mActivity);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         new AlertDialog.Builder(this.getActivity())

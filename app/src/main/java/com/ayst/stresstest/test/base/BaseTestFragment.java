@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.base;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -32,14 +32,12 @@ import android.os.Message;
 
 import androidx.annotation.StringRes;
 
-import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -47,95 +45,111 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 import com.ayst.stresstest.R;
 
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link BaseTestFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public abstract class BaseTestFragment extends Fragment {
-    protected String TAG = "BaseTestFragment";
+    protected static final String TAG = BaseTestFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
+    // Update UI
     protected static final int MSG_UPDATE = 1;
 
+    // Testing progress
     protected ProgressBar mProgressbar;
+
+    // The title view
     protected TextView mTitleTv;
+
+    // Tested count view
     protected TextView mCountTv;
+
+    // Failure count view
     protected TextView mFailureCountTv;
+
+    // Title container
     protected FrameLayout mTitleContainer;
+
+    // Content container
     protected RelativeLayout mContentContainer;
+
+    // Start button
     protected Button mStartBtn;
+
+    // Logo view
     protected ImageView mLogoIv;
+
+    // Full container
     protected RelativeLayout mFullContainer;
 
+    // Context
     protected Activity mActivity;
 
+    // Test item types
     protected TestType mType = TestType.TYPE_CPU_TEST;
 
-    public static final int STATE_RUNNING = 1;
-    public static final int STATE_STOP = 2;
-    protected int mState = STATE_STOP;
-
+    // Failure count, Record the number of failure
     protected int mFailureCount = 0;
 
+    // Fail threshold, Slight errors show yellow
     protected int mFailThreshold = 1;
+
+    // Poor threshold, Serious errors show red
     protected int mPoorThreshold = 3;
 
-    private boolean isEnable = true;
+    // Is available?
+    private boolean isAvailable = true;
 
+    // Notice the Activity state
     protected OnFragmentInteractionListener mListener;
 
-    protected enum RESULT {
+    // Running state
+    public class State {
+        public static final int RUNNING = 1;
+        public static final int STOP = 2;
+    }
+
+    // Current running state
+    protected int mState = State.STOP;
+
+    // The test results
+    protected enum Result {
         GOOD,
         FAIL,
         POOR,
         CANCEL
     }
-    protected RESULT mResult = RESULT.GOOD;
-    protected HashMap<RESULT, ClipDrawable> mResultDrawable = new HashMap<>();
-    protected static HashMap<RESULT, String> sResultStringMap = new HashMap<>();
+
+    // Current test result
+    protected Result mResult = Result.GOOD;
+
+    // The test results corresponding to the progress of color
+    protected HashMap<Result, ClipDrawable> mResultDrawable = new HashMap<>();
+
+    // The test results character
+    protected static HashMap<Result, String> sResultStringMap = new HashMap<>();
 
     static {
-        sResultStringMap.put(RESULT.GOOD, "GOOD");
-        sResultStringMap.put(RESULT.FAIL, "FAIL");
-        sResultStringMap.put(RESULT.POOR, "POOR");
-        sResultStringMap.put(RESULT.CANCEL, "CANCEL");
-    }
-
-    public BaseTestFragment() {
-        // Required empty public constructor
+        sResultStringMap.put(Result.GOOD, "GOOD");
+        sResultStringMap.put(Result.FAIL, "FAIL");
+        sResultStringMap.put(Result.POOR, "POOR");
+        sResultStringMap.put(Result.CANCEL, "CANCEL");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TAG = getClass().getSimpleName();
-
         mActivity = this.getActivity();
 
-        mResultDrawable.put(RESULT.GOOD, new ClipDrawable(new ColorDrawable(Color.GREEN), Gravity.LEFT, ClipDrawable.HORIZONTAL));
-        mResultDrawable.put(RESULT.FAIL, new ClipDrawable(new ColorDrawable(Color.YELLOW), Gravity.LEFT, ClipDrawable.HORIZONTAL));
-        mResultDrawable.put(RESULT.POOR, new ClipDrawable(new ColorDrawable(Color.RED), Gravity.LEFT, ClipDrawable.HORIZONTAL));
-        mResultDrawable.put(RESULT.CANCEL, new ClipDrawable(new ColorDrawable(Color.GRAY), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        mResultDrawable.put(Result.GOOD, new ClipDrawable(new ColorDrawable(Color.GREEN), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        mResultDrawable.put(Result.FAIL, new ClipDrawable(new ColorDrawable(Color.YELLOW), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        mResultDrawable.put(Result.POOR, new ClipDrawable(new ColorDrawable(Color.RED), Gravity.LEFT, ClipDrawable.HORIZONTAL));
+        mResultDrawable.put(Result.CANCEL, new ClipDrawable(new ColorDrawable(Color.GRAY), Gravity.LEFT, ClipDrawable.HORIZONTAL));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_base_test, container, false);
         initView(view);
         return view;
@@ -204,9 +218,12 @@ public abstract class BaseTestFragment extends Fragment {
         }
     }
 
+    /**
+     * Update the UI，Must be in the main thread
+     */
     protected void updateImpl() {
         // Updating progressbar.
-        mProgressbar.setVisibility(isEnable() ? View.VISIBLE : View.INVISIBLE);
+        mProgressbar.setVisibility(isAvailable() ? View.VISIBLE : View.INVISIBLE);
         if (isRunning()) {
             if (mProgressbar.getProgressDrawable() != mResultDrawable.get(mResult)) {
                 mProgressbar.setProgressDrawable(mResultDrawable.get(mResult));
@@ -214,7 +231,7 @@ public abstract class BaseTestFragment extends Fragment {
         }
 
         // Updating other.
-        mStartBtn.setEnabled(isEnable());
+        mStartBtn.setEnabled(isAvailable());
         if (isRunning()) {
             mStartBtn.setText(R.string.stop);
             mStartBtn.setSelected(true);
@@ -226,38 +243,69 @@ public abstract class BaseTestFragment extends Fragment {
         }
     }
 
+    /**
+     * To update the UI in the main thread
+     */
     protected void update() {
         mHandler.sendEmptyMessage(MSG_UPDATE);
     }
 
+    /**
+     * Click the start button
+     */
     protected void onStartClicked() {
         if (isRunning()) {
             showStopDialog();
         } else {
-            showSetMaxDialog();
+            showSetTargetDialog();
         }
     }
 
+    /**
+     * Set the title
+     * @param text String
+     */
     protected void setTitle(String text) {
         mTitleTv.setText(text);
     }
 
+    /**
+     * Set the title by resource id
+     * @param textId Resource id
+     */
     protected void setTitle(@StringRes int textId) {
         mTitleTv.setText(textId);
     }
 
+    /**
+     * Set the content
+     * @param contentView
+     */
     protected void setContentView(View contentView) {
         mContentContainer.addView(contentView);
     }
 
+    /**
+     * Set the full content
+     * @param contentView
+     */
     protected void setFullContentView(View contentView) {
         mFullContainer.addView(contentView);
     }
 
+    /**
+     * Set test type
+     * @param type TestType
+     */
     protected void setType(TestType type) {
         mType = type;
     }
 
+    /**
+     * Set failure threshold
+     * @param fail
+     * @param poor
+     */
     protected void setThreshold(int fail, int poor) {
         if (poor > fail) {
             mFailThreshold = fail;
@@ -267,16 +315,19 @@ public abstract class BaseTestFragment extends Fragment {
         }
     }
 
+    /**
+     * To start testing
+     */
     public void start() {
-        mState = STATE_RUNNING;
-        mResult = RESULT.GOOD;
+        mState = State.RUNNING;
+        mResult = Result.GOOD;
         mFailureCount = 0;
 
         if (mListener != null) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mListener.onFragmentInteraction(mType, STATE_RUNNING);
+                    mListener.onFragmentInteraction(mType, State.RUNNING);
                 }
             });
         }
@@ -284,13 +335,16 @@ public abstract class BaseTestFragment extends Fragment {
         update();
     }
 
+    /**
+     * To stop testing
+     */
     public void stop() {
-        mState = STATE_STOP;
+        mState = State.STOP;
         if (mListener != null) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mListener.onFragmentInteraction(mType, STATE_STOP);
+                    mListener.onFragmentInteraction(mType, State.STOP);
                 }
             });
         }
@@ -298,30 +352,50 @@ public abstract class BaseTestFragment extends Fragment {
         update();
     }
 
-    protected void incFailureCount() {
+    /**
+     * Mark a failure, the failure count
+     */
+    protected void markFailure() {
         mFailureCount++;
         if (mFailureCount >= mPoorThreshold) {
-            mResult = RESULT.POOR;
+            mResult = Result.POOR;
         } else if (mFailureCount >= mFailThreshold) {
-            mResult = RESULT.FAIL;
+            mResult = Result.FAIL;
         } else {
-            mResult = RESULT.GOOD;
+            mResult = Result.GOOD;
         }
-    }
-
-    public boolean isRunning() {
-        return mState == STATE_RUNNING;
-    }
-
-    public void setEnable(boolean enable) {
-        isEnable = enable;
         update();
     }
 
-    public boolean isEnable() {
-        return isEnable;
+    /**
+     * Is running?
+     * @return
+     */
+    public boolean isRunning() {
+        return mState == State.RUNNING;
     }
 
+    /**
+     * Set Available or unavailable
+     * @param available
+     */
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+        update();
+    }
+
+    /**
+     * Available or unavailable?
+     * @return
+     */
+    public boolean isAvailable() {
+        return isAvailable && isSupport();
+    }
+
+    /**
+     * Is support?
+     * @return
+     */
     public abstract boolean isSupport();
 
     @SuppressLint("HandlerLeak")
@@ -343,15 +417,20 @@ public abstract class BaseTestFragment extends Fragment {
 
     }
 
-    protected abstract void showSetMaxDialog();
+    /**
+     * Pop-up set test time or number of dialog
+     */
+    protected abstract void showSetTargetDialog();
 
+    /**
+     * Pop-up the stop dialog
+     */
     protected void showStopDialog() {
         new AlertDialog.Builder(this.getActivity())
                 .setMessage(R.string.stop_test_tips)
                 .setPositiveButton(R.string.stop, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mResult = RESULT.CANCEL;
                         stop();
                     }
                 })
@@ -374,13 +453,16 @@ public abstract class BaseTestFragment extends Fragment {
         }
     };
 
+    /**
+     * Shows a {@link Toast} on the UI thread.
+     * @param resId The message to show.
+     */
     protected void showToast(int resId) {
         showToast(getString(resId));
     }
 
     /**
      * Shows a {@link Toast} on the UI thread.
-     *
      * @param text The message to show.
      */
     protected void showToast(String text) {
@@ -391,17 +473,25 @@ public abstract class BaseTestFragment extends Fragment {
         mMessageHandler.sendMessage(message);
     }
 
+    /**
+     * Pop-up the error dialog
+     * @param strId
+     */
     protected void showErrorDialog(int strId) {
         showErrorDialog(getString(strId));
     }
 
+    /**
+     * Pop-up the error dialog
+     * @param msg
+     */
     protected void showErrorDialog(String msg) {
         new AlertDialog.Builder(this.getActivity())
                 .setMessage(msg)
                 .setPositiveButton(R.string.stop, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mResult = RESULT.POOR;
+                        mResult = Result.POOR;
                         stop();
                     }
                 }).show();
@@ -418,7 +508,6 @@ public abstract class BaseTestFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(TestType testType, int state);
     }
 }

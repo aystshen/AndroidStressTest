@@ -1,4 +1,4 @@
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.base;
 
 import android.util.Log;
 
@@ -8,7 +8,7 @@ import java.util.TimerTask;
 public abstract class BaseCountTestWithTimerFragment extends BaseCountTestFragment {
 
     // Default time period
-    private static final long DEFAULT_PERIOD = 10*1000; // Default 10s
+    private static final long DEFAULT_PERIOD = 10 * 1000; // Default 10s
 
     // Timer period
     private long mPeriod = DEFAULT_PERIOD;
@@ -22,11 +22,10 @@ public abstract class BaseCountTestWithTimerFragment extends BaseCountTestFragme
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (next()) {
-                    if (!testOnce()) {
-                        incFailureCount();
-                    }
+                if (!testOnce()) {
+                    markFailure();
                 }
+                next();
             }
         }, 1000, mPeriod);
 
@@ -42,8 +41,16 @@ public abstract class BaseCountTestWithTimerFragment extends BaseCountTestFragme
         super.stop();
     }
 
+    /**
+     * The actual execution of the test action, execute once
+     * @return
+     */
     protected abstract boolean testOnce();
 
+    /**
+     * Set the period of a test
+     * @param period
+     */
     protected void setPeriod(long period) {
         if (period > 1000) {
             mPeriod = period;

@@ -33,6 +33,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseTimingTestFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.util.ArmFreqUtils;
 import com.ayst.stresstest.view.DincondFontTextView;
 import com.github.lzyzsd.circleprogress.ArcProgress;
@@ -381,7 +383,7 @@ public class CPUTestFragment extends BaseTimingTestFragment {
             case MSG_RANDOM_SET_FREQ:
                 if (isRunning()) {
                     if (!setRandomFreq()) {
-                        incFailureCount();
+                        markFailure();
                     }
                 }
                 break;

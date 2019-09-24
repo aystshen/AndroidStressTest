@@ -40,6 +40,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseCountTestWithTimerFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.ArrayList;
@@ -148,7 +150,7 @@ public class BluetoothTestFragment extends BaseCountTestWithTimerFragment {
         } else {
             if (isCheckConnect) {
                 if (mData.isEmpty()) {
-                    incFailureCount();
+                    markFailure();
                 }
             }
             return mBluetoothAdapter.disable();

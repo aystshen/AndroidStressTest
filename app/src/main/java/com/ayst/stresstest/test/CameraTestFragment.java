@@ -66,6 +66,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.legacy.app.FragmentCompat;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseCountTestWithTimerFragment;
+import com.ayst.stresstest.test.base.TestType;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -315,7 +317,7 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
                 cameraDevice.close();
                 mCameraDevice = null;
             }
-            incFailureCount();
+            markFailure();
         }
 
     };
@@ -469,7 +471,7 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
                 mJpegResultQueue.remove(requestId);
                 finishedCaptureLocked();
             }
-            incFailureCount();
+            markFailure();
         }
 
     };
@@ -501,7 +503,6 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         if (null == mCameraManager) {
             Log.e(TAG, "This device doesn't support Camera2 API.");
-            setEnable(false);
             return;
         }
 
@@ -512,12 +513,9 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
                 mAdapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, cameraIds);
                 mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mCameraSpinner.setAdapter(mAdapter);
-            } else {
-                setEnable(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            setEnable(false);
         }
     }
 
@@ -679,7 +677,7 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
         } catch (Exception e) {
             e.printStackTrace();
             mCameraOpenCloseLock.release();
-            incFailureCount();
+            markFailure();
         }
     }
 
@@ -728,7 +726,7 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
      */
     private void showMissingPermissionError() {
         showToast(getString(R.string.request_permission));
-        setEnable(false);
+        setAvailable(false);
     }
 
     /**
@@ -840,13 +838,13 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
                         @Override
                         public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
                             Log.e(TAG, "Failed to configure camera.");
-                            incFailureCount();
+                            markFailure();
                         }
                     }, mBackgroundHandler
             );
         } catch (Exception e) {
             e.printStackTrace();
-            incFailureCount();
+            markFailure();
         }
     }
 
@@ -1072,7 +1070,7 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
                         mBackgroundHandler);
             } catch (Exception e) {
                 e.printStackTrace();
-                incFailureCount();
+                markFailure();
             }
         }
     }
@@ -1118,7 +1116,7 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
 
         } catch (Exception e) {
             e.printStackTrace();
-            incFailureCount();
+            markFailure();
         }
     }
 
@@ -1143,7 +1141,7 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
             }
         } catch (Exception e) {
             e.printStackTrace();
-            incFailureCount();
+            markFailure();
         }
     }
 

@@ -31,11 +31,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseCountTestFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.util.AppUtils;
 import com.ayst.stresstest.util.SPUtils;
 
@@ -76,7 +77,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mState = SPUtils.getInstance(mActivity).getData(SP_REBOOT_FLAG, STATE_STOP);
+        mState = SPUtils.getInstance(mActivity).getData(SP_REBOOT_FLAG, State.STOP);
         mCurrentCount = SPUtils.getInstance(mActivity).getData(SP_REBOOT_COUNT, 0);
         mTargetCount = SPUtils.getInstance(mActivity).getData(SP_REBOOT_MAX, 0);
         mDelayTime = SPUtils.getInstance(mActivity).getData(SP_REBOOT_DELAY, 5);
@@ -151,7 +152,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
                 if (!AppUtils.isExternalStorageMounted()) {
                     mSdStateTv.setText("Check SD: Unmount");
                     mSdStateTv.setVisibility(View.VISIBLE);
-                    incFailureCount();
+                    markFailure();
                 }
             }
 
@@ -159,7 +160,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
                 if (!AppUtils.isConnNetWork(mActivity)) {
                     mWifiStateTv.setText("Check WIFI: Disconnect");
                     mWifiStateTv.setVisibility(View.VISIBLE);
-                    incFailureCount();
+                    markFailure();
                 }
             }
 

@@ -36,6 +36,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseCountTestFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.util.SPUtils;
 
 import java.lang.reflect.Method;
@@ -81,10 +83,10 @@ public class TimingBootTestFragment extends BaseCountTestFragment {
             mMcuService = IMcuService.Stub.asInterface(binder);
         } catch (Exception e) {
             e.printStackTrace();
-            setEnable(false);
+            setAvailable(false);
         }
 
-        mState = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_FLAG, STATE_STOP);
+        mState = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_FLAG, State.STOP);
         mCurrentCount = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_COUNT, 0);
         mTargetCount = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_MAX, 0);
         mShutdownDelayTime = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_SHUTDOWN_DELAY, 60);
@@ -128,7 +130,7 @@ public class TimingBootTestFragment extends BaseCountTestFragment {
             Log.d(TAG, "check, diffTime=" + diffTime);
             if (Math.abs(diffTime) > TIME_DEVIATION) {
                 Log.d(TAG, "check, Timing boot test failed!");
-                incFailureCount();
+                markFailure();
             }
 
             if (next()) {
@@ -145,11 +147,13 @@ public class TimingBootTestFragment extends BaseCountTestFragment {
             Toast.makeText(mActivity, R.string.timing_boot_test_set_shutdown_delay_tips, Toast.LENGTH_SHORT).show();
             return;
         }
+
         String startupStr = mStartupDelayEdt.getText().toString();
         if (TextUtils.isEmpty(startupStr)) {
             Toast.makeText(mActivity, R.string.timing_boot_test_set_startup_delay_tips, Toast.LENGTH_SHORT).show();
             return;
         }
+
         mShutdownDelayTime = Integer.parseInt(shutdownStr);
         mStartupDelayTime = Integer.parseInt(startupStr);
 

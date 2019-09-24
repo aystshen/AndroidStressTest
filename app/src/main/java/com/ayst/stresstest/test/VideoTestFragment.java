@@ -30,12 +30,13 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseTimingTestFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.util.FileUtils;
 
 import butterknife.BindView;
@@ -104,7 +105,7 @@ public class VideoTestFragment extends BaseTimingTestFragment {
             mVideoContainer.setVisibility(View.INVISIBLE);
             mPathTv.setText(mPath);
             mContentContainer.setVisibility(View.VISIBLE);
-            if (mResult == RESULT.POOR || mResult == RESULT.FAIL) {
+            if (mResult == Result.POOR || mResult == Result.FAIL) {
                 mErrorTv.setVisibility(View.VISIBLE);
             } else {
                 mErrorTv.setVisibility(View.GONE);
@@ -145,30 +146,37 @@ public class VideoTestFragment extends BaseTimingTestFragment {
             showToast(R.string.video_test_select_file_tips);
             return false;
         }
+
         MediaController mc = new MediaController(mActivity);
         mVideoView.setMediaController(mc);
         //videoView.setVideoURI(Uri.parse(""));
         mVideoView.setVideoPath(mPath);
+
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             public void onCompletion(MediaPlayer mp) {
                 Log.d(TAG, "onCompletion, restart");
                 mVideoView.start();
             }
         });
+
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
             }
         });
+
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 mErrorTv.setText(getString(R.string.video_test_play_error) + "（" + what + "," + extra + ")");
-                mResult = RESULT.POOR;
-                stop();
+
+                markFailure();
+                mVideoView.start();
+
                 return false;
             }
         });
+
         mVideoView.requestFocus();
         mVideoView.start();
 

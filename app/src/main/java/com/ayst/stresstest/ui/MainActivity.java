@@ -25,7 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import com.ayst.stresstest.R;
-import com.ayst.stresstest.test.BaseTestFragment;
+import com.ayst.stresstest.test.base.BaseTestFragment;
 import com.ayst.stresstest.test.BluetoothTestFragment;
 import com.ayst.stresstest.test.CPUTestFragment;
 import com.ayst.stresstest.test.CameraTestFragment;
@@ -35,7 +35,7 @@ import com.ayst.stresstest.test.NetworkTestFragment;
 import com.ayst.stresstest.test.RebootTestFragment;
 import com.ayst.stresstest.test.RecoveryTestFragment;
 import com.ayst.stresstest.test.SleepTestFragment;
-import com.ayst.stresstest.test.TestType;
+import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.test.TimingBootTestFragment;
 import com.ayst.stresstest.test.VideoTestFragment;
 import com.ayst.stresstest.test.WifiTestFragment;
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
             if (mTestFragments.get(i).isRunning()) {
                 TestType[] mutexTests = mMutexTests.get(i);
                 for (TestType mutexTest : mutexTests) {
-                    mTestFragments.get(mutexTest.ordinal()).setEnable(false);
+                    mTestFragments.get(mutexTest.ordinal()).setAvailable(false);
                 }
             }
         }
@@ -132,10 +132,10 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
     @Override
     public void onFragmentInteraction(TestType testType, int state) {
         Log.d(TAG, "onFragmentInteraction, testType=" + testType + ", state=" + state);
-        if (BaseTestFragment.STATE_RUNNING == state) {
+        if (BaseTestFragment.State.RUNNING == state) {
             TestType[] mutexTests = mMutexTests.get(testType.ordinal());
             for (TestType mutexTest : mutexTests) {
-                mTestFragments.get(mutexTest.ordinal()).setEnable(false);
+                mTestFragments.get(mutexTest.ordinal()).setAvailable(false);
             }
         } else {
             for (int i = 0; i < mTestFragments.size(); i++) {
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
                     }
                 }
                 if (j == mutexTests.length) {
-                    mTestFragments.get(i).setEnable(true);
+                    mTestFragments.get(i).setAvailable(true);
                 }
             }
         }

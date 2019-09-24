@@ -38,23 +38,22 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseCountTestWithTimerFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class FlyModeTestFragment extends BaseCountTestWithTimerFragment {
-    private final static int SCAN_PERIOD = 3000;
+
     @BindView(R.id.chbox_check_wifi)
     CheckBox mCheckWiFiCheckbox;
     @BindView(R.id.container_settings)
@@ -185,7 +184,7 @@ public class FlyModeTestFragment extends BaseCountTestWithTimerFragment {
         } else {
             if (isCheckConnect) {
                 if (!isWifiConnected(mActivity)) {
-                    incFailureCount();
+                    markFailure();
                 }
             }
             setAirplaneModeOn(true);

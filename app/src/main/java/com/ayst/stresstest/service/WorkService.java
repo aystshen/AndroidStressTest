@@ -33,7 +33,7 @@ import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
 import com.github.mjdev.libaums.fs.UsbFileInputStream;
-import com.ayst.stresstest.test.BaseTestFragment;
+import com.ayst.stresstest.test.base.BaseTestFragment;
 import com.ayst.stresstest.test.RecoveryTestFragment;
 import com.ayst.stresstest.ui.MainActivity;
 
@@ -182,7 +182,7 @@ public class WorkService extends Service {
             reader = new BufferedReader(isr);
 
             String tempString = null;
-            int state = BaseTestFragment.STATE_STOP;
+            int state = BaseTestFragment.State.STOP;
             int curCount = 0;
             int maxCount = 0;
             boolean isWipeAll = false;
@@ -214,7 +214,7 @@ public class WorkService extends Service {
             is.close();
             isr.close();
 
-            if (state == BaseTestFragment.STATE_RUNNING) {
+            if (state == BaseTestFragment.State.RUNNING) {
                 Log.d(TAG, "checkRecoveryState, start Recovery Test");
                 Intent startIntent = new Intent(this, MainActivity.class);
                 startIntent.putExtra(RecoveryTestFragment.EXTRA_RECOVERY_FLAG, state);

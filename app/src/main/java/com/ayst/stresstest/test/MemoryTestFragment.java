@@ -29,6 +29,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseTimingTestFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.util.MemOpUtils;
 import com.ayst.stresstest.view.DincondFontTextView;
 import com.github.lzyzsd.circleprogress.ArcProgress;

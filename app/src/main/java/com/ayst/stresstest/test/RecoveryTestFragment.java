@@ -38,6 +38,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseCountTestFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.util.AppUtils;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
@@ -83,7 +85,7 @@ public class RecoveryTestFragment extends BaseCountTestFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mState = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_FLAG, STATE_STOP);
+        mState = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_FLAG, State.STOP);
         mCurrentCount = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_COUNT, 0);
         mTargetCount = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_MAX, 0);
         mIsWipeAll = mActivity.getIntent().getBooleanExtra(EXTRA_RECOVERY_WIPE_ALL, false);

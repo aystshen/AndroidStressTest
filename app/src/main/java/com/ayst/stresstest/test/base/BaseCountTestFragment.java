@@ -1,4 +1,4 @@
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.base;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,9 +9,6 @@ import android.widget.EditText;
 
 import com.ayst.stresstest.R;
 import com.orhanobut.logger.Logger;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public abstract class BaseCountTestFragment extends BaseTestFragment {
 
@@ -24,6 +21,7 @@ public abstract class BaseCountTestFragment extends BaseTestFragment {
     @Override
     public void start() {
         Logger.t(TAG).d("Start %s times", mTargetCount);
+
         mCurrentCount = 0;
 
         super.start();
@@ -51,22 +49,26 @@ public abstract class BaseCountTestFragment extends BaseTestFragment {
             mFailureCountTv.setVisibility(View.GONE);
         }
 
-        mProgressbar.setProgress((mCurrentCount * 100) / mTargetCount);
+        mProgressbar.setProgress(mCurrentCount > 0 ? (mCurrentCount * 100) / mTargetCount : 0);
     }
 
     protected boolean next() {
         if (!isRunning() || mCurrentCount >= mTargetCount) {
             stop();
+
             return false;
         } else {
             mCurrentCount++;
+            update();
+
             Logger.t(TAG).d("Testing %d/%d", mCurrentCount, mTargetCount);
+
             return true;
         }
     }
 
     @Override
-    protected void showSetMaxDialog() {
+    protected void showSetTargetDialog() {
         final EditText editText = new EditText(mActivity);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         new AlertDialog.Builder(this.getActivity())

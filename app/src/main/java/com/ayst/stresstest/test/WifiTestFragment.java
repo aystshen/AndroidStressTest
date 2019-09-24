@@ -37,31 +37,42 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseCountTestWithTimerFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
-public class WifiTestFragment extends BaseTestFragment {
-    private final static int SCAN_PERIOD = 3000; //扫描wifi周期 <3s>
+import androidx.annotation.Nullable;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-    private LinearLayout mSettingsContainer;
-    private FrameLayout mRunningContainer;
-    private SpinKitView mSpinKitView;
-    private TextView mTipsTv;
-    private CheckBox mCheckAPCheckbox;
-    private ListView mWifiLv;
+public class WifiTestFragment extends BaseCountTestWithTimerFragment {
+
+    @BindView(R.id.chbox_check_connect)
+    CheckBox mCheckConnectCheckbox;
+    @BindView(R.id.container_settings)
+    LinearLayout mSettingsContainer;
+    @BindView(R.id.lv_wifi)
+    ListView mWifiLv;
+    @BindView(R.id.spin_kit)
+    SpinKitView mSpinKitView;
+    @BindView(R.id.tv_tips)
+    TextView mTipsTv;
+    @BindView(R.id.container_running)
+    FrameLayout mRunningContainer;
+    Unbinder unbinder;
 
     private WifiInfo mWifiInfo;
     private List<ScanResult> mWifiList;
     private WifiReceiver mWifiReceiver;
     private WifiListAdapter mWifiAdapter;
     private NetworkInfo.DetailedState mLastState = null;
-    private boolean mIsScanPause = false;
+
     private boolean isCheckConnect = false;
 
     private ConnectivityManager mConnManager;
@@ -85,33 +96,33 @@ public class WifiTestFragment extends BaseTestFragment {
         setContentView(contentView);
 
         setTitle(R.string.wifi_test);
-        setCountType(COUNT_TYPE_COUNT);
         setType(TestType.TYPE_WIFI_TEST);
 
-        initView(contentView);
-
+        unbinder = ButterKnife.bind(this, contentView);
         return view;
     }
 
-    private void initView(View view) {
-        mSettingsContainer = (LinearLayout) view.findViewById(R.id.container_settings);
-        mRunningContainer = (FrameLayout) view.findViewById(R.id.container_running);
-        mSpinKitView = (SpinKitView) view.findViewById(R.id.spin_kit);
-        mWifiLv = (ListView) view.findViewById(R.id.lv_wifi);
-        mTipsTv = (TextView) view.findViewById(R.id.tv_tips);
-        mCheckAPCheckbox = (CheckBox) view.findViewById(R.id.chbox_check_connect);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        mCheckAPCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mCheckConnectCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     if (!mWifiManager.isWifiEnabled() || !isWifiConnected(mActivity)) {
-                        Toast.makeText(mActivity, R.string.wifi_test_connect_tips, Toast.LENGTH_SHORT).show();
+                        showToast(R.string.wifi_test_connect_tips);
                         buttonView.setChecked(false);
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -136,9 +147,7 @@ public class WifiTestFragment extends BaseTestFragment {
 
     @Override
     public void start() {
-        super.start();
-
-        isCheckConnect = mCheckAPCheckbox.isChecked();
+        isCheckConnect = mCheckConnectCheckbox.isChecked();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
@@ -149,8 +158,6 @@ public class WifiTestFragment extends BaseTestFragment {
         filter.addAction(WifiManager.RSSI_CHANGED_ACTION);
         mActivity.registerReceiver(mWifiReceiver, filter);
 
-        //mHandler.postDelayed(mRunnable, SCAN_PERIOD);
-
         if (mWifiManager.isWifiEnabled()) {
             scan();
             mWifiList = mWifiManager.getScanResults();
@@ -159,46 +166,47 @@ public class WifiTestFragment extends BaseTestFragment {
         mWifiAdapter = new WifiListAdapter(mActivity, mWifiList, mWifiInfo);
         mWifiLv.setAdapter(mWifiAdapter);
 
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!isRunning() || (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount)) {
-                    if (mWifiManager.getWifiState() == mWifiManager.WIFI_STATE_DISABLED) {
-                        mWifiManager.setWifiEnabled(true);
-                    }
-                    stop();
-                } else {
-                    if (!mWifiManager.isWifiEnabled()) {
-                        mWifiManager.setWifiEnabled(true);
-                        Log.d(TAG, "run, WIFI is closed, try open WIFI now!");
-                    } else if (mWifiManager.isWifiEnabled()) {
-                        if (isCheckConnect) {
-                            if (!isWifiConnected(mActivity)) {
-                                incFailureCount();
-                            }
-                        }
-
-                        mWifiManager.setWifiEnabled(false);
-                        Log.d(TAG, "run, WIFI is opened, try close WIFI now!");
-                        incCurrentCount();
-                    }
-                    mHandler.sendEmptyMessage(MSG_UPDATE);
-                }
-            }
-        }, 15000, 15000);
+        super.start();
     }
 
     @Override
     public void stop() {
-        super.stop();
+        if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
+            mWifiManager.setWifiEnabled(true);
+        }
 
         if (mTimer != null) {
             mTimer.cancel();
         }
 
-        mHandler.removeCallbacks(mRunnable);
         mActivity.unregisterReceiver(mWifiReceiver);
+
+        super.stop();
+    }
+
+    @Override
+    public boolean isSupport() {
+        return (null != mWifiManager);
+    }
+
+    @Override
+    protected boolean testOnce() {
+        if (mWifiManager.isWifiEnabled()) {
+            if (isCheckConnect) {
+                if (!isWifiConnected(mActivity)) {
+                    markFailure();
+                }
+            }
+
+            mWifiManager.setWifiEnabled(false);
+            Log.d(TAG, "run, WIFI is opened, try close WIFI now.");
+
+        } else {
+            mWifiManager.setWifiEnabled(true);
+            Log.d(TAG, "run, WIFI is closed, try open WIFI now.");
+        }
+
+        return true;
     }
 
     class WifiReceiver extends BroadcastReceiver {
@@ -206,16 +214,6 @@ public class WifiTestFragment extends BaseTestFragment {
             handleEvent(context, intent);
         }
     }
-
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mWifiManager.isWifiEnabled() && !mIsScanPause) {
-                scan();
-            }
-            mHandler.postDelayed(this, SCAN_PERIOD);
-        }
-    };
 
     private void handleEvent(Context context, Intent intent) {
         String action = intent.getAction();
@@ -284,13 +282,6 @@ public class WifiTestFragment extends BaseTestFragment {
 
             if (state == NetworkInfo.DetailedState.CONNECTED) {
                 mWifiManager.saveConfiguration();
-            }
-
-            if (state == NetworkInfo.DetailedState.OBTAINING_IPADDR
-                    || state == NetworkInfo.DetailedState.CONNECTING) {
-                mIsScanPause = true;
-            } else {
-                mIsScanPause = false;
             }
         }
     }

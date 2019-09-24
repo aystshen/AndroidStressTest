@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.base;
 
 /**
  * Created by Bob Shen on 2017/11/13.

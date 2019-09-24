@@ -33,11 +33,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.base.BaseCountTestFragment;
+import com.ayst.stresstest.test.base.TestType;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

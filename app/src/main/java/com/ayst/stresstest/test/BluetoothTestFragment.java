@@ -38,38 +38,39 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.ybq.android.spinkit.SpinKitView;
 import com.ayst.stresstest.R;
+import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class BluetoothTestFragment extends BaseTestFragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-    private final static int TIME_OUT = 30000;
+public class BluetoothTestFragment extends BaseCountTestWithTimerFragment {
 
-    private static final int REQUEST_ENABLE_BT = 1;
-    // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 10000;
-
-    private LinearLayout mSettingsContainer;
-    private FrameLayout mRunningContainer;
-    private SpinKitView mSpinKitView;
-    private ListView mDeviceLv = null;
-    private TextView mTipsTv;
-    private CheckBox mCheckConnectCheckbox;
-    private CheckBox mBleCheckbox;
+    @BindView(R.id.chbox_check_devices)
+    CheckBox mCheckDevicesCheckbox;
+    @BindView(R.id.chbox_ble)
+    CheckBox mBleCheckbox;
+    @BindView(R.id.container_settings)
+    LinearLayout mSettingsContainer;
+    @BindView(R.id.lv_device)
+    ListView mDeviceLv;
+    @BindView(R.id.spin_kit)
+    SpinKitView mSpinKitView;
+    @BindView(R.id.tv_tips)
+    TextView mTipsTv;
+    @BindView(R.id.container_running)
+    FrameLayout mRunningContainer;
+    Unbinder unbinder;
 
     private boolean isCheckConnect = false;
     private boolean mScanning = true;
     private DeviceListAdapter mDeviceListAdapter = null;
     private ArrayList<ScanResult> mData = new ArrayList<ScanResult>();
-
     private BluetoothAdapter mBluetoothAdapter;
-    private Timer mTimer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,41 +88,33 @@ public class BluetoothTestFragment extends BaseTestFragment {
         setContentView(contentView);
 
         setTitle(R.string.bluetooth_test);
-        setCountType(COUNT_TYPE_COUNT);
         setType(TestType.TYPE_BT_TEST);
 
+        unbinder = ButterKnife.bind(this, contentView);
         return view;
     }
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        mSettingsContainer = (LinearLayout) view.findViewById(R.id.container_settings);
-        mRunningContainer = (FrameLayout) view.findViewById(R.id.container_running);
-        mSpinKitView = (SpinKitView) view.findViewById(R.id.spin_kit);
-        mDeviceLv = (ListView) view.findViewById(R.id.lv_device);
-        mTipsTv = (TextView) view.findViewById(R.id.tv_tips);
-        mBleCheckbox = (CheckBox) view.findViewById(R.id.chbox_ble);
-        mCheckConnectCheckbox = (CheckBox) view.findViewById(R.id.chbox_check_connect);
-
-        mCheckConnectCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mCheckDevicesCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Toast.makeText(mActivity, R.string.bt_test_valid_device_tips, Toast.LENGTH_SHORT).show();
+                    showToast(R.string.bt_test_valid_device_tips);
                 }
             }
         });
+    }
 
-        if (null == mBluetoothAdapter) {
-            setEnable(false);
-        }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
     public void start() {
-        super.start();
-
-        isCheckConnect = mCheckConnectCheckbox.isChecked();
+        isCheckConnect = mCheckDevicesCheckbox.isChecked();
 
         mActivity.registerReceiver(mBTStateChangeReceiver, makeFilter());
 
@@ -132,47 +125,34 @@ public class BluetoothTestFragment extends BaseTestFragment {
             scan(true);
         }
 
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!isRunning() || (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount)) {
-                    Log.d(TAG, "run, Bluetooth test finish!");
-                    if (mBluetoothAdapter.getState() == mBluetoothAdapter.STATE_OFF) {
-                        mBluetoothAdapter.enable();
-                    }
-                    stop();
-                } else {
-                    if (!mBluetoothAdapter.isEnabled()) {
-                        mBluetoothAdapter.enable();
-                        Log.d(TAG, "run, Bluetooth is closed, try open Bluetooth now!");
-                    } else if (mBluetoothAdapter.isEnabled()) {
-                        if (isCheckConnect) {
-                            if (!(mData.size() > 0)) {
-                                incFailureCount();
-                            }
-                        }
-
-                        mBluetoothAdapter.disable();
-                        Log.d(TAG, "run, Bluetooth is opened, try close Bluetooth now!");
-                        incCurrentCount();
-                    }
-                    mHandler.sendEmptyMessage(MSG_UPDATE);
-                }
-            }
-        }, 15000, 15000);
+        super.start();
     }
 
     @Override
     public void stop() {
-        super.stop();
-
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
         scan(false);
-
         mActivity.unregisterReceiver(mBTStateChangeReceiver);
+
+        super.stop();
+    }
+
+    @Override
+    public boolean isSupport() {
+        return (null != mBluetoothAdapter);
+    }
+
+    @Override
+    protected boolean testOnce() {
+        if (!mBluetoothAdapter.isEnabled()) {
+            return mBluetoothAdapter.enable();
+        } else {
+            if (isCheckConnect) {
+                if (mData.isEmpty()) {
+                    incFailureCount();
+                }
+            }
+            return mBluetoothAdapter.disable();
+        }
     }
 
     @Override
@@ -356,7 +336,7 @@ public class BluetoothTestFragment extends BaseTestFragment {
     private class DeviceListAdapter extends BaseAdapter {
         private LayoutInflater mInflater = null;
 
-        public DeviceListAdapter() {
+        DeviceListAdapter() {
             mInflater = LayoutInflater.from(mActivity);
         }
 
@@ -403,7 +383,7 @@ public class BluetoothTestFragment extends BaseTestFragment {
             return view;
         }
 
-        public final class ViewHolder {
+        final class ViewHolder {
             private TextView mMainTv = null;
             private TextView mSubOneTv = null;
             private TextView mSubTwoTv = null;

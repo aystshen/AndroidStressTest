@@ -26,35 +26,48 @@ import android.view.ViewGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.github.lzyzsd.circleprogress.ArcProgress;
+import androidx.annotation.Nullable;
+
 import com.ayst.stresstest.R;
 import com.ayst.stresstest.util.MemOpUtils;
+import com.ayst.stresstest.view.DincondFontTextView;
+import com.github.lzyzsd.circleprogress.ArcProgress;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MemoryTestFragment extends BaseTestFragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-    private ArcProgress mArcProgress;
-    private TextView mFreeMemoryTv;
-    private TextView mTotalMemoryTv;
-    private Spinner mFillPercentSpinner;
+public class MemoryTestFragment extends BaseTimingTestFragment {
+
+    @BindView(R.id.arc_progress)
+    ArcProgress mArcProgress;
+    @BindView(R.id.tv_free_memory)
+    DincondFontTextView mFreeMemoryTv;
+    @BindView(R.id.tv_total_memory)
+    TextView mTotalMemoryTv;
+    @BindView(R.id.spinner_percent)
+    Spinner mFillPercentSpinner;
+    Unbinder unbinder;
+
+    private static int[] sMemoryFillPercentList = null;
 
     private int mFreeMemory;
     private int mUsedMemory;
     private int mTotalMemory;
     private int mFillPercent;
-    private static int[] sMemoryFillPercentList = null;
     private int mCountDown = 30;
 
-    private Timer mTimer;
+    private Timer mMallocMemoryTimer;
     private ActivityManager mAm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAm = (ActivityManager)mActivity.getSystemService(Context.ACTIVITY_SERVICE);
+        mAm = (ActivityManager) mActivity.getSystemService(Context.ACTIVITY_SERVICE);
         sMemoryFillPercentList = this.getResources().getIntArray(R.array.memory_fill_percent);
     }
 
@@ -64,39 +77,47 @@ public class MemoryTestFragment extends BaseTestFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setTitle(R.string.memory_test);
-        setCountType(COUNT_TYPE_TIME);
         setType(TestType.TYPE_MEMORY_TEST);
 
         View contentView = inflater.inflate(R.layout.fragment_memory_test, container, false);
         setContentView(contentView);
 
-        initView(view);
-
+        unbinder = ButterKnife.bind(this, contentView);
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mFillPercentSpinner.setSelection(2); // Default 80%
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
     @Override
     public void onStart() {
         super.onStart();
 
         mCountDown = 30;
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
+        mMallocMemoryTimer = new Timer();
+        mMallocMemoryTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                update();
-
                 if (isRunning()) {
-                    if ((mUsedMemory*100)/mTotalMemory < mFillPercent) {
+                    if ((mUsedMemory * 100) / mTotalMemory < mFillPercent) {
                         MemOpUtils.malloc(10);
                     } else {
                         if (mCountDown > 0) {
                             mCountDown--;
                         } else {
-                            if (mTimer != null) {
-                                mTimer.cancel();
-                                mTimer = null;
+                            if (mMallocMemoryTimer != null) {
+                                mMallocMemoryTimer.cancel();
+                                mMallocMemoryTimer = null;
                             }
                         }
                     }
@@ -109,18 +130,10 @@ public class MemoryTestFragment extends BaseTestFragment {
     public void onStop() {
         super.onStop();
 
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer = null;
+        if (mMallocMemoryTimer != null) {
+            mMallocMemoryTimer.cancel();
+            mMallocMemoryTimer = null;
         }
-    }
-
-    private void initView(View view) {
-        mArcProgress = (ArcProgress) view.findViewById(R.id.arc_progress);
-        mFreeMemoryTv = (TextView) view.findViewById(R.id.tv_free_memory);
-        mTotalMemoryTv = (TextView) view.findViewById(R.id.tv_total_memory);
-        mFillPercentSpinner = (Spinner) view.findViewById(R.id.spinner_percent);
-        mFillPercentSpinner.setSelection(2); // 默认80%
     }
 
     @Override
@@ -129,25 +142,28 @@ public class MemoryTestFragment extends BaseTestFragment {
 
         MemoryInfo systemMemInfo = new MemoryInfo();
         mAm.getMemoryInfo(systemMemInfo);
-        mFreeMemory = (int) systemMemInfo.availMem/1024/1024;
-        mTotalMemory = (int) systemMemInfo.totalMem/1024/1024;
+        mFreeMemory = (int) systemMemInfo.availMem / 1024 / 1024;
+        mTotalMemory = (int) systemMemInfo.totalMem / 1024 / 1024;
+
         mUsedMemory = mTotalMemory - mFreeMemory;
-        int progress = (mUsedMemory*100)/mTotalMemory;
+        int progress = (mUsedMemory * 100) / mTotalMemory;
         mArcProgress.setProgress(progress);
         if (progress >= 70) {
             mArcProgress.setFinishedStrokeColor(getResources().getColor(R.color.red));
-        } else if (progress >= 50){
+        } else if (progress >= 50) {
             mArcProgress.setFinishedStrokeColor(getResources().getColor(R.color.orange));
         } else {
             mArcProgress.setFinishedStrokeColor(getResources().getColor(R.color.colorAccent));
         }
-        mFreeMemoryTv.setText(mFreeMemory+"");
-        mTotalMemoryTv.setText(mTotalMemory+"");
+
+        mFreeMemoryTv.setText(mFreeMemory + "");
+        mTotalMemoryTv.setText(mTotalMemory + "");
     }
 
     @Override
     public void start() {
         mFillPercent = sMemoryFillPercentList[mFillPercentSpinner.getSelectedItemPosition()];
+
         super.start();
     }
 
@@ -156,5 +172,10 @@ public class MemoryTestFragment extends BaseTestFragment {
         MemOpUtils.free();
 
         super.stop();
+    }
+
+    @Override
+    public boolean isSupport() {
+        return true;
     }
 }

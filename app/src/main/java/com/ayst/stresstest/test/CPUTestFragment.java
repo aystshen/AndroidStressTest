@@ -16,9 +16,6 @@
 
 package com.ayst.stresstest.test;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Process;
@@ -32,11 +29,13 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.lzyzsd.circleprogress.ArcProgress;
+import androidx.annotation.Nullable;
+
 import com.ayst.stresstest.R;
 import com.ayst.stresstest.util.ArmFreqUtils;
+import com.ayst.stresstest.view.DincondFontTextView;
+import com.github.lzyzsd.circleprogress.ArcProgress;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -47,22 +46,43 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CPUTestFragment extends BaseTestFragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+public class CPUTestFragment extends BaseTimingTestFragment {
     private static final int MSG_RANDOM_SET_FREQ = 1001;
 
-    private LinearLayout mSettingsContainer;
-    private LinearLayout mRunningContainer;
-    private CheckBox mFixFreqCheckbox;
-    private CheckBox mRandomFreqCheckbox;
-    private CheckBox mCpuRateCheckbox;
-    private Spinner mFreqSpinner;
-    private Spinner mIntervalSpinner;
-    private Spinner mCpuRateSpinner;
-    private TextView mCurPercentTv;
-    private ArcProgress mCurPercentPgr;
-    private TextView mCurFreqTv;
-    private ArcProgress mCurFreqPgr;
-    private TextView mMaxFreqTv;
+    @BindView(R.id.chbox_fix_freq)
+    CheckBox mFixFreqCheckbox;
+    @BindView(R.id.spinner_freq)
+    Spinner mFreqSpinner;
+    @BindView(R.id.chbox_random_freq)
+    CheckBox mRandomFreqCheckbox;
+    @BindView(R.id.spinner_interval)
+    Spinner mIntervalSpinner;
+    @BindView(R.id.chbox_cpu_rate)
+    CheckBox mCpuRateCheckbox;
+    @BindView(R.id.spinner_cpu_rate)
+    Spinner mCpuRateSpinner;
+    @BindView(R.id.container_settings)
+    LinearLayout mSettingsContainer;
+    @BindView(R.id.pgr_percent)
+    ArcProgress mCurPercentPgr;
+    @BindView(R.id.tv_percent)
+    DincondFontTextView mCurPercentTv;
+    @BindView(R.id.pgr_freq)
+    ArcProgress mCurFreqPgr;
+    @BindView(R.id.tv_freq)
+    DincondFontTextView mCurFreqTv;
+    @BindView(R.id.tv_freq_max)
+    TextView mMaxFreqTv;
+    @BindView(R.id.container_running)
+    LinearLayout mRunningContainer;
+    Unbinder unbinder;
+
+    private static int[] sIntervalTimeList = null;
+    private static int[] sCpuRateList = null;
 
     private static final int DELAY_CNT_BASE = 10000;
     private static final int DELAY_CNT_STEP = 500;
@@ -76,9 +96,7 @@ public class CPUTestFragment extends BaseTestFragment {
 
     protected ArrayAdapter<String> mAdapter;
     private List<String> mFreqs = null;
-    private static int[] mIntervalTimeList = null;
-    private static int[] mCpuRateList = null;
-    private Timer mTimer;
+
     private Timer mRandomFreqTimer;
     private ReaderThread mCpuReaderThread;
 
@@ -86,8 +104,8 @@ public class CPUTestFragment extends BaseTestFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mIntervalTimeList = this.getResources().getIntArray(R.array.cpu_random_freq_interval);
-        mCpuRateList = this.getResources().getIntArray(R.array.cpu_rate);
+        sIntervalTimeList = this.getResources().getIntArray(R.array.cpu_random_freq_interval);
+        sCpuRateList = this.getResources().getIntArray(R.array.cpu_rate);
     }
 
     @Override
@@ -96,42 +114,31 @@ public class CPUTestFragment extends BaseTestFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setTitle(R.string.cpu_test);
-        setCountType(COUNT_TYPE_TIME);
         setType(TestType.TYPE_CPU_TEST);
 
         View contentView = inflater.inflate(R.layout.fragment_cpu_test, container, false);
         setContentView(contentView);
 
-        initView(contentView);
-
+        unbinder = ButterKnife.bind(this, contentView);
         return view;
     }
 
-    private void initView(View view) {
-        mSettingsContainer = (LinearLayout) view.findViewById(R.id.container_settings);
-        mRunningContainer = (LinearLayout) view.findViewById(R.id.container_running);
-        mFixFreqCheckbox = (CheckBox) view.findViewById(R.id.chbox_fix_freq);
-        mRandomFreqCheckbox = (CheckBox) view.findViewById(R.id.chbox_random_freq);
-        mCpuRateCheckbox = (CheckBox) view.findViewById(R.id.chbox_cpu_rate);
-        mFreqSpinner = (Spinner) view.findViewById(R.id.spinner_freq);
-        mIntervalSpinner = (Spinner) view.findViewById(R.id.spinner_interval);
-        mCpuRateSpinner = (Spinner) view.findViewById(R.id.spinner_cpu_rate);
-        mCurFreqTv = (TextView) view.findViewById(R.id.tv_freq);
-        mCurFreqPgr = (ArcProgress) view.findViewById(R.id.pgr_freq);
-        mMaxFreqTv = (TextView) view.findViewById(R.id.tv_freq_max);
-        mCurPercentTv = (TextView) view.findViewById(R.id.tv_percent);
-        mCurPercentPgr = (ArcProgress) view.findViewById(R.id.pgr_percent);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mFreqs = ArmFreqUtils.getCpuAvailableFreqs();
         if (!mFreqs.isEmpty()) {
             String str = mFreqs.get(mFreqs.size() - 1);
             mMaxFreq = Integer.valueOf(str.split("M")[0]);
+
+            mAdapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, mFreqs);
+            mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mFreqSpinner.setAdapter(mAdapter);
         } else {
-            mStartBtn.setEnabled(false);
+            mRandomFreqCheckbox.setEnabled(false);
+            mFixFreqCheckbox.setEnabled(false);
         }
-        mAdapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, mFreqs);
-        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mFreqSpinner.setAdapter(mAdapter);
 
         mFixFreqCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -164,6 +171,12 @@ public class CPUTestFragment extends BaseTestFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
     protected void updateImpl() {
         super.updateImpl();
 
@@ -171,30 +184,30 @@ public class CPUTestFragment extends BaseTestFragment {
             mSettingsContainer.setVisibility(View.INVISIBLE);
             mRunningContainer.setVisibility(View.VISIBLE);
 
-            mMaxFreqTv.setText(mMaxFreq+"");
+            mMaxFreqTv.setText(mMaxFreq + "");
 
-            mCurPercentTv.setText(mCurPercent+"");
+            mCurPercentTv.setText(mCurPercent + "");
             mCurPercentPgr.setProgress(mCurPercent);
             if (mCurPercent >= 70) {
                 mCurPercentPgr.setFinishedStrokeColor(getResources().getColor(R.color.red));
-            } else if (mCurPercent >= 50){
+            } else if (mCurPercent >= 50) {
                 mCurPercentPgr.setFinishedStrokeColor(getResources().getColor(R.color.orange));
             } else {
                 mCurPercentPgr.setFinishedStrokeColor(getResources().getColor(R.color.colorAccent));
             }
 
-            if (mCurPercent > (mCpuRate+5)) {
+            if (mCurPercent > (mCpuRate + 5)) {
                 mDelayCnt -= DELAY_CNT_STEP;
-            } else if (mCurPercent < (mCpuRate-5)) {
+            } else if (mCurPercent < (mCpuRate - 5)) {
                 mDelayCnt += DELAY_CNT_STEP;
             }
 
-            int progress = mCurFreq*100/mMaxFreq;
-            mCurFreqTv.setText(mCurFreq+"");
+            int progress = mCurFreq * 100 / mMaxFreq;
+            mCurFreqTv.setText(mCurFreq + "");
             mCurFreqPgr.setProgress(progress);
             if (progress >= 70) {
                 mCurFreqPgr.setFinishedStrokeColor(getResources().getColor(R.color.red));
-            } else if (progress >= 50){
+            } else if (progress >= 50) {
                 mCurFreqPgr.setFinishedStrokeColor(getResources().getColor(R.color.orange));
             } else {
                 mCurFreqPgr.setFinishedStrokeColor(getResources().getColor(R.color.colorAccent));
@@ -211,7 +224,7 @@ public class CPUTestFragment extends BaseTestFragment {
             if (!mFixFreqCheckbox.isChecked()
                     && !mRandomFreqCheckbox.isChecked()
                     && !mCpuRateCheckbox.isChecked()) {
-                Toast.makeText(mActivity, R.string.at_least_one_test_case, Toast.LENGTH_SHORT).show();
+                showToast(R.string.at_least_one_test_case);
                 return;
             }
         }
@@ -220,21 +233,18 @@ public class CPUTestFragment extends BaseTestFragment {
 
     @Override
     public void start() {
-        if (mFreqs.isEmpty()) {
-            Toast.makeText(mActivity, R.string.cpu_test_not_support, Toast.LENGTH_SHORT).show();
-            return;
+        // Check Governor mode when CPU frequency test
+        if (mFixFreqCheckbox.isChecked() || mRandomFreqCheckbox.isChecked()) {
+            try {
+                ArmFreqUtils.setCpuGovernorMode(ArmFreqUtils.USERSPACE_MODE);
+            } catch (Exception e) {
+                Log.e(TAG, "start, setCpuGovernorMode failed: " + e.getMessage());
+                showErrorDialog(R.string.cpu_test_userspace_mode_not_support);
+                return;
+            }
         }
 
-        super.start();
-
-        try {
-            ArmFreqUtils.setCpuGovernorMode(ArmFreqUtils.USERSPACE_MODE);
-        } catch (Exception e) {
-            Log.e(TAG, "start, setCpuGovernorMode failed: " + e.getMessage());
-            showErrorDialog(R.string.cpu_test_userspace_mode_not_support);
-            return;
-        }
-
+        // Fixed frequency test
         if (mFixFreqCheckbox.isChecked()) {
             String str = mFreqs.get(mFreqSpinner.getSelectedItemPosition());
             mCurFreq = Integer.valueOf(str.split("M")[0]);
@@ -246,9 +256,11 @@ public class CPUTestFragment extends BaseTestFragment {
                 showErrorDialog(R.string.cpu_test_set_freq_fail);
                 return;
             }
+
+        // Frequency conversion test
         } else if (mRandomFreqCheckbox.isChecked()) {
             int index = mIntervalSpinner.getSelectedItemPosition();
-            if (index < 0 || index >= mIntervalTimeList.length) {
+            if (index < 0 || index >= sIntervalTimeList.length) {
                 Log.e(TAG, "start, index invalid");
                 showErrorDialog(R.string.cpu_test_invalid_interval);
                 return;
@@ -259,7 +271,7 @@ public class CPUTestFragment extends BaseTestFragment {
                 return;
             }
 
-            int intervalTime = mIntervalTimeList[index];
+            int intervalTime = sIntervalTimeList[index];
 
             mRandomFreqTimer = new Timer();
             mRandomFreqTimer.schedule(new TimerTask() {
@@ -270,6 +282,8 @@ public class CPUTestFragment extends BaseTestFragment {
                     }
                 }
             }, intervalTime, intervalTime);
+
+        // CPU usage test
         } else {
             String str = mFreqs.get(mFreqs.size() - 1);
             mCurFreq = Integer.valueOf(str.split("M")[0]);
@@ -278,20 +292,21 @@ public class CPUTestFragment extends BaseTestFragment {
                 ArmFreqUtils.setCpuFreq(value);
             } catch (Exception e) {
                 Log.e(TAG, "start, setCpuFreq failed: " + e.getMessage());
-                Toast.makeText(mActivity, R.string.cpu_test_set_freq_fail, Toast.LENGTH_SHORT).show();
+                showToast(R.string.cpu_test_set_freq_fail);
             }
 
             int index = mCpuRateSpinner.getSelectedItemPosition();
-            if (index < 0 || index >= mCpuRateList.length) {
-                Log.e(TAG, "start, mCpuRateList index invalid");
+            if (index < 0 || index >= sCpuRateList.length) {
+                Log.e(TAG, "start, sCpuRateList index invalid");
                 showErrorDialog(R.string.cpu_test_invalid_percent);
                 return;
             }
+
             int cores = ArmFreqUtils.getNumberOfCPUCores();
-            mCpuRate = mCpuRateList[index];
+            mCpuRate = sCpuRateList[index];
             Log.d(TAG, "start, CPU cores: " + cores + ", CPU rate: " + mCpuRate);
 
-            for (int i=0; i<cores; i++) {
+            for (int i = 0; i < cores; i++) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -312,48 +327,33 @@ public class CPUTestFragment extends BaseTestFragment {
             }
         }
 
-        // 启动读CPU占用率线程
-//        if(Build.VERSION.SDK_INT >= 26) {
-//            Log.w(TAG, "start, Read CPU state is not supported on Android O and above and will be no-op.");
-//        } else {
-            if(this.mCpuReaderThread == null) {
-                this.mCpuReaderThread = new ReaderThread();
-                this.mCpuReaderThread.start();
-            }
-//        }
+        if (this.mCpuReaderThread == null) {
+            this.mCpuReaderThread = new ReaderThread();
+            this.mCpuReaderThread.start();
+        }
 
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (isRunning()) {
-                    update();
-                } else {
-                    stop();
-                }
-            }
-        }, 1000, 1000);
+        super.start();
     }
 
     @Override
     public void stop() {
-        super.stop();
-
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
-
-        if(this.mCpuReaderThread != null) {
+        if (this.mCpuReaderThread != null) {
             this.mCpuReaderThread.cancel();
 
             try {
                 this.mCpuReaderThread.join();
-            } catch (InterruptedException var2) {
-                ;
+            } catch (InterruptedException ignored) {
             }
 
             this.mCpuReaderThread = null;
         }
+
+        super.stop();
+    }
+
+    @Override
+    public boolean isSupport() {
+        return !mFreqs.isEmpty();
     }
 
     private boolean setRandomFreq() {
@@ -369,24 +369,8 @@ public class CPUTestFragment extends BaseTestFragment {
             Log.e(TAG, "setRandomFreq, set random freq failed: " + e.getMessage());
             return false;
         }
-        mCurFreqTv.setText(mCurFreq+"");
+        mCurFreqTv.setText(mCurFreq + "");
         return true;
-    }
-
-    public void showErrorDialog(int strId) {
-        showErrorDialog(getString(strId));
-    }
-
-    public void showErrorDialog(String msg) {
-        new AlertDialog.Builder(this.getActivity())
-                .setMessage(msg)
-                .setPositiveButton(R.string.stop, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mResult = RESULT.POOR;
-                        stop();
-                    }
-                }).show();
     }
 
     @Override
@@ -397,17 +381,15 @@ public class CPUTestFragment extends BaseTestFragment {
             case MSG_RANDOM_SET_FREQ:
                 if (isRunning()) {
                     if (!setRandomFreq()) {
-                        mResult = RESULT.POOR;
-                        stop();
+                        incFailureCount();
                     }
                 }
-
                 break;
         }
     }
 
     private static double getPercentInRange(double percent) {
-        return percent > 100.0D?100.0D:(percent < 0.0D?0.0D:percent);
+        return percent > 100.0D ? 100.0D : (percent < 0.0D ? 0.0D : percent);
     }
 
     private class ReaderThread extends Thread {
@@ -424,8 +406,8 @@ public class CPUTestFragment extends BaseTestFragment {
         }
 
         public void run() {
-            while(true) {
-                if(!Thread.currentThread().isInterrupted()) {
+            while (true) {
+                if (!Thread.currentThread().isInterrupted()) {
                     this.openCpuReaders();
                     this.read();
                     this.closeCpuReaders();
@@ -448,7 +430,7 @@ public class CPUTestFragment extends BaseTestFragment {
         }
 
         private void openCpuReaders() {
-            if(this.totalCpuReader == null) {
+            if (this.totalCpuReader == null) {
                 try {
                     this.totalCpuReader = new BufferedReader(new FileReader("/proc/stat"));
                 } catch (FileNotFoundException var3) {
@@ -456,7 +438,7 @@ public class CPUTestFragment extends BaseTestFragment {
                 }
             }
 
-            if(this.myPidCpuReader == null) {
+            if (this.myPidCpuReader == null) {
                 try {
                     this.myPidCpuReader = new BufferedReader(new FileReader("/proc/" + Process.myPid() + "/stat"));
                 } catch (FileNotFoundException var2) {
@@ -468,7 +450,7 @@ public class CPUTestFragment extends BaseTestFragment {
 
         private void read() {
             String[] cpuData;
-            if(this.totalCpuReader != null) {
+            if (this.totalCpuReader != null) {
                 try {
                     cpuData = this.totalCpuReader.readLine().split("[ ]+", 9);
                     this.jiffies = Long.parseLong(cpuData[1]) + Long.parseLong(cpuData[2]) + Long.parseLong(cpuData[3]);
@@ -478,7 +460,7 @@ public class CPUTestFragment extends BaseTestFragment {
                 }
             }
 
-            if(this.myPidCpuReader != null) {
+            if (this.myPidCpuReader != null) {
                 try {
                     cpuData = this.myPidCpuReader.readLine().split("[ ]+", 18);
                     this.jiffiesMyPid = Long.parseLong(cpuData[13]) + Long.parseLong(cpuData[14]) + Long.parseLong(cpuData[15]) + Long.parseLong(cpuData[16]);
@@ -487,12 +469,12 @@ public class CPUTestFragment extends BaseTestFragment {
                 }
             }
 
-            if(this.totalJiffiesBefore > 0L) {
+            if (this.totalJiffiesBefore > 0L) {
                 long totalDiff = this.totalJiffies - this.totalJiffiesBefore;
                 long jiffiesDiff = this.jiffies - this.jiffiesBefore;
                 long jiffiesMyPidDiff = this.jiffiesMyPid - this.jiffiesMyPidBefore;
-                mCurPercent = (int) getPercentInRange((double)(100.0F * (float)jiffiesDiff / (float)totalDiff));
-                mCurMyPidPercent = (int) getPercentInRange((double)(100.0F * (float)jiffiesMyPidDiff / (float)totalDiff));
+                mCurPercent = (int) getPercentInRange((double) (100.0F * (float) jiffiesDiff / (float) totalDiff));
+                mCurMyPidPercent = (int) getPercentInRange((double) (100.0F * (float) jiffiesMyPidDiff / (float) totalDiff));
             }
 
             this.totalJiffiesBefore = this.totalJiffies;
@@ -502,17 +484,16 @@ public class CPUTestFragment extends BaseTestFragment {
 
         private void closeCpuReaders() {
             try {
-                if(this.totalCpuReader != null) {
+                if (this.totalCpuReader != null) {
                     this.totalCpuReader.close();
                     this.totalCpuReader = null;
                 }
 
-                if(this.myPidCpuReader != null) {
+                if (this.myPidCpuReader != null) {
                     this.myPidCpuReader.close();
                     this.myPidCpuReader = null;
                 }
-            } catch (IOException var2) {
-                ;
+            } catch (IOException ignored) {
             }
 
         }

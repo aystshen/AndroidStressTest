@@ -50,7 +50,7 @@
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">蓝牙测试将持续打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙，支持自动判别测试结果。</string>
-    <string name="bt_test_check_connect">通过检查蓝牙连接判别测试结果</string>
+    <string name="bt_test_check_devices">扫描列表无蓝牙设备标记为失败</string>
     <string name="bt_test_ble">蓝牙4.0+</string>
     <string name="bt_test_valid_device_tips">请确定附近至少能搜索到一个有效的蓝牙设备！</string>
     <string name="bt_test_bt_opening">蓝牙打开中</string>
@@ -113,10 +113,11 @@
     <string name="reboot_test_insert_sdcard_tips">请插入SD卡!</string>
     <string name="reboot_test_connect_wifi_tips">请连接WIFI!</string>
     <string name="reboot_test_reboot_tips">确定要重启测试吗？确定后将在 %d 秒后重启系统。</string>
+    <string name="reboot_test_delay_empty">请设置延时！</string>
 
     <!--Fly Mode Test-->
     <string name="fly_mode_test_intro">飞行模式测试将持续打开、关闭飞行模式，同时扫描附近WiFi热点，支持自动判别测试结果。</string>
-    <string name="fly_mode_test_check_wifi">通过WIFI连接状态判断结果</string>
+    <string name="fly_mode_test_check_wifi">通过WiFi连接状态判断结果</string>
     <string name="fly_mode_test_close">关闭飞行模式</string>
     <string name="fly_mode_test_open">打开飞行模式</string>
     <string name="fly_mode_test_opened">飞行模式已打开</string>

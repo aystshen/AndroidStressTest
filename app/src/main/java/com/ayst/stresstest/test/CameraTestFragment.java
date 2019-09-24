@@ -30,6 +30,7 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
@@ -80,8 +81,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -91,7 +90,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class CameraTestFragment extends BaseTestFragment
+public class CameraTestFragment extends BaseCountTestWithTimerFragment
         implements FragmentCompat.OnRequestPermissionsResultCallback {
 
     /**
@@ -269,8 +268,8 @@ public class CameraTestFragment extends BaseTestFragment
      */
     private long mCaptureTimer;
 
-    private Timer mTimer;
     protected ArrayAdapter<String> mAdapter;
+
     private CameraManager mCameraManager;
 
     //**********************************************************************************************
@@ -487,8 +486,8 @@ public class CameraTestFragment extends BaseTestFragment
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setTitle(R.string.camera_test);
-        setCountType(COUNT_TYPE_COUNT);
         setType(TestType.TYPE_CAMERA_TEST);
+        setPeriod(15*1000);
 
         View contentView = inflater.inflate(R.layout.fragment_camera_test, container, false);
         setContentView(contentView);
@@ -578,43 +577,45 @@ public class CameraTestFragment extends BaseTestFragment
     @Override
     public void start() {
         super.start();
-
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!isRunning() || (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount)) {
-                    stop();
-                } else if (null != mBackgroundThread) {
-                    showCameraSurfaceView(true);
-
-                    try {
-                        openCamera();
-                        Thread.sleep(5000);
-
-                        takePicture();
-                        Thread.sleep(5000);
-
-                        closeCamera();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    showCameraSurfaceView(false);
-
-                    incCurrentCount();
-                    mHandler.sendEmptyMessage(MSG_UPDATE);
-                }
-            }
-        }, 15000, 15000);
     }
 
     @Override
     public void stop() {
         super.stop();
-        if (mTimer != null) {
-            mTimer.cancel();
+    }
+
+    @Override
+    public boolean isSupport() {
+        if (null != mCameraManager) {
+            try {
+                return (mCameraManager.getCameraIdList().length > 0);
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
         }
+        return false;
+    }
+
+    @Override
+    protected boolean testOnce() {
+        if (null != mBackgroundThread) {
+            showCameraSurfaceView(true);
+
+            try {
+                openCamera();
+                Thread.sleep(5000);
+
+                takePicture();
+                Thread.sleep(5000);
+
+                closeCamera();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            showCameraSurfaceView(false);
+        }
+        return true;
     }
 
     private void showCameraSurfaceView(final boolean show) {

@@ -57,32 +57,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/network_test_retry_count"
-                android:textColor="@color/black"/>
-
-            <EditText
-                android:id="@+id/edt_retry_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="50dp"
-                android:padding="5dp"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLines="1"
-                android:text="3"/>
-
-        </LinearLayout>
-
     </LinearLayout>
 
 </FrameLayout>

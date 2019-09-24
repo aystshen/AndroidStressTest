@@ -40,6 +40,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.ayst.stresstest.R;
 import com.github.ybq.android.spinkit.SpinKitView;
 
@@ -47,27 +49,35 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class FlyModeTestFragment extends BaseTestFragment {
-    private final static int SCAN_PERIOD = 3000; //扫描wifi周期 <3s>
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-    private LinearLayout mSettingsContainer;
-    private FrameLayout mRunningContainer;
-    private SpinKitView mSpinKitView;
-    private TextView mTipsTv;
-    private CheckBox mCheckAPCheckbox;
-    private ListView mWifiLv;
+public class FlyModeTestFragment extends BaseCountTestWithTimerFragment {
+    private final static int SCAN_PERIOD = 3000;
+    @BindView(R.id.chbox_check_wifi)
+    CheckBox mCheckWiFiCheckbox;
+    @BindView(R.id.container_settings)
+    LinearLayout mSettingsContainer;
+    @BindView(R.id.lv_wifi)
+    ListView mWifiLv;
+    @BindView(R.id.spin_kit)
+    SpinKitView mSpinKitView;
+    @BindView(R.id.tv_tips)
+    TextView mTipsTv;
+    @BindView(R.id.container_running)
+    FrameLayout mRunningContainer;
+    Unbinder unbinder;
 
     private WifiInfo mWifiInfo;
     private List<ScanResult> mWifiList;
     private WifiReceiver mWifiReceiver;
     private WifiListAdapter mWifiAdapter;
     private NetworkInfo.DetailedState mLastState = null;
-    private boolean mIsScanPause = false;
     private boolean isCheckConnect = false;
 
     private ConnectivityManager mConnManager;
     private WifiManager mWifiManager;
-    private Timer mTimer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,33 +96,33 @@ public class FlyModeTestFragment extends BaseTestFragment {
         setContentView(contentView);
 
         setTitle(R.string.fly_mode_test);
-        setCountType(COUNT_TYPE_COUNT);
         setType(TestType.TYPE_FLY_MODE_TEST);
 
-        initView(contentView);
-
+        unbinder = ButterKnife.bind(this, contentView);
         return view;
     }
 
-    private void initView(View view) {
-        mSettingsContainer = (LinearLayout) view.findViewById(R.id.container_settings);
-        mRunningContainer = (FrameLayout) view.findViewById(R.id.container_running);
-        mSpinKitView = (SpinKitView) view.findViewById(R.id.spin_kit);
-        mWifiLv = (ListView) view.findViewById(R.id.lv_wifi);
-        mTipsTv = (TextView) view.findViewById(R.id.tv_tips);
-        mCheckAPCheckbox = (CheckBox) view.findViewById(R.id.chbox_check_connect);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        mCheckAPCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mCheckWiFiCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton view, boolean isChecked) {
                 if (isChecked) {
                     if (!mWifiManager.isWifiEnabled() || !isWifiConnected(mActivity)) {
-                        Toast.makeText(mActivity, R.string.wifi_test_connect_tips, Toast.LENGTH_SHORT).show();
-                        buttonView.setChecked(false);
+                        showToast(R.string.wifi_test_connect_tips);
+                        view.setChecked(false);
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -130,9 +140,7 @@ public class FlyModeTestFragment extends BaseTestFragment {
 
     @Override
     public void start() {
-        super.start();
-
-        isCheckConnect = mCheckAPCheckbox.isChecked();
+        isCheckConnect = mCheckWiFiCheckbox.isChecked();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
@@ -143,8 +151,6 @@ public class FlyModeTestFragment extends BaseTestFragment {
         filter.addAction(WifiManager.RSSI_CHANGED_ACTION);
         mActivity.registerReceiver(mWifiReceiver, filter);
 
-        //mHandler.postDelayed(mRunnable, SCAN_PERIOD);
-
         if (mWifiManager.isWifiEnabled()) {
             scan();
             mWifiList = mWifiManager.getScanResults();
@@ -153,46 +159,38 @@ public class FlyModeTestFragment extends BaseTestFragment {
         mWifiAdapter = new WifiListAdapter(mActivity, mWifiList, mWifiInfo);
         mWifiLv.setAdapter(mWifiAdapter);
 
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!isRunning() || (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount)) {
-                    Log.d(TAG, "run, WIFI test finish!");
-                    if (isAirplaneModeOn()) {
-                        setAirplaneModeOn(false);
-                    }
-                    stop();
-                } else {
-                    if (!isAirplaneModeOn()) {
-                        if (isCheckConnect) {
-                            if (!isWifiConnected(mActivity)) {
-                                incFailureCount();
-                            }
-                        }
-                        setAirplaneModeOn(true);
-                        Log.d(TAG, "run, flymode is closed, try open flymode now!");
-                    } else if (isAirplaneModeOn()) {
-                        setAirplaneModeOn(false);
-                        Log.d(TAG, "run, flymode is opened, try close flymode now!");
-                        incCurrentCount();
-                    }
-                    mHandler.sendEmptyMessage(MSG_UPDATE);
-                }
-            }
-        }, 8000, 8000);
+        super.start();
     }
 
     @Override
     public void stop() {
-        super.stop();
+        mActivity.unregisterReceiver(mWifiReceiver);
 
-        if (mTimer != null) {
-            mTimer.cancel();
+        if (isAirplaneModeOn()) {
+            setAirplaneModeOn(false);
         }
 
-        mHandler.removeCallbacks(mRunnable);
-        mActivity.unregisterReceiver(mWifiReceiver);
+        super.stop();
+    }
+
+    @Override
+    public boolean isSupport() {
+        return (null != mWifiManager);
+    }
+
+    @Override
+    protected boolean testOnce() {
+        if (isAirplaneModeOn()) {
+            setAirplaneModeOn(false);
+        } else {
+            if (isCheckConnect) {
+                if (!isWifiConnected(mActivity)) {
+                    incFailureCount();
+                }
+            }
+            setAirplaneModeOn(true);
+        }
+        return true;
     }
 
     private void scan() {
@@ -207,16 +205,6 @@ public class FlyModeTestFragment extends BaseTestFragment {
             handleEvent(context, intent);
         }
     }
-
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mWifiManager.isWifiEnabled() && !mIsScanPause) {
-                scan();
-            }
-            mHandler.postDelayed(this, SCAN_PERIOD);
-        }
-    };
 
     private void handleEvent(Context context, Intent intent) {
         String action = intent.getAction();
@@ -286,30 +274,27 @@ public class FlyModeTestFragment extends BaseTestFragment {
             if (state == NetworkInfo.DetailedState.CONNECTED) {
                 mWifiManager.saveConfiguration();
             }
-
-            if (state == NetworkInfo.DetailedState.OBTAINING_IPADDR
-                    || state == NetworkInfo.DetailedState.CONNECTING) {
-                mIsScanPause = true;
-            } else {
-                mIsScanPause = false;
-            }
         }
     }
 
     public boolean isWifiConnected(Context context) {
         if (null == mConnManager) {
-            mConnManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            mConnManager = (ConnectivityManager) context.
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
         }
-        NetworkInfo wifiNetworkInfo = mConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo wifiNetworkInfo = mConnManager.
+                getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         return ((wifiNetworkInfo != null) && wifiNetworkInfo.isConnected());
     }
 
     public boolean isAirplaneModeOn() {
-        return Settings.Global.getInt(mActivity.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+        return Settings.Global.getInt(mActivity.getContentResolver(),
+                Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
     }
 
     private void setAirplaneModeOn(boolean enabling) {
-        Settings.Global.putInt(mActivity.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, enabling ? 1 : 0);
+        Settings.Global.putInt(mActivity.getContentResolver(),
+                Settings.Global.AIRPLANE_MODE_ON, enabling ? 1 : 0);
 
         Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
         intent.putExtra("state", enabling);

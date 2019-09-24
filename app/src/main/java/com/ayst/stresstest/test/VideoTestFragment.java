@@ -16,6 +16,7 @@
 
 package com.ayst.stresstest.test;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -32,24 +33,36 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import androidx.annotation.Nullable;
+
 import com.ayst.stresstest.R;
 import com.ayst.stresstest.util.FileUtils;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 import static android.app.Activity.RESULT_OK;
 
-public class VideoTestFragment extends BaseTestFragment {
-    private RelativeLayout mVideoContainer;
-    private LinearLayout mContentContainer;
-    private VideoView mVideoView;
-    private TextView mPathTv;
-    private TextView mErrorTv;
+public class VideoTestFragment extends BaseTimingTestFragment {
+
+    @BindView(R.id.tv_path)
+    TextView mPathTv;
+    @BindView(R.id.tv_error)
+    TextView mErrorTv;
+    @BindView(R.id.container_content)
+    LinearLayout mContentContainer;
+    @BindView(R.id.video_view)
+    VideoView mVideoView;
+    @BindView(R.id.container_video)
+    RelativeLayout mVideoContainer;
+    Unbinder unbinder;
 
     private String mPath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -58,26 +71,26 @@ public class VideoTestFragment extends BaseTestFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setTitle(R.string.video_test);
-        setCountType(COUNT_TYPE_TIME);
         setType(TestType.TYPE_VIDEO_TEST);
 
         View contentView = inflater.inflate(R.layout.fragment_video_test, container, false);
         setFullContentView(contentView);
 
-        initView(contentView);
-
-
+        unbinder = ButterKnife.bind(this, contentView);
         return view;
     }
 
-    private void initView(View view) {
-        mVideoContainer = (RelativeLayout) view.findViewById(R.id.container_video);
-        mContentContainer = (LinearLayout) view.findViewById(R.id.container_content);
-        mVideoView = (VideoView) view.findViewById(R.id.video_view);
-        mPathTv = (TextView) view.findViewById(R.id.tv_path);
-        mErrorTv = (TextView) view.findViewById(R.id.tv_error);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mPathTv.setText(mPath);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -110,21 +123,26 @@ public class VideoTestFragment extends BaseTestFragment {
 
     @Override
     public void start() {
-        super.start();
-
         playVideo();
+
+        super.start();
     }
 
     @Override
     public void stop() {
-        super.stop();
-
         stopVideo();
+
+        super.stop();
+    }
+
+    @Override
+    public boolean isSupport() {
+        return true;
     }
 
     private boolean playVideo() {
         if (mPath == null) {
-            Toast.makeText(mActivity, R.string.video_test_select_file_tips, Toast.LENGTH_LONG).show();
+            showToast(R.string.video_test_select_file_tips);
             return false;
         }
         MediaController mc = new MediaController(mActivity);
@@ -162,15 +180,16 @@ public class VideoTestFragment extends BaseTestFragment {
     }
 
     private static final int FILE_SELECT_CODE = 0;
+
     private void showFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
-            startActivityForResult( Intent.createChooser(intent, getString(R.string.video_test_select_file)), FILE_SELECT_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.video_test_select_file)), FILE_SELECT_CODE);
+        } catch (ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(mActivity, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+            showToast("Please install a File Manager.");
         }
     }
 
@@ -189,7 +208,7 @@ public class VideoTestFragment extends BaseTestFragment {
                     if (!TextUtils.isEmpty(mPath)) {
                         super.onStartClicked();
                     } else {
-                        Toast.makeText(mActivity, R.string.video_test_invalid_file, Toast.LENGTH_SHORT).show();
+                        showToast(R.string.video_test_invalid_file);
                     }
                 }
                 break;

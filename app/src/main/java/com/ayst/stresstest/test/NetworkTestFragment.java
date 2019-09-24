@@ -18,42 +18,28 @@ package com.ayst.stresstest.test;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.ayst.stresstest.R;
 import com.ayst.stresstest.util.NetworkUtils;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class NetworkTestFragment extends BaseTestFragment {
-
-    private static final int RETRY_INTERVAL = 3000; // 1s
+public class NetworkTestFragment extends BaseCountTestWithTimerFragment {
 
     @BindView(R.id.edt_url)
     EditText mUrlEdt;
-    @BindView(R.id.edt_retry_count)
-    EditText mRetryCountEdt;
     Unbinder unbinder;
 
     private String mTestUrl = "www.baidu.com";
-    private int mRetryCount = 3;
-
-    private Timer mTimer;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,32 +47,26 @@ public class NetworkTestFragment extends BaseTestFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setTitle(R.string.network_test);
-        setCountType(COUNT_TYPE_COUNT);
         setType(TestType.TYPE_NETWORK_TEST);
 
         View contentView = inflater.inflate(R.layout.fragment_network_test, container, false);
         setContentView(contentView);
 
         unbinder = ButterKnife.bind(this, contentView);
-        initView();
-
         return view;
     }
 
-    private void initView() {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         mUrlEdt.setText(mTestUrl);
-        mRetryCountEdt.setText(mRetryCount + "");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    protected void updateImpl() {
-        super.updateImpl();
     }
 
     @Override
@@ -100,52 +80,12 @@ public class NetworkTestFragment extends BaseTestFragment {
     }
 
     @Override
-    public void start() {
-        super.start();
-
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!isRunning() || (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount)) {
-                    stop();
-                } else {
-                    int retry = 0;
-                    int lostCnt = 0;
-                    while (retry++ < mRetryCount) {
-                        boolean available = NetworkUtils.isAvailableByDns(mTestUrl);
-                        Log.i(TAG, "run, Check the network is "
-                                + (available ? "working" : "no working")
-                                + ", retry " + retry);
-                        if (available) {
-                            lostCnt = 0;
-                        } else {
-                            lostCnt++;
-                        }
-                        try {
-                            Thread.sleep(RETRY_INTERVAL);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if (lostCnt >= mRetryCount) {
-                        incFailureCount();
-                    }
-
-                    incCurrentCount();
-                    mHandler.sendEmptyMessage(MSG_UPDATE);
-                }
-            }
-        }, 10000, 10000);
+    public boolean isSupport() {
+        return true;
     }
 
     @Override
-    public void stop() {
-        super.stop();
-
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
+    protected boolean testOnce() {
+        return NetworkUtils.isAvailableByDns(mTestUrl);
     }
 }

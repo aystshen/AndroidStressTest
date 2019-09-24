@@ -34,10 +34,10 @@
             android:textColor="@color/black_70" />
 
         <CheckBox
-            android:id="@+id/chbox_check_connect"
+            android:id="@+id/chbox_check_devices"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bt_test_check_connect" />
+            android:text="@string/bt_test_check_devices" />
 
         <CheckBox
             android:id="@+id/chbox_ble"

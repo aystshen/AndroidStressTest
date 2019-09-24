@@ -35,12 +35,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
+import com.ayst.stresstest.R;
+import com.ayst.stresstest.util.AppUtils;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
 import com.github.mjdev.libaums.fs.UsbFileOutputStream;
-import com.ayst.stresstest.R;
-import com.ayst.stresstest.util.AppUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,7 +50,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class RecoveryTestFragment extends BaseTestFragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+public class RecoveryTestFragment extends BaseCountTestFragment {
     public static final String EXTRA_RECOVERY_FLAG = "recovery_flag";
     public static final String EXTRA_RECOVERY_COUNT = "recovery_count";
     public static final String EXTRA_RECOVERY_MAX = "recovery_max";
@@ -57,11 +63,15 @@ public class RecoveryTestFragment extends BaseTestFragment {
     public static final String EXTRA_RECOVERY_DELAY = "recovery_delay";
 
     private final static int MSG_RECOVERY_COUNTDOWN = 1001;
-
-    private CheckBox mEraseFlashCheckbox;
-    private CheckBox mWipeAllCheckbox;
-    private EditText mDelayEdt;
-    private TextView mCountdownTv;
+    @BindView(R.id.chbox_erase_flash)
+    CheckBox mEraseFlashCheckbox;
+    @BindView(R.id.chbox_wipe_all)
+    CheckBox mWipeAllCheckbox;
+    @BindView(R.id.edt_delay)
+    EditText mDelayEdt;
+    @BindView(R.id.tv_countdown)
+    TextView mCountdownTv;
+    Unbinder unbinder;
 
     private int mDelayTime;
     private int mCountDownTime;
@@ -75,7 +85,7 @@ public class RecoveryTestFragment extends BaseTestFragment {
 
         mState = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_FLAG, STATE_STOP);
         mCurrentCount = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_COUNT, 0);
-        mMaxTestCount = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_MAX, 0);
+        mTargetCount = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_MAX, 0);
         mIsWipeAll = mActivity.getIntent().getBooleanExtra(EXTRA_RECOVERY_WIPE_ALL, false);
         mIsEraseFlash = mActivity.getIntent().getBooleanExtra(EXTRA_RECOVERY_ERASE_FLASH, false);
         mDelayTime = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_DELAY, 5);
@@ -87,29 +97,18 @@ public class RecoveryTestFragment extends BaseTestFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setTitle(R.string.recovery_test);
-        setCountType(COUNT_TYPE_COUNT);
         setType(TestType.TYPE_RECOVERY_TEST);
 
         View contentView = inflater.inflate(R.layout.fragment_recovery_test, container, false);
         setContentView(contentView);
 
-        initView(contentView);
-
+        unbinder = ButterKnife.bind(this, contentView);
         return view;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        check();
-    }
-
-    private void initView(View view) {
-        mEraseFlashCheckbox = (CheckBox) view.findViewById(R.id.chbox_erase_flash);
-        mWipeAllCheckbox = (CheckBox) view.findViewById(R.id.chbox_wipe_all);
-        mDelayEdt = (EditText) view.findViewById(R.id.edt_delay);
-        mCountdownTv = (TextView) view.findViewById(R.id.tv_countdown);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mEraseFlashCheckbox.setChecked(mIsEraseFlash);
         mWipeAllCheckbox.setChecked(mIsWipeAll);
@@ -140,12 +139,23 @@ public class RecoveryTestFragment extends BaseTestFragment {
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        check();
+    }
+
     private void check() {
         if (isRunning()) {
-            if (mMaxTestCount != 0 && mMaxTestCount <= mCurrentCount) {
-                stop();
-            } else {
-                mCountDownTime = mDelayTime; // DELAY_TIME/1000;
+            if (next()) {
+                mCountDownTime = mDelayTime;
                 mHandler.sendEmptyMessage(MSG_RECOVERY_COUNTDOWN);
             }
         }
@@ -153,21 +163,26 @@ public class RecoveryTestFragment extends BaseTestFragment {
 
     @Override
     public void onStartClicked() {
+        String delayStr = mDelayEdt.getText().toString();
+        if (TextUtils.isEmpty(delayStr)) {
+            showToast(R.string.reboot_test_delay_empty);
+            return;
+        }
+        mDelayTime = Integer.valueOf(mDelayEdt.getText().toString());
+
         if (null == mUsbRootFile) {
             mUsbRootFile = createUsbRootFile();
             if (null == mUsbRootFile) {
-                Toast.makeText(mActivity, R.string.recovery_test_insert_udisk_tips, Toast.LENGTH_SHORT).show();
+                showToast(R.string.recovery_test_insert_udisk_tips);
                 return;
             }
         }
+
         super.onStartClicked();
     }
 
     @Override
     public void start() {
-        super.start();
-
-        mDelayTime = Integer.valueOf(mDelayEdt.getText().toString());
         new AlertDialog.Builder(mActivity)
                 .setMessage(String.format(getString(R.string.recovery_test_recovery_tips), mDelayTime))
                 .setPositiveButton(R.string.ok,
@@ -175,7 +190,6 @@ public class RecoveryTestFragment extends BaseTestFragment {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-                                mState = STATE_RUNNING;
                                 mIsEraseFlash = mEraseFlashCheckbox.isChecked();
                                 mIsWipeAll = mWipeAllCheckbox.isChecked();
                                 mCountDownTime = mDelayTime;
@@ -187,19 +201,26 @@ public class RecoveryTestFragment extends BaseTestFragment {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-                                mState = STATE_STOP;
+                                stop();
                                 dialog.cancel();
                             }
                         }).show();
+
+        super.start();
     }
 
     @Override
     public void stop() {
-        super.stop();
-
         mHandler.removeMessages(MSG_RECOVERY_COUNTDOWN);
         mCountdownTv.setVisibility(View.GONE);
         saveState();
+
+        super.stop();
+    }
+
+    @Override
+    public boolean isSupport() {
+        return true;
     }
 
     @Override
@@ -227,11 +248,7 @@ public class RecoveryTestFragment extends BaseTestFragment {
     }
 
     private void recovery() {
-        // save state
-        incCurrentCount();
-
         if (saveState()) {
-            // 恢复出厂设置
             if (mIsWipeAll) {
                 try {
                     bootCommand(mActivity, "--wipe_all");
@@ -286,7 +303,7 @@ public class RecoveryTestFragment extends BaseTestFragment {
         StringBuilder sb = new StringBuilder();
         sb.append(EXTRA_RECOVERY_FLAG).append(":").append(mState).append("\n");
         sb.append(EXTRA_RECOVERY_COUNT).append(":").append(mCurrentCount).append("\n");
-        sb.append(EXTRA_RECOVERY_MAX).append(":").append(mMaxTestCount).append("\n");
+        sb.append(EXTRA_RECOVERY_MAX).append(":").append(mTargetCount).append("\n");
         sb.append(EXTRA_RECOVERY_WIPE_ALL).append(":").append(mIsWipeAll ? "1" : "0").append("\n");
         sb.append(EXTRA_RECOVERY_ERASE_FLASH).append(":").append(mIsEraseFlash ? "1" : "0").append("\n");
         sb.append(EXTRA_RECOVERY_DELAY).append(":").append(mDelayTime).append("\n");
@@ -304,8 +321,8 @@ public class RecoveryTestFragment extends BaseTestFragment {
             UsbFile stateFile = null;
             UsbFile[] files = mUsbRootFile.listFiles();
 
-            for(UsbFile file: files) {
-                if(TextUtils.equals("recovery_state", file.getName())) {
+            for (UsbFile file : files) {
+                if (TextUtils.equals("recovery_state", file.getName())) {
                     Log.d(TAG, "saveState, found recovery_state file");
                     stateFile = file;
                     break;

@@ -33,12 +33,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.ayst.stresstest.R;
 import com.ayst.stresstest.util.SPUtils;
 
 import java.lang.reflect.Method;
 
-public class TimingBootTestFragment extends BaseTestFragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+public class TimingBootTestFragment extends BaseCountTestFragment {
     public static final String SP_TIMING_BOOT_FLAG = "timing_boot_flag";
     private static final String SP_TIMING_BOOT_COUNT = "timing_boot_count";
     private static final String SP_TIMING_BOOT_MAX = "timing_boot_max";
@@ -47,12 +53,15 @@ public class TimingBootTestFragment extends BaseTestFragment {
     private static final String SP_TIMING_BOOT_STARTUP_TIME = "timing_boot_startup_time";
 
     private final static int MSG_TIMING_BOOT_COUNTDOWN = 1001;
-
     private final static int TIME_DEVIATION = 300; // unit: seconds
 
-    private EditText mShutdownDelayEdt;
-    private EditText mStartupDelayEdt;
-    private TextView mCountdownTv;
+    @BindView(R.id.edt_shutdown_delay)
+    EditText mShutdownDelayEdt;
+    @BindView(R.id.edt_startup_delay)
+    EditText mStartupDelayEdt;
+    @BindView(R.id.tv_countdown)
+    TextView mCountdownTv;
+    Unbinder unbinder;
 
     private int mShutdownDelayTime;
     private int mStartupDelayTime;
@@ -77,10 +86,10 @@ public class TimingBootTestFragment extends BaseTestFragment {
 
         mState = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_FLAG, STATE_STOP);
         mCurrentCount = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_COUNT, 0);
-        mMaxTestCount = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_MAX, 0);
+        mTargetCount = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_MAX, 0);
         mShutdownDelayTime = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_SHUTDOWN_DELAY, 60);
         mStartupDelayTime = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_STARTUP_DELAY, 60);
-        mStartupTime = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_STARTUP_TIME, (long)0);
+        mStartupTime = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_STARTUP_TIME, (long) 0);
     }
 
     @Override
@@ -89,15 +98,21 @@ public class TimingBootTestFragment extends BaseTestFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setTitle(R.string.timing_boot_test);
-        setCountType(COUNT_TYPE_COUNT);
         setType(TestType.TYPE_TIMING_BOOT_TEST);
 
         View contentView = inflater.inflate(R.layout.fragment_timing_boot_test, container, false);
         setContentView(contentView);
 
-        initView(contentView);
-
+        unbinder = ButterKnife.bind(this, contentView);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mShutdownDelayEdt.setText(mShutdownDelayTime + "");
+        mStartupDelayEdt.setText(mStartupDelayTime + "");
     }
 
     @Override
@@ -107,28 +122,17 @@ public class TimingBootTestFragment extends BaseTestFragment {
         check();
     }
 
-    private void initView(View view){
-        mShutdownDelayEdt = (EditText) view.findViewById(R.id.edt_shutdown_delay);
-        mStartupDelayEdt = (EditText) view.findViewById(R.id.edt_startup_delay);
-        mCountdownTv = (TextView) view.findViewById(R.id.tv_countdown);
-
-        mShutdownDelayEdt.setText(mShutdownDelayTime + "");
-        mStartupDelayEdt.setText(mStartupDelayTime + "");
-    }
-
     private void check() {
         if (isRunning()) {
-            long diffTime = (System.currentTimeMillis() - mStartupTime)/1000;
+            long diffTime = (System.currentTimeMillis() - mStartupTime) / 1000;
             Log.d(TAG, "check, diffTime=" + diffTime);
             if (Math.abs(diffTime) > TIME_DEVIATION) {
                 Log.d(TAG, "check, Timing boot test failed!");
                 incFailureCount();
             }
 
-            if (mMaxTestCount != 0 && mMaxTestCount <= mCurrentCount) {
-                stop();
-            } else {
-                mCountDownTime = mShutdownDelayTime; // DELAY_TIME/1000;
+            if (next()) {
+                mCountDownTime = mShutdownDelayTime;
                 mHandler.sendEmptyMessage(MSG_TIMING_BOOT_COUNTDOWN);
             }
         }
@@ -156,8 +160,6 @@ public class TimingBootTestFragment extends BaseTestFragment {
 
     @Override
     public void start() {
-        super.start();
-
         new AlertDialog.Builder(mActivity)
                 .setMessage(String.format(getString(R.string.timing_boot_test_shutdown_tips), mShutdownDelayTime))
                 .setPositiveButton(R.string.ok,
@@ -165,7 +167,6 @@ public class TimingBootTestFragment extends BaseTestFragment {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-                                mState = STATE_RUNNING;
                                 mCountDownTime = mShutdownDelayTime;
                                 mHandler.sendEmptyMessage(MSG_TIMING_BOOT_COUNTDOWN);
                             }
@@ -175,19 +176,26 @@ public class TimingBootTestFragment extends BaseTestFragment {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-                                mState = STATE_STOP;
+                                stop();
                                 dialog.cancel();
                             }
                         }).show();
+
+        super.start();
     }
 
     @Override
     public void stop() {
-        super.stop();
-
         mHandler.removeMessages(MSG_TIMING_BOOT_COUNTDOWN);
         mCountdownTv.setVisibility(View.GONE);
         saveState();
+
+        super.stop();
+    }
+
+    @Override
+    public boolean isSupport() {
+        return (null != mMcuService);
     }
 
     @Override
@@ -215,12 +223,9 @@ public class TimingBootTestFragment extends BaseTestFragment {
     }
 
     private void powerOff() {
-        // save state
-        incCurrentCount();
         saveState();
         setUptime(mStartupDelayTime);
 
-        // 关机
         Intent intent = new Intent("com.android.internal.intent.action.REQUEST_SHUTDOWN");
         intent.putExtra("android.intent.extra.KEY_CONFIRM", false);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -242,9 +247,15 @@ public class TimingBootTestFragment extends BaseTestFragment {
     private void saveState() {
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_FLAG, mState);
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_COUNT, mCurrentCount);
-        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_MAX, mMaxTestCount);
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_MAX, mTargetCount);
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_SHUTDOWN_DELAY, mShutdownDelayTime);
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_STARTUP_DELAY, mStartupDelayTime);
-        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_STARTUP_TIME, System.currentTimeMillis() + mStartupDelayTime*1000);
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_STARTUP_TIME, System.currentTimeMillis() + mStartupDelayTime * 1000);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

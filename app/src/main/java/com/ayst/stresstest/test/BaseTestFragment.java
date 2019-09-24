@@ -62,7 +62,7 @@ import java.util.TimerTask;
  * Use the {@link BaseTestFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BaseTestFragment extends Fragment {
+public abstract class BaseTestFragment extends Fragment {
     protected String TAG = "BaseTestFragment";
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -89,17 +89,7 @@ public class BaseTestFragment extends Fragment {
     public static final int STATE_STOP = 2;
     protected int mState = STATE_STOP;
 
-    protected static final int COUNT_TYPE_COUNT = 1;
-    protected static final int COUNT_TYPE_TIME = 2;
-    protected static final int COUNT_TYPE_NONE = 3;
-    protected int mCountType = COUNT_TYPE_COUNT;
-
-    protected int mMaxTestCount = 0;
-    protected int mMaxTestTime = 0;
-    protected int mCurrentCount = 0;
     protected int mFailureCount = 0;
-    protected int mCurrentTime = 0;
-    private Timer mCountTimer;
 
     protected int mFailThreshold = 1;
     protected int mPoorThreshold = 3;
@@ -127,24 +117,6 @@ public class BaseTestFragment extends Fragment {
 
     public BaseTestFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BaseTestFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static BaseTestFragment newInstance(String param1, String param2) {
-        BaseTestFragment fragment = new BaseTestFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -233,40 +205,12 @@ public class BaseTestFragment extends Fragment {
     }
 
     protected void updateImpl() {
-        // Updating test count.
-        if (mCountType == COUNT_TYPE_COUNT) {
-            if (mMaxTestCount > 0) {
-                mCountTv.setText(mCurrentCount + "/" + mMaxTestCount);
-                mCountTv.setVisibility(View.VISIBLE);
-
-                mFailureCountTv.setText(mFailureCount + "/" + mCurrentCount);
-                mFailureCountTv.setVisibility(View.VISIBLE);
-            } else {
-                mCountTv.setVisibility(View.GONE);
-                mFailureCountTv.setVisibility(View.GONE);
-            }
-        } else if (mCountType == COUNT_TYPE_TIME) {
-            if (mMaxTestTime > 0) {
-                int curHour = mCurrentTime / 3600;
-                int curMin = (mCurrentTime % 3600) / 60;
-                int curSec = (mCurrentTime % 3600) % 60;
-                mCountTv.setText(curHour + ":" + curMin + ":" + curSec + "/" + mMaxTestTime + ":0:0");
-                mCountTv.setVisibility(View.VISIBLE);
-            } else {
-                mCountTv.setVisibility(View.GONE);
-            }
-        } else {
-            mCountTv.setVisibility(View.GONE);
-            mFailureCountTv.setVisibility(View.GONE);
-        }
-
         // Updating progressbar.
         mProgressbar.setVisibility(isEnable() ? View.VISIBLE : View.INVISIBLE);
         if (isRunning()) {
             if (mProgressbar.getProgressDrawable() != mResultDrawable.get(mResult)) {
                 mProgressbar.setProgressDrawable(mResultDrawable.get(mResult));
             }
-            mProgressbar.setProgress((mCountType == COUNT_TYPE_COUNT) ? (mCurrentCount * 100) / mMaxTestCount : (mCurrentTime * 100) / (mMaxTestTime * 3600));
         }
 
         // Updating other.
@@ -290,11 +234,7 @@ public class BaseTestFragment extends Fragment {
         if (isRunning()) {
             showStopDialog();
         } else {
-            if (mCountType == COUNT_TYPE_NONE) {
-                start();
-            } else {
-                showSetMaxDialog();
-            }
+            showSetMaxDialog();
         }
     }
 
@@ -314,10 +254,6 @@ public class BaseTestFragment extends Fragment {
         mFullContainer.addView(contentView);
     }
 
-    protected void setCountType(int type) {
-        mCountType = type;
-    }
-
     protected void setType(TestType type) {
         mType = type;
     }
@@ -332,13 +268,9 @@ public class BaseTestFragment extends Fragment {
     }
 
     public void start() {
-        Logger.t(TAG).d("Start %s", mCountType == COUNT_TYPE_COUNT ? mMaxTestCount : mMaxTestTime + "h");
-
         mState = STATE_RUNNING;
         mResult = RESULT.GOOD;
-        mCurrentCount = 0;
         mFailureCount = 0;
-        mCurrentTime = 0;
 
         if (mListener != null) {
             mHandler.post(new Runnable() {
@@ -349,38 +281,10 @@ public class BaseTestFragment extends Fragment {
             });
         }
 
-        if (mCountType == COUNT_TYPE_TIME) {
-            mCountTimer = new Timer();
-            mCountTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (!isRunning() || (mMaxTestTime != 0 && mCurrentTime >= mMaxTestTime * 3600)) {
-                        Log.d(TAG, "CountTimer, " + TAG + " test finish!");
-                        mResult = RESULT.GOOD;
-                        stop();
-                    } else {
-                        mCurrentTime++;
-                        update();
-                    }
-                }
-            }, 1000, 1000);
-        }
-
         update();
     }
 
     public void stop() {
-        String message;
-        if (mCountType == COUNT_TYPE_COUNT) {
-            message = mCurrentCount + "/" + mMaxTestCount;
-        } else {
-            int curHour = mCurrentTime / 3600;
-            int curMin = (mCurrentTime % 3600) / 60;
-            int curSec = (mCurrentTime % 3600) % 60;
-            message = curHour + ":" + curMin + ":" + curSec + "/" + mMaxTestTime + ":0:0";
-        }
-        Logger.t(TAG).d("Stop %s %s", message, sResultStringMap.get(mResult));
-
         mState = STATE_STOP;
         if (mListener != null) {
             mHandler.post(new Runnable() {
@@ -390,15 +294,8 @@ public class BaseTestFragment extends Fragment {
                 }
             });
         }
-        if (mCountTimer != null) {
-            mCountTimer.cancel();
-        }
-        update();
-    }
 
-    protected void incCurrentCount() {
-        mCurrentCount++;
-        Logger.t(TAG).d("Testing %d/%d", mCurrentCount, mMaxTestCount);
+        update();
     }
 
     protected void incFailureCount() {
@@ -425,6 +322,8 @@ public class BaseTestFragment extends Fragment {
         return isEnable;
     }
 
+    public abstract boolean isSupport();
+
     @SuppressLint("HandlerLeak")
     protected Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -444,36 +343,9 @@ public class BaseTestFragment extends Fragment {
 
     }
 
-    public void showSetMaxDialog() {
-        final String title = mCountType == COUNT_TYPE_COUNT ? getString(R.string.set_time_tips) : getString(R.string.set_duration_tips);
-        final EditText editText = new EditText(this.getActivity());
-        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        new AlertDialog.Builder(this.getActivity())
-                .setTitle(title)
-                .setView(editText)
-                .setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (!editText.getText().toString().trim().equals("")) {
-                            if (mCountType == COUNT_TYPE_COUNT) {
-                                mMaxTestCount = Integer.valueOf(editText.getText().toString());
-                            } else {
-                                mMaxTestTime = Integer.valueOf(editText.getText().toString());
-                            }
-                            start();
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+    protected abstract void showSetMaxDialog();
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                }).show();
-    }
-
-    public void showStopDialog() {
+    protected void showStopDialog() {
         new AlertDialog.Builder(this.getActivity())
                 .setMessage(R.string.stop_test_tips)
                 .setPositiveButton(R.string.stop, new DialogInterface.OnClickListener() {
@@ -502,6 +374,10 @@ public class BaseTestFragment extends Fragment {
         }
     };
 
+    protected void showToast(int resId) {
+        showToast(getString(resId));
+    }
+
     /**
      * Shows a {@link Toast} on the UI thread.
      *
@@ -513,6 +389,22 @@ public class BaseTestFragment extends Fragment {
         Message message = Message.obtain();
         message.obj = text;
         mMessageHandler.sendMessage(message);
+    }
+
+    protected void showErrorDialog(int strId) {
+        showErrorDialog(getString(strId));
+    }
+
+    protected void showErrorDialog(String msg) {
+        new AlertDialog.Builder(this.getActivity())
+                .setMessage(msg)
+                .setPositiveButton(R.string.stop, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mResult = RESULT.POOR;
+                        stop();
+                    }
+                }).show();
     }
 
     /**

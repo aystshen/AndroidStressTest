@@ -50,7 +50,7 @@
 
     <!--Bluetooth Test-->
     <string name="bt_test_intro">The Bluetooth test will continue to turn on, off, and scan nearby Bluetooth devices, support classic Bluetooth and low-power Bluetooth, and support automatic identification of test results.</string>
-    <string name="bt_test_check_connect">Check the Bluetooth connection discrimination test result</string>
+    <string name="bt_test_check_devices">Scan list no device marked as failed</string>
     <string name="bt_test_ble">Bluetooth Ble</string>
     <string name="bt_test_valid_device_tips">Please be sure to find at least one valid Bluetooth device nearby!</string>
     <string name="bt_test_bt_opening">OPENING</string>
@@ -113,6 +113,7 @@
     <string name="reboot_test_insert_sdcard_tips">Please insert the SD card!</string>
     <string name="reboot_test_connect_wifi_tips">Please connect to WIFI!</string>
     <string name="reboot_test_reboot_tips">Are you want to restart the test? After confirming, the system will be restarted after %d seconds.</string>
+    <string name="reboot_test_delay_empty">Please set the delay!</string>
 
     <!--Fly Mode Test-->
     <string name="fly_mode_test_intro">The flight mode test will continue to turn on and off the flight mode, while scanning nearby WiFi hotspots to support automatic identification of test results.</string>

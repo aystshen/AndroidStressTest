@@ -35,21 +35,32 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.ayst.stresstest.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SleepTestFragment extends BaseTestFragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+public class SleepTestFragment extends BaseCountTestFragment {
     private static final String ACTION_TEST_CASE_SLEEP = "com.topband.stresstest.sleep.ACTION_TEST_CASE_SLEEP";
 
     public static String DATE_TO_STRING_PATTERN = "MM-dd HH:mm:ss";
-
-    private EditText mWakeupEdt;
-    private EditText mSleepEdt;
-    private LinearLayout mTimeContainer;
-    private TextView mSleepTimeTv;
-    private TextView mWakeupTimeTv;
+    @BindView(R.id.edt_wakeup_time)
+    EditText mWakeupEdt;
+    @BindView(R.id.edt_sleep_time)
+    EditText mSleepEdt;
+    @BindView(R.id.tv_sleep_time)
+    TextView mSleepTimeTv;
+    @BindView(R.id.tv_wakeup_time)
+    TextView mWakeupTimeTv;
+    @BindView(R.id.container_time)
+    LinearLayout mTimeContainer;
+    Unbinder unbinder;
 
     private PowerManager mPowerManager;
     private AlarmManager mAlarmManager;
@@ -83,23 +94,18 @@ public class SleepTestFragment extends BaseTestFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setTitle(R.string.sleep_test);
-        setCountType(COUNT_TYPE_COUNT);
         setType(TestType.TYPE_SLEEP_TEST);
 
         View contentView = inflater.inflate(R.layout.fragment_sleep_test, container, false);
         setContentView(contentView);
 
-        initView(contentView);
-
+        unbinder = ButterKnife.bind(this, contentView);
         return view;
     }
 
-    private void initView(View view) {
-        mWakeupEdt = (EditText) view.findViewById(R.id.edt_wakeup_time);
-        mSleepEdt = (EditText) view.findViewById(R.id.edt_sleep_time);
-        mTimeContainer = (LinearLayout) view.findViewById(R.id.container_time);
-        mSleepTimeTv = (TextView) view.findViewById(R.id.tv_sleep_time);
-        mWakeupTimeTv = (TextView) view.findViewById(R.id.tv_wakeup_time);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mWakeupEdt.setText(mWakeTime / 1000 + "");
         mSleepEdt.setText(mSleepTime / 1000 + "");
@@ -110,9 +116,10 @@ public class SleepTestFragment extends BaseTestFragment {
         super.onDestroyView();
         mActivity.unregisterReceiver(mSleepTestReceiver);
 
-        if(null != mWakeLock){
+        if (null != mWakeLock) {
             mWakeLock.release();
         }
+        unbinder.unbind();
     }
 
     private void setAlarm(Context context, long sleepTime, boolean repeat) {
@@ -141,16 +148,16 @@ public class SleepTestFragment extends BaseTestFragment {
     public void onStartClicked() {
         String wakeupStr = mWakeupEdt.getText().toString();
         if (TextUtils.isEmpty(wakeupStr)) {
-            Toast.makeText(mActivity, R.string.sleep_test_set_wakeup_duration_tips, Toast.LENGTH_SHORT).show();
+            showToast(R.string.sleep_test_set_wakeup_duration_tips);
             return;
         }
         String sleepStr = mSleepEdt.getText().toString();
         if (TextUtils.isEmpty(sleepStr)) {
-            Toast.makeText(mActivity, R.string.sleep_test_set_sleep_duration_tips, Toast.LENGTH_SHORT).show();
+            showToast(R.string.sleep_test_set_sleep_duration_tips);
             return;
         }
-        mWakeTime = Integer.parseInt(wakeupStr)*1000;
-        mSleepTime = Integer.parseInt(sleepStr)*1000;
+        mWakeTime = Integer.parseInt(wakeupStr) * 1000;
+        mSleepTime = Integer.parseInt(sleepStr) * 1000;
 
         Log.d(TAG, "onStartClicked, mWakeTime=" + mWakeTime + " mSleepTime=" + mSleepTime);
 
@@ -159,15 +166,13 @@ public class SleepTestFragment extends BaseTestFragment {
 
     @Override
     public void start() {
-        super.start();
-
         stopAlarm(mActivity);
 
         mDefaultScreenOffTime = Settings.System.getInt(mActivity.getContentResolver(), "screen_off_timeout", -1);
-        Settings.System.putInt(mActivity.getContentResolver(), "screen_off_timeout", (int)mWakeTime);
-        setAlarm(mActivity, mWakeTime+mSleepTime, false);
+        Settings.System.putInt(mActivity.getContentResolver(), "screen_off_timeout", (int) mWakeTime);
+        setAlarm(mActivity, mWakeTime + mSleepTime, false);
 
-        if(null != mWakeLock){
+        if (null != mWakeLock) {
             mWakeLock.release();
         }
 
@@ -175,12 +180,12 @@ public class SleepTestFragment extends BaseTestFragment {
         mSleepTimeTv.setText(mSimpleDateFormat.format(new Date(mEnterSleepTime)));
         mWakeupTimeTv.setText("--:--:--");
         mTimeContainer.setVisibility(View.VISIBLE);
+
+        super.start();
     }
 
     @Override
     public void stop() {
-        super.stop();
-
         Settings.System.putInt(mActivity.getContentResolver(), "screen_off_timeout", mDefaultScreenOffTime);
         stopAlarm(mActivity);
 
@@ -189,6 +194,13 @@ public class SleepTestFragment extends BaseTestFragment {
         mWakeLock.acquire();
 
         mTimeContainer.setVisibility(View.GONE);
+
+        super.stop();
+    }
+
+    @Override
+    public boolean isSupport() {
+        return true;
     }
 
     private BroadcastReceiver mSleepTestReceiver = new BroadcastReceiver() {
@@ -206,11 +218,8 @@ public class SleepTestFragment extends BaseTestFragment {
             }
             mPowerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.FULL_WAKE_LOCK, "ScreenOnTimer").acquire(mWakeTime);
 
-            incCurrentCount();
-            if (mMaxTestCount != 0 && mCurrentCount >= mMaxTestCount) {
-                stop();
-            } else {
-                setAlarm(mActivity, mWakeTime+mSleepTime, false);
+            if (next()) {
+                setAlarm(mActivity, mWakeTime + mSleepTime, false);
             }
         }
 

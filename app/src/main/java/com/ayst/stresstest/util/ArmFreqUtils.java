@@ -54,34 +54,34 @@ public class ArmFreqUtils {
     private static File sDdrFreqFile = new File("/proc/driver/ddr_ts");
 
     public static void setDDRFreq(String value) throws IOException {
-        WriteFile(sDdrFreqFile, value);
+        writeFile(sDdrFreqFile, value);
     }
 
     public static void openGpuEcho() throws IOException {
-        WriteFile(sGpuFreqFile, "debug_lo");
+        writeFile(sGpuFreqFile, "debug_lo");
     }
 
     public static void setGpuFreq(String value) throws IOException {
-        WriteFile(sGpuFreqFile, value);
+        writeFile(sGpuFreqFile, value);
     }
 
     public static void setGpuFreqFor3188(String value) throws IOException {
-        WriteFile(sGpuFreqFile_3188, value);
+        writeFile(sGpuFreqFile_3188, value);
     }
 
     public static void setCpuGovernorMode(String mode) throws IOException {
-        WriteFile(sCpuGovernorFreqFile, mode);
+        writeFile(sCpuGovernorFreqFile, mode);
     }
 
     public static void setCpuFreq(int value) throws IOException {
-        WriteFile(sCpuSetFreqFile, String.valueOf(value));
+        writeFile(sCpuSetFreqFile, String.valueOf(value));
     }
 
     public static List<String> getCpuAvailableFreqs() {
         List<String> result = new ArrayList<String>();
         if (sCpuFreqsFile.exists()) {
             try {
-                String str = ReadFile(sCpuFreqsFile);
+                String str = readFile(sCpuFreqsFile);
                 String freqs[] = str.split(" ");
                 if (freqs.length > 0) {
                     for (String freq : freqs) {
@@ -96,7 +96,7 @@ public class ArmFreqUtils {
         if (result.isEmpty()) {
             if (sCpuMinFreqFile.exists()) {
                 try {
-                    String freq = ReadFile(sCpuMinFreqFile);
+                    String freq = readFile(sCpuMinFreqFile);
                     result.add(Integer.valueOf(freq) / 1000 + "M");
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -104,7 +104,7 @@ public class ArmFreqUtils {
             }
             if (sCpuMaxFreqFile.exists()) {
                 try {
-                    String freq = ReadFile(sCpuMaxFreqFile);
+                    String freq = readFile(sCpuMaxFreqFile);
                     result.add(Integer.valueOf(freq) / 1000 + "M");
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -117,7 +117,7 @@ public class ArmFreqUtils {
 
     public static Integer getCpuCurFreq() {
         try {
-            return Integer.valueOf(ReadFile(sCpuCurFreqFile));
+            return Integer.valueOf(readFile(sCpuCurFreqFile));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,7 +127,7 @@ public class ArmFreqUtils {
 
     public static int getDDRCurFreq() {
         try {
-            return Integer.valueOf(ReadFile(sDdrFreqFile));
+            return Integer.valueOf(readFile(sDdrFreqFile));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,7 +139,7 @@ public class ArmFreqUtils {
         List<String> result = new ArrayList<String>();
         if (sGpuFreqsFile.exists()) {
             try {
-                String str = ReadFile(sGpuFreqsFile);
+                String str = readFile(sGpuFreqsFile);
                 String freqs[] = str.split(",");
                 if (freqs.length > 0) {
                     int count = Integer.valueOf(freqs[0]);
@@ -181,7 +181,7 @@ public class ArmFreqUtils {
         }
     };
 
-    private static boolean WriteFile(File file, String message)
+    private static boolean writeFile(File file, String message)
             throws IOException {
 
         if (!file.exists()) {
@@ -201,7 +201,7 @@ public class ArmFreqUtils {
 
     }
 
-    private static String ReadFile(File file)
+    private static String readFile(File file)
             throws IOException {
 
         if (!file.exists()) {

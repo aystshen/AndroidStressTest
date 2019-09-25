@@ -37,7 +37,7 @@
     <string name="video_test">VIDEO TEST</string>
     <string name="wifi_test">WIFI TEST</string>
     <string name="bluetooth_test">BLUETOOTH TEST</string>
-    <string name="airplane_mode_test">Airplane mode TEST</string>
+    <string name="airplane_mode_test">AIRPLANE MODE TEST</string>
     <string name="reboot_test">REBOOT TEST</string>
     <string name="sleep_test">SLEEP TEST</string>
     <string name="recovery_test">RECOVERY TEST</string>
@@ -49,7 +49,7 @@
     <string name="request_permission">Failed to get camera permissions, the test will not work.</string>
 
     <!--Bluetooth Test-->
-    <string name="bt_test_intro">The Bluetooth test will continue to turn on, off, and scan nearby Bluetooth devices, support classic Bluetooth and low-power Bluetooth.</string>
+    <string name="bt_test_intro">Bluetooth test is turned on, off, and scanned repeatedly, supporting classic and ble bluetooth.</string>
     <string name="bt_test_check_devices">Unable to search for device as failed</string>
     <string name="bt_test_ble">Bluetooth Ble</string>
     <string name="bt_test_valid_device_tips">Please be sure to find at least one valid Bluetooth device nearby!</string>
@@ -66,7 +66,7 @@
     <string name="cpu_test_percent">CPU usage</string>
     <string name="cpu_test_set_percent">Set usage:</string>
     <string name="cpu_test_cur_freq">Current freq</string>
-    <string name="cpu_test_not_support">This device does not support CPU stress testing!</string>
+    <string name="cpu_test_not_support">This device does not support CPU testing!</string>
     <string name="cpu_test_userspace_mode_not_support">Failed to set [USERSPACE_MODE], the product may not be able to perform CPU frequency conversion test!</string>
     <string name="cpu_test_set_freq_fail">Failed to set the CPU frequency, the product may not be able to perform CPU frequency conversion test!</string>
     <string name="cpu_test_invalid_interval">Invalid interval, please reset!</string>
@@ -74,7 +74,7 @@
     <string name="cpu_test_set_random_freq_fail">Failed to set the random CPU frequency, the product may not be able to perform CPU frequency conversion test!</string>
 
     <!--WiFi Test-->
-    <string name="wifi_test_intro">The WiFi test will continue to turn on, off, and scan nearby WiFi.</string>
+    <string name="wifi_test_intro">The WiFi test will repeatedly turn on, off, and scan WiFi access points. </string>
     <string name="wifi_test_check_connect">Check the WiFi connection</string>
     <string name="wifi_test_connect_tips">Please go to the settings and connect a valid WiFi!</string>
     <string name="wifi_test_connected">Connected</string>
@@ -87,17 +87,17 @@
     <string name="wifi_test_closed">CLOSED</string>
 
     <!--Sleep Test-->
-    <string name="sleep_test_intro">The sleep test will continue to sleep and wake up the device. Manually observe whether sleep and wakeup are normal.</string>
+    <string name="sleep_test_intro">The sleep test will cause the device to repeatedly sleep and wake up. </string>
     <string name="sleep_test_wakeup_duration">Wake time:</string>
     <string name="sleep_test_sleep_duration">Sleep time:</string>
     <string name="sleep_test_set_wakeup_duration_tips">Please set the wake up time!</string>
     <string name="sleep_test_set_sleep_duration_tips">Please set the sleep time!</string>
 
     <!--Video Test-->
-    <string name="video_test_intro">The video test will play the video file repeatedly. During the test, please observe the video is black, is blurred, is stuck, the audio and video are synchronized.</string>
+    <string name="video_test_intro">The video test will play the video repeatedly. During the test, please observe the video is black, is blurred, is stuck, the audio and video are synchronized.</string>
     <string name="video_test_video_file">Tested video:</string>
     <string name="video_test_play_error">Playback error:</string>
-    <string name="video_test_select_file_tips">Please select a video file</string>
+    <string name="video_test_select_file_tips">Please select a video!</string>
     <string name="video_test_select_file">Select video file</string>
     <string name="video_test_invalid_file">Invalid file!</string>
 
@@ -106,7 +106,7 @@
     <string name="memory_test_fill_percent">Fill percent:</string>
 
     <!--Reboot Test-->
-    <string name="reboot_test_intro">Reboot the test to verify the reliability of the device restart.</string>
+    <string name="reboot_test_intro">"Reboot the test to verify the device's power-on reliability. If the reboot is interrupted, the test fails."</string>
     <string name="reboot_test_check_sdcard">Check the sdcard status after rebooting</string>
     <string name="reboot_test_check_wifi">Check the WiFi connection status after rebooting</string>
     <string name="reboot_test_count_down">seconds, reboot</string>
@@ -116,14 +116,14 @@
     <string name="reboot_test_delay_empty">Please set the delay!</string>
 
     <!--Airplane mode Test-->
-    <string name="airplane_mode_test_intro">The Airplane mode test will continue to turn on and off the Airplane mode, while scanning nearby WiFi.</string>
+    <string name="airplane_mode_test_intro">The airplane mode test will turn the airplane mode on and off repeatedly while scanning the WiFi access point.</string>
     <string name="airplane_mode_test_check_wifi">Check the WiFi connection</string>
     <string name="airplane_mode_test_close">CLOSING</string>
     <string name="airplane_mode_test_open">OPENING</string>
     <string name="airplane_mode_test_opened">OPENED</string>
 
     <!--Recovery Test-->
-    <string name="recovery_test_intro">Restoring the factory will erase all data, please insert UDisk to save the state.</string>
+    <string name="recovery_test_intro">Restoring the factory will erase all data, please insert u disk to save the state.</string>
     <string name="recovery_test_format_sdcard">Format SD card</string>
     <string name="recovery_test_wipe_all">Erase all data</string>
     <string name="recovery_test_count_down">seconds, Start factory reset</string>
@@ -132,7 +132,7 @@
     <string name="recovery_test_recovery_tips">Are you want to restore the factory settings test? After confirming, the factory settings will be restored after %d seconds.</string>
 
     <!--Timing boot Test-->
-    <string name="timing_boot_test_intro">The timing boot test will be turned on and off repeatedly. Check whether the current time is consistent with the set time after power on..</string>
+    <string name="timing_boot_test_intro">The timing boot test will be turned on and off repeatedly. Check whether the current time is consistent with the set time after power on.</string>
     <string name="timing_boot_test_shutdown_count_down">seconds, Shutdown</string>
     <string name="timing_boot_test_startup_count_down">seconds, Startup</string>
     <string name="timing_boot_test_shutdown_tips">Are you sure you want to timing boot test? After confirming, it will shutdown after %d seconds.</string>
@@ -140,14 +140,12 @@
     <string name="timing_boot_test_set_startup_delay_tips">Please set the startup time！</string>
 
     <!--Network Test-->
-    <string name="network_test_intro">The network test will repeatedly ping the specified URL and record the number of failures.</string>
+    <string name="network_test_intro">The network test will ping the specified URL repeatedly.</string>
     <string name="network_test_url_empty_tips">Please set the test URL!</string>
-    <string name="network_test_url">Test URL:</string>
-    <string name="network_test_retry_count">Retry count:</string>
-    <string name="network_test_failure_count">Failure count:</string>
+    <string name="network_test_url">url:</string>
 
     <!--Camera Test-->
-    <string name="camera_test_intro">The camera test will repeatedly open the camera for preview and take a photo, recording the number of failures.</string>
+    <string name="camera_test_intro">The camera test will repeatedly open the camera for preview and take a photo. It will automatically check whether each preview and take photo is successful.</string>
     <string name="camera_test_select_camera">Select camera:</string>
     <string name="camera_test_failure_count">Failure count：</string>
 

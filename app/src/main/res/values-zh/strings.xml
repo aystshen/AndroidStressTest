@@ -49,7 +49,7 @@
     <string name="request_permission">获取相机权限失败，该项测试将无法进行。</string>
 
     <!--Bluetooth Test-->
-    <string name="bt_test_intro">蓝牙测试将持续打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙。</string>
+    <string name="bt_test_intro">蓝牙测试将反复打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙。</string>
     <string name="bt_test_check_devices">无法搜索到设备视为失败</string>
     <string name="bt_test_ble">蓝牙4.0+</string>
     <string name="bt_test_valid_device_tips">请确定附近至少能搜索到一个有效的蓝牙设备！</string>
@@ -74,7 +74,7 @@
     <string name="cpu_test_set_random_freq_fail">设置随机CPU频率失败，该产品可能无法进行CPU变频测试！</string>
 
     <!--WiFi Test-->
-    <string name="wifi_test_intro">WiFi测试将持续打开、关闭、并扫描附近WiFi热点。</string>
+    <string name="wifi_test_intro">WiFi测试将反复打开、关闭、并扫描附近WiFi热点。</string>
     <string name="wifi_test_check_connect">通过检查WiFi连接判别测试结果</string>
     <string name="wifi_test_connect_tips">请先到系统设置打开并连接一个有效的WiFi热点！</string>
     <string name="wifi_test_connected">已连接</string>
@@ -87,7 +87,7 @@
     <string name="wifi_test_closed">WiFi已关闭</string>
 
     <!--Sleep Test-->
-    <string name="sleep_test_intro">休眠测试将对设备进行持续休眠和唤醒操作，测试时需要人工观察休眠与唤醒是否正常。</string>
+    <string name="sleep_test_intro">休眠测试将使设备反复休眠和唤醒，测试时需要人工观察休眠与唤醒是否正常。</string>
     <string name="sleep_test_wakeup_duration">唤醒时间：</string>
     <string name="sleep_test_sleep_duration">睡眠时间：</string>
     <string name="sleep_test_set_wakeup_duration_tips">请设置唤醒时间！</string>
@@ -106,7 +106,7 @@
     <string name="memory_test_fill_percent">填充比例：</string>
 
     <!--Reboot Test-->
-    <string name="reboot_test_intro">重启测试验证设备重启可靠性，如果重启中断说明测试失败。</string>
+    <string name="reboot_test_intro">重启测试验证设备开机过程可靠性，如果重启中断说明测试失败。</string>
     <string name="reboot_test_check_sdcard">重启后检查SD卡状态</string>
     <string name="reboot_test_check_wifi">重启后检查WiFi连接状态</string>
     <string name="reboot_test_count_down">秒后开始重启系统</string>
@@ -123,7 +123,7 @@
     <string name="airplane_mode_test_opened">飞行模式已打开</string>
 
     <!--Recovery Test-->
-    <string name="recovery_test_intro">恢复出厂测试将会擦除所有数据，请先插入U盘用于保存状态。</string>
+    <string name="recovery_test_intro">恢复出厂测试将会擦除所有数据，请先插入u盘用于保存状态。</string>
     <string name="recovery_test_format_sdcard">格式化SD卡</string>
     <string name="recovery_test_wipe_all">擦除所有数据</string>
     <string name="recovery_test_count_down">秒后开始恢复出厂设置</string>
@@ -140,14 +140,12 @@
     <string name="timing_boot_test_set_startup_delay_tips">请设置开机时间！</string>
 
     <!--Network Test-->
-    <string name="network_test_intro">网络测试将反复 ping 指定的网址，记录失败次数。</string>
+    <string name="network_test_intro">网络测试将反复 ping 指定的网址。</string>
     <string name="network_test_url_empty_tips">请设置测试网址！</string>
     <string name="network_test_url">测试网址：</string>
-    <string name="network_test_retry_count">重试次数：</string>
-    <string name="network_test_failure_count">失败计数：</string>
 
     <!--Camera Test-->
-    <string name="camera_test_intro">摄像头测试将反复打开摄像头进行预览并拍照，记录失败次数。</string>
+    <string name="camera_test_intro">摄像头测试将反复打开摄像头进行预览并拍照，测试过程中会自动检查每次预览和拍照是否成功。</string>
     <string name="camera_test_select_camera">被测摄像头：</string>
     <string name="camera_test_failure_count">失败计数：</string>
 

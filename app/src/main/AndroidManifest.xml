@@ -52,6 +52,7 @@
         android:persistent="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name="com.ayst.stresstest.ui.MainActivity"
             android:label="@string/app_name"

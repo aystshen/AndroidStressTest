@@ -26,7 +26,7 @@ public enum TestType{
     TYPE_VIDEO_TEST,                // Video Test
     TYPE_WIFI_TEST,                 // Wifi Test
     TYPE_BT_TEST,                   // Bluetooth Test
-    TYPE_FLY_MODE_TEST,             // Flymode Test
+    TYPE_AIRPLANE_MODE_TEST,        // Airplane mode Test
     TYPE_REBOOT_TEST,               // Reboot Test
     TYPE_SLEEP_TEST,                // Sleep Test
     TYPE_RECOVERY_TEST,             // Recovery Test

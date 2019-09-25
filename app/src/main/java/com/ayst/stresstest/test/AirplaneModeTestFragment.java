@@ -52,7 +52,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class FlyModeTestFragment extends BaseCountTestWithTimerFragment {
+public class AirplaneModeTestFragment extends BaseCountTestWithTimerFragment {
 
     @BindView(R.id.chbox_check_wifi)
     CheckBox mCheckWiFiCheckbox;
@@ -94,8 +94,8 @@ public class FlyModeTestFragment extends BaseCountTestWithTimerFragment {
         View contentView = inflater.inflate(R.layout.fragment_flymode_test, container, false);
         setContentView(contentView);
 
-        setTitle(R.string.fly_mode_test);
-        setType(TestType.TYPE_FLY_MODE_TEST);
+        setTitle(R.string.airplane_mode_test);
+        setType(TestType.TYPE_AIRPLANE_MODE_TEST);
 
         unbinder = ButterKnife.bind(this, contentView);
         return view;
@@ -236,17 +236,17 @@ public class FlyModeTestFragment extends BaseCountTestWithTimerFragment {
                 break;
 
             case WifiManager.WIFI_STATE_ENABLING:
-                showTips(R.string.fly_mode_test_close);
+                showTips(R.string.airplane_mode_test_close);
                 break;
 
             case WifiManager.WIFI_STATE_DISABLING:
                 mWifiAdapter.updateList(null);
                 mWifiAdapter.notifyDataSetChanged();
-                showTips(R.string.fly_mode_test_open);
+                showTips(R.string.airplane_mode_test_open);
                 break;
 
             case WifiManager.WIFI_STATE_DISABLED:
-                showTips(R.string.fly_mode_test_opened);
+                showTips(R.string.airplane_mode_test_opened);
                 break;
         }
     }

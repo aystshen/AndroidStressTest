@@ -53,6 +53,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class CPUTestFragment extends BaseTimingTestFragment {
+
     private static final int MSG_RANDOM_SET_FREQ = 1001;
 
     @BindView(R.id.chbox_fix_freq)
@@ -151,6 +152,7 @@ public class CPUTestFragment extends BaseTimingTestFragment {
                 }
             }
         });
+
         mRandomFreqCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -355,7 +357,7 @@ public class CPUTestFragment extends BaseTimingTestFragment {
 
     @Override
     public boolean isSupport() {
-        return !mFreqs.isEmpty();
+        return true;
     }
 
     private boolean setRandomFreq() {
@@ -364,14 +366,16 @@ public class CPUTestFragment extends BaseTimingTestFragment {
         String str = mFreqs.get(randomIndex);
         mCurFreq = Integer.valueOf(str.split("M")[0]);
         int value = mCurFreq * 1000;
-        Log.d(TAG, "setRandomFreq, set freq value: " + value);
+
         try {
             ArmFreqUtils.setCpuFreq(value);
         } catch (Exception e) {
             Log.e(TAG, "setRandomFreq, set random freq failed: " + e.getMessage());
             return false;
         }
+
         mCurFreqTv.setText(mCurFreq + "");
+
         return true;
     }
 
@@ -442,9 +446,11 @@ public class CPUTestFragment extends BaseTimingTestFragment {
 
             if (this.myPidCpuReader == null) {
                 try {
-                    this.myPidCpuReader = new BufferedReader(new FileReader("/proc/" + Process.myPid() + "/stat"));
+                    this.myPidCpuReader = new BufferedReader(new FileReader("/proc/"
+                            + Process.myPid() + "/stat"));
                 } catch (FileNotFoundException var2) {
-                    Log.w(TAG, "Could not open '/proc/" + Process.myPid() + "/stat' - " + var2.getMessage());
+                    Log.w(TAG, "Could not open '/proc/" + Process.myPid() + "/stat' - "
+                            + var2.getMessage());
                 }
             }
 
@@ -455,19 +461,24 @@ public class CPUTestFragment extends BaseTimingTestFragment {
             if (this.totalCpuReader != null) {
                 try {
                     cpuData = this.totalCpuReader.readLine().split("[ ]+", 9);
-                    this.jiffies = Long.parseLong(cpuData[1]) + Long.parseLong(cpuData[2]) + Long.parseLong(cpuData[3]);
-                    this.totalJiffies = this.jiffies + Long.parseLong(cpuData[4]) + Long.parseLong(cpuData[6]) + Long.parseLong(cpuData[7]);
+                    this.jiffies = Long.parseLong(cpuData[1]) + Long.parseLong(cpuData[2])
+                            + Long.parseLong(cpuData[3]);
+                    this.totalJiffies = this.jiffies + Long.parseLong(cpuData[4])
+                            + Long.parseLong(cpuData[6]) + Long.parseLong(cpuData[7]);
                 } catch (IOException var8) {
-                    Log.w("CpuUsageDataModule", "Failed reading total cpu data - " + var8.getMessage());
+                    Log.w("CpuUsageDataModule", "Failed reading total cpu data - "
+                            + var8.getMessage());
                 }
             }
 
             if (this.myPidCpuReader != null) {
                 try {
                     cpuData = this.myPidCpuReader.readLine().split("[ ]+", 18);
-                    this.jiffiesMyPid = Long.parseLong(cpuData[13]) + Long.parseLong(cpuData[14]) + Long.parseLong(cpuData[15]) + Long.parseLong(cpuData[16]);
+                    this.jiffiesMyPid = Long.parseLong(cpuData[13]) + Long.parseLong(cpuData[14])
+                            + Long.parseLong(cpuData[15]) + Long.parseLong(cpuData[16]);
                 } catch (IOException var7) {
-                    Log.w("CpuUsageDataModule", "Failed reading my pid cpu data - " + var7.getMessage());
+                    Log.w("CpuUsageDataModule", "Failed reading my pid cpu data - "
+                            + var7.getMessage());
                 }
             }
 
@@ -475,8 +486,10 @@ public class CPUTestFragment extends BaseTimingTestFragment {
                 long totalDiff = this.totalJiffies - this.totalJiffiesBefore;
                 long jiffiesDiff = this.jiffies - this.jiffiesBefore;
                 long jiffiesMyPidDiff = this.jiffiesMyPid - this.jiffiesMyPidBefore;
-                mCurPercent = (int) getPercentInRange((double) (100.0F * (float) jiffiesDiff / (float) totalDiff));
-                mCurMyPidPercent = (int) getPercentInRange((double) (100.0F * (float) jiffiesMyPidDiff / (float) totalDiff));
+                mCurPercent = (int) getPercentInRange((double) (100.0F * (float) jiffiesDiff
+                        / (float) totalDiff));
+                mCurMyPidPercent = (int) getPercentInRange((double) (100.0F * (float) jiffiesMyPidDiff
+                        / (float) totalDiff));
             }
 
             this.totalJiffiesBefore = this.totalJiffies;

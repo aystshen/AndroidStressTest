@@ -52,10 +52,10 @@ import java.util.HashMap;
 public abstract class BaseTestFragment extends Fragment {
     protected static final String TAG = BaseTestFragment.class.getSimpleName();
 
-    // Update UI
+    // Notify Handler Message for update ui
     protected static final int MSG_UPDATE = 1;
 
-    // Testing progress
+    // Progress bar
     protected ProgressBar mProgressbar;
 
     // The title view
@@ -219,7 +219,7 @@ public abstract class BaseTestFragment extends Fragment {
     }
 
     /**
-     * Update the UI，Must be in the main thread
+     * Update ui, can only be executed in the main thread
      */
     protected void updateImpl() {
         // Updating progressbar.

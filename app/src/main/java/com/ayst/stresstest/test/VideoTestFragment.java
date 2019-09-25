@@ -168,7 +168,7 @@ public class VideoTestFragment extends BaseTimingTestFragment {
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
-                mErrorTv.setText(getString(R.string.video_test_play_error) + "（" + what + "," + extra + ")");
+                mErrorTv.setText(getString(R.string.video_test_play_error) + "(" + what + "," + extra + ")");
 
                 markFailure();
                 mVideoView.start();

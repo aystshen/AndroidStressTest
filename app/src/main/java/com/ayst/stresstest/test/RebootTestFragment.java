@@ -150,7 +150,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
         if (isRunning()) {
             if (isCheckSD) {
                 if (!AppUtils.isExternalStorageMounted()) {
-                    mSdStateTv.setText("Check SD: Unmount");
+                    mSdStateTv.setText("Check sdcard: Unmount");
                     mSdStateTv.setVisibility(View.VISIBLE);
                     markFailure();
                 }
@@ -158,7 +158,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
 
             if (isCheckWifi) {
                 if (!AppUtils.isConnNetWork(mActivity)) {
-                    mWifiStateTv.setText("Check WIFI: Disconnect");
+                    mWifiStateTv.setText("Check WiFi: Disconnect");
                     mWifiStateTv.setVisibility(View.VISIBLE);
                     markFailure();
                 }

@@ -1,5 +1,6 @@
 package com.ayst.stresstest.test.base;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.text.InputType;
@@ -103,14 +104,15 @@ public abstract class BaseTimingTestFragment extends BaseTestFragment {
                 }).show();
     }
 
+    @SuppressLint("DefaultLocale")
     private String time2String(int time) {
-        int curHour = time / 3600;
-        int curMin = (time % 3600) / 60;
-        int curSec = (time % 3600) % 60;
-        return curHour + ":" + curMin + ":" + curSec;
+        int hour = time / 3600;
+        int min = (time % 3600) / 60;
+        int sec = (time % 3600) % 60;
+        return String.format("%02d:%02d:%02d", hour, min, sec);
     }
 
     private String formatTimeString() {
-        return time2String(mCurrentTime) + "/" + time2String(mTargetTime);
+        return time2String(mCurrentTime) + "/" + mTargetTime/3600 + "h";
     }
 }

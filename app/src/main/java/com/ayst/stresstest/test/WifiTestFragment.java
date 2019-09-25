@@ -77,7 +77,6 @@ public class WifiTestFragment extends BaseCountTestWithTimerFragment {
 
     private ConnectivityManager mConnManager;
     private WifiManager mWifiManager;
-    private Timer mTimer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -173,10 +172,6 @@ public class WifiTestFragment extends BaseCountTestWithTimerFragment {
     public void stop() {
         if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
             mWifiManager.setWifiEnabled(true);
-        }
-
-        if (mTimer != null) {
-            mTimer.cancel();
         }
 
         mActivity.unregisterReceiver(mWifiReceiver);

@@ -69,7 +69,8 @@ public class BluetoothTestFragment extends BaseCountTestWithTimerFragment {
     Unbinder unbinder;
 
     private boolean isCheckConnect = false;
-    private boolean mScanning = true;
+    private boolean isScanning = true;
+
     private DeviceListAdapter mDeviceListAdapter = null;
     private ArrayList<ScanResult> mData = new ArrayList<ScanResult>();
     private BluetoothAdapter mBluetoothAdapter;
@@ -165,7 +166,7 @@ public class BluetoothTestFragment extends BaseCountTestWithTimerFragment {
             mSettingsContainer.setVisibility(View.INVISIBLE);
             mRunningContainer.setVisibility(View.VISIBLE);
 
-            if (mScanning) {
+            if (isScanning) {
                 mSpinKitView.setVisibility(View.VISIBLE);
             } else {
                 mSpinKitView.setVisibility(View.INVISIBLE);
@@ -184,7 +185,7 @@ public class BluetoothTestFragment extends BaseCountTestWithTimerFragment {
                 scanClassicalDevice(enable);
             }
         }
-        mScanning = enable;
+        isScanning = enable;
         update();
     }
 
@@ -219,7 +220,6 @@ public class BluetoothTestFragment extends BaseCountTestWithTimerFragment {
         mTipsTv.setVisibility(View.INVISIBLE);
     }
 
-    // Device scan callback.
     private ScanCallback mLeScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, final android.bluetooth.le.ScanResult result) {
@@ -255,16 +255,16 @@ public class BluetoothTestFragment extends BaseCountTestWithTimerFragment {
         private BluetoothDevice mDevice = null;
         private int mRssi = 0;
 
-        public ScanResult(BluetoothDevice device, int rssi) {
+        ScanResult(BluetoothDevice device, int rssi) {
             mDevice = device;
             mRssi = rssi;
         }
 
-        public BluetoothDevice getDevice() {
+        BluetoothDevice getDevice() {
             return mDevice;
         }
 
-        public int getRssi() {
+        int getRssi() {
             return mRssi;
         }
     }
@@ -287,23 +287,19 @@ public class BluetoothTestFragment extends BaseCountTestWithTimerFragment {
                 int btState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
                 switch (btState) {
                     case BluetoothAdapter.STATE_TURNING_ON:
-                        Log.i(TAG, "onReceive, STATE_TURNING_ON");
                         showTips(R.string.bt_test_bt_opening);
                         break;
                     case BluetoothAdapter.STATE_ON:
-                        Log.i(TAG, "onReceive, STATE_ON");
                         scan(true);
                         hideTips();
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
-                        Log.i(TAG, "onReceive, STATE_TURNING_OFF");
                         scan(false);
                         mData.clear();
                         mDeviceListAdapter.notifyDataSetChanged();
                         showTips(R.string.bt_test_bt_closing);
                         break;
                     case BluetoothAdapter.STATE_OFF:
-                        Log.i(TAG, "onReceive, STATE_OFF");
                         showTips(R.string.bt_test_bt_closed);
                         break;
                 }

@@ -37,7 +37,7 @@
     <string name="video_test">视频测试</string>
     <string name="wifi_test">WiFi测试</string>
     <string name="bluetooth_test">蓝牙测试</string>
-    <string name="fly_mode_test">飞行模式测试</string>
+    <string name="airplane_mode_test">飞行模式测试</string>
     <string name="reboot_test">重启测试</string>
     <string name="sleep_test">休眠测试</string>
     <string name="recovery_test">恢复出厂测试</string>
@@ -49,8 +49,8 @@
     <string name="request_permission">获取相机权限失败，该项测试将无法进行。</string>
 
     <!--Bluetooth Test-->
-    <string name="bt_test_intro">蓝牙测试将持续打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙，支持自动判别测试结果。</string>
-    <string name="bt_test_check_devices">扫描列表无蓝牙设备标记为失败</string>
+    <string name="bt_test_intro">蓝牙测试将持续打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙。</string>
+    <string name="bt_test_check_devices">无法搜索到设备视为失败</string>
     <string name="bt_test_ble">蓝牙4.0+</string>
     <string name="bt_test_valid_device_tips">请确定附近至少能搜索到一个有效的蓝牙设备！</string>
     <string name="bt_test_bt_opening">蓝牙打开中</string>
@@ -74,9 +74,9 @@
     <string name="cpu_test_set_random_freq_fail">设置随机CPU频率失败，该产品可能无法进行CPU变频测试！</string>
 
     <!--WiFi Test-->
-    <string name="wifi_test_intro">WiFi测试将持续打开、关闭、并扫描附近WiFi热点，支持自动判别测试结果。</string>
+    <string name="wifi_test_intro">WiFi测试将持续打开、关闭、并扫描附近WiFi热点。</string>
     <string name="wifi_test_check_connect">通过检查WiFi连接判别测试结果</string>
-    <string name="wifi_test_connect_tips">请先到系统设置打开并连接一个有效的WIFI热点！</string>
+    <string name="wifi_test_connect_tips">请先到系统设置打开并连接一个有效的WiFi热点！</string>
     <string name="wifi_test_connected">已连接</string>
     <string name="wifi_test_connecting">连接中</string>
     <string name="wifi_test_authenticating">验证中</string>
@@ -108,19 +108,19 @@
     <!--Reboot Test-->
     <string name="reboot_test_intro">重启测试验证设备重启可靠性，如果重启中断说明测试失败。</string>
     <string name="reboot_test_check_sdcard">重启后检查SD卡状态</string>
-    <string name="reboot_test_check_wifi">重启后检查WIFI连接状态</string>
+    <string name="reboot_test_check_wifi">重启后检查WiFi连接状态</string>
     <string name="reboot_test_count_down">秒后开始重启系统</string>
     <string name="reboot_test_insert_sdcard_tips">请插入SD卡!</string>
-    <string name="reboot_test_connect_wifi_tips">请连接WIFI!</string>
+    <string name="reboot_test_connect_wifi_tips">请连接WiFi!</string>
     <string name="reboot_test_reboot_tips">确定要重启测试吗？确定后将在 %d 秒后重启系统。</string>
     <string name="reboot_test_delay_empty">请设置延时！</string>
 
-    <!--Fly Mode Test-->
-    <string name="fly_mode_test_intro">飞行模式测试将持续打开、关闭飞行模式，同时扫描附近WiFi热点，支持自动判别测试结果。</string>
-    <string name="fly_mode_test_check_wifi">通过WiFi连接状态判断结果</string>
-    <string name="fly_mode_test_close">关闭飞行模式</string>
-    <string name="fly_mode_test_open">打开飞行模式</string>
-    <string name="fly_mode_test_opened">飞行模式已打开</string>
+    <!--Airplane Mode Test-->
+    <string name="airplane_mode_test_intro">飞行模式测试将反复打开、关闭飞行模式，同时扫描附近WiFi热点。</string>
+    <string name="airplane_mode_test_check_wifi">通过WiFi连接状态判断结果</string>
+    <string name="airplane_mode_test_close">关闭飞行模式</string>
+    <string name="airplane_mode_test_open">打开飞行模式</string>
+    <string name="airplane_mode_test_opened">飞行模式已打开</string>
 
     <!--Recovery Test-->
     <string name="recovery_test_intro">恢复出厂测试将会擦除所有数据，请先插入U盘用于保存状态。</string>

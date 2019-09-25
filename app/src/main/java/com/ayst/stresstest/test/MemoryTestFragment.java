@@ -112,7 +112,7 @@ public class MemoryTestFragment extends BaseTimingTestFragment {
             public void run() {
                 if (isRunning()) {
                     if ((mUsedMemory * 100) / mTotalMemory < mFillPercent) {
-                        MemOpUtils.malloc(10);
+                        MemOpUtils.malloc(10); // Malloc 10M memory
                     } else {
                         if (mCountDown > 0) {
                             mCountDown--;

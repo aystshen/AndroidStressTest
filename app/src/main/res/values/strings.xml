@@ -37,7 +37,7 @@
     <string name="video_test">VIDEO TEST</string>
     <string name="wifi_test">WIFI TEST</string>
     <string name="bluetooth_test">BLUETOOTH TEST</string>
-    <string name="fly_mode_test">FLY MODE TEST</string>
+    <string name="airplane_mode_test">Airplane mode TEST</string>
     <string name="reboot_test">REBOOT TEST</string>
     <string name="sleep_test">SLEEP TEST</string>
     <string name="recovery_test">RECOVERY TEST</string>
@@ -49,8 +49,8 @@
     <string name="request_permission">Failed to get camera permissions, the test will not work.</string>
 
     <!--Bluetooth Test-->
-    <string name="bt_test_intro">The Bluetooth test will continue to turn on, off, and scan nearby Bluetooth devices, support classic Bluetooth and low-power Bluetooth, and support automatic identification of test results.</string>
-    <string name="bt_test_check_devices">Scan list no device marked as failed</string>
+    <string name="bt_test_intro">The Bluetooth test will continue to turn on, off, and scan nearby Bluetooth devices, support classic Bluetooth and low-power Bluetooth.</string>
+    <string name="bt_test_check_devices">Unable to search for device as failed</string>
     <string name="bt_test_ble">Bluetooth Ble</string>
     <string name="bt_test_valid_device_tips">Please be sure to find at least one valid Bluetooth device nearby!</string>
     <string name="bt_test_bt_opening">OPENING</string>
@@ -58,7 +58,7 @@
     <string name="bt_test_bt_closed">CLOSED</string>
 
     <!--CPU Test-->
-    <string name="cpu_test_intro">The CPU test supports three modes: fixed frequency, random frequency, and specified CPU usage.</string>
+    <string name="cpu_test_intro">The CPU test supports: fixed frequency, random frequency, and CPU usage.</string>
     <string name="cpu_test_fix_freq">Fixed frequency</string>
     <string name="cpu_test_set_freq">Set frequency:</string>
     <string name="cpu_test_random_freq">Random frequency</string>
@@ -74,9 +74,9 @@
     <string name="cpu_test_set_random_freq_fail">Failed to set the random CPU frequency, the product may not be able to perform CPU frequency conversion test!</string>
 
     <!--WiFi Test-->
-    <string name="wifi_test_intro">The WiFi test will continue to turn on, off, and scan nearby WiFi hotspots to support automatic identification of test results.</string>
-    <string name="wifi_test_check_connect">Check the WiFi connection discrimination test result</string>
-    <string name="wifi_test_connect_tips">Please go to the system settings and open a valid WIFI hotspot!</string>
+    <string name="wifi_test_intro">The WiFi test will continue to turn on, off, and scan nearby WiFi.</string>
+    <string name="wifi_test_check_connect">Check the WiFi connection</string>
+    <string name="wifi_test_connect_tips">Please go to the settings and connect a valid WiFi!</string>
     <string name="wifi_test_connected">Connected</string>
     <string name="wifi_test_connecting">Connecting</string>
     <string name="wifi_test_authenticating">Authenticating</string>
@@ -106,21 +106,21 @@
     <string name="memory_test_fill_percent">Fill percent:</string>
 
     <!--Reboot Test-->
-    <string name="reboot_test_intro">Reboot the test to verify the reliability of the device restart. If the restart interrupt indicates that the test failed.</string>
-    <string name="reboot_test_check_sdcard">Check the SD card status after rebooting</string>
-    <string name="reboot_test_check_wifi">Check the WIFI connection status after rebooting</string>
-    <string name="reboot_test_count_down">seconds, Start rebooting the system</string>
-    <string name="reboot_test_insert_sdcard_tips">Please insert the SD card!</string>
-    <string name="reboot_test_connect_wifi_tips">Please connect to WIFI!</string>
+    <string name="reboot_test_intro">Reboot the test to verify the reliability of the device restart.</string>
+    <string name="reboot_test_check_sdcard">Check the sdcard status after rebooting</string>
+    <string name="reboot_test_check_wifi">Check the WiFi connection status after rebooting</string>
+    <string name="reboot_test_count_down">seconds, reboot</string>
+    <string name="reboot_test_insert_sdcard_tips">Please insert the sdcard!</string>
+    <string name="reboot_test_connect_wifi_tips">Please connect to WiFi!</string>
     <string name="reboot_test_reboot_tips">Are you want to restart the test? After confirming, the system will be restarted after %d seconds.</string>
     <string name="reboot_test_delay_empty">Please set the delay!</string>
 
-    <!--Fly Mode Test-->
-    <string name="fly_mode_test_intro">The flight mode test will continue to turn on and off the flight mode, while scanning nearby WiFi hotspots to support automatic identification of test results.</string>
-    <string name="fly_mode_test_check_wifi">Judging result by WIFI connection status</string>
-    <string name="fly_mode_test_close">CLOSING</string>
-    <string name="fly_mode_test_open">OPENING</string>
-    <string name="fly_mode_test_opened">OPENED</string>
+    <!--Airplane mode Test-->
+    <string name="airplane_mode_test_intro">The Airplane mode test will continue to turn on and off the Airplane mode, while scanning nearby WiFi.</string>
+    <string name="airplane_mode_test_check_wifi">Check the WiFi connection</string>
+    <string name="airplane_mode_test_close">CLOSING</string>
+    <string name="airplane_mode_test_open">OPENING</string>
+    <string name="airplane_mode_test_opened">OPENED</string>
 
     <!--Recovery Test-->
     <string name="recovery_test_intro">Restoring the factory will erase all data, please insert UDisk to save the state.</string>

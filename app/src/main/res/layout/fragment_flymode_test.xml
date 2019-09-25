@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fly_mode_test_intro"
+            android:text="@string/airplane_mode_test_intro"
             android:textColor="@color/black_70" />
 
         <CheckBox
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/fly_mode_test_check_wifi" />
+            android:text="@string/airplane_mode_test_check_wifi" />
 
     </LinearLayout>
 

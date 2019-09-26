@@ -45,6 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class RebootTestFragment extends BaseCountTestFragment {
+
     public static final String SP_REBOOT_FLAG = "reboot_flag";
     private static final String SP_REBOOT_COUNT = "reboot_count";
     private static final String SP_REBOOT_MAX = "reboot_max";
@@ -52,6 +53,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
     private static final String SP_REBOOT_SD = "reboot_sd";
 
     private final static int MSG_REBOOT_COUNTDOWN = 1001;
+    private final static int DELAY_DEFAULT = 10; // Default 10s
 
     @BindView(R.id.chbox_sdcard)
     CheckBox mSdcardCheckbox;
@@ -74,7 +76,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
         mState = SPUtils.getInstance(mActivity).getData(SP_REBOOT_FLAG, State.STOP);
         mCurrentCount = SPUtils.getInstance(mActivity).getData(SP_REBOOT_COUNT, 0);
         mTargetCount = SPUtils.getInstance(mActivity).getData(SP_REBOOT_MAX, 0);
-        mDelayTime = SPUtils.getInstance(mActivity).getData(SP_REBOOT_DELAY, 5);
+        mDelayTime = SPUtils.getInstance(mActivity).getData(SP_REBOOT_DELAY, DELAY_DEFAULT);
         isCheckSD = SPUtils.getInstance(mActivity).getData(SP_REBOOT_SD, false);
     }
 
@@ -186,7 +188,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
     public void stop() {
         mHandler.removeMessages(MSG_REBOOT_COUNTDOWN);
         mCountdownTv.setVisibility(View.GONE);
-        saveState();
+        cleanState();
 
         super.stop();
     }
@@ -234,5 +236,13 @@ public class RebootTestFragment extends BaseCountTestFragment {
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_MAX, mTargetCount);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_DELAY, mDelayTime);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_SD, isCheckSD);
+    }
+
+    private void cleanState() {
+        SPUtils.getInstance(mActivity).saveData(SP_REBOOT_FLAG, State.STOP);
+        SPUtils.getInstance(mActivity).saveData(SP_REBOOT_COUNT, 0);
+        SPUtils.getInstance(mActivity).saveData(SP_REBOOT_MAX, 0);
+        SPUtils.getInstance(mActivity).saveData(SP_REBOOT_DELAY, DELAY_DEFAULT);
+        SPUtils.getInstance(mActivity).saveData(SP_REBOOT_SD, false);
     }
 }

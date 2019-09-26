@@ -35,9 +35,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp">
+            android:layout_height="wrap_content">
 
             <CheckBox
                 android:id="@+id/chbox_fix_freq"
@@ -57,9 +55,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp">
+            android:layout_height="wrap_content">
 
             <CheckBox
                 android:id="@+id/chbox_random_freq"
@@ -79,9 +75,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp">
+            android:layout_height="wrap_content">
 
             <CheckBox
                 android:id="@+id/chbox_cpu_rate"

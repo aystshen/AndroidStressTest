@@ -31,59 +31,21 @@
             android:text="@string/recovery_test_intro"
             android:textColor="@color/black_70" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/chbox_erase_flash"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp">
+            android:text="@string/recovery_test_format_sdcard" />
 
-            <CheckBox
-                android:id="@+id/chbox_erase_flash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/recovery_test_format_sdcard" />
-
-            <TextView
-                android:id="@+id/tv_sd_state"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="FAIL"
-                android:textColor="@color/red" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/chbox_wipe_all"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp">
-
-            <CheckBox
-                android:id="@+id/chbox_wipe_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/recovery_test_wipe_all" />
-
-            <TextView
-                android:id="@+id/tv_wifi_state"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="FAIL"
-                android:textColor="@color/red"/>
-
-        </RelativeLayout>
+            android:text="@string/recovery_test_wipe_all" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:focusable="true"
             android:focusableInTouchMode="true">
 
@@ -91,17 +53,17 @@
                 android:id="@+id/edt_delay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="50dp"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
-                android:text="5"/>
+                android:minWidth="50dp"
+                android:text="10" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/recovery_test_count_down"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
@@ -109,7 +71,6 @@
 
     <TextView
         android:id="@+id/tv_countdown"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black_30"
@@ -117,6 +78,7 @@
         android:text="5"
         android:textColor="@color/black"
         android:textSize="50sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 </FrameLayout>

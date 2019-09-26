@@ -65,6 +65,8 @@ public class RecoveryTestFragment extends BaseCountTestFragment {
     public static final String EXTRA_RECOVERY_DELAY = "recovery_delay";
 
     private final static int MSG_RECOVERY_COUNTDOWN = 1001;
+    private final static int DELAY_DEFAULT = 10; // Default 10s
+
     @BindView(R.id.chbox_erase_flash)
     CheckBox mEraseFlashCheckbox;
     @BindView(R.id.chbox_wipe_all)
@@ -90,7 +92,7 @@ public class RecoveryTestFragment extends BaseCountTestFragment {
         mTargetCount = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_MAX, 0);
         mIsWipeAll = mActivity.getIntent().getBooleanExtra(EXTRA_RECOVERY_WIPE_ALL, false);
         mIsEraseFlash = mActivity.getIntent().getBooleanExtra(EXTRA_RECOVERY_ERASE_FLASH, false);
-        mDelayTime = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_DELAY, 5);
+        mDelayTime = mActivity.getIntent().getIntExtra(EXTRA_RECOVERY_DELAY, DELAY_DEFAULT);
     }
 
     @Override

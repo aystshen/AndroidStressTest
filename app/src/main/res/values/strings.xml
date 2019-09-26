@@ -124,7 +124,7 @@
 
     <!--Recovery Test-->
     <string name="recovery_test_intro">Restoring the factory will erase all data, please insert u disk to save the state.</string>
-    <string name="recovery_test_format_sdcard">Format SD card</string>
+    <string name="recovery_test_format_sdcard">Format sdcard</string>
     <string name="recovery_test_wipe_all">Erase all data</string>
     <string name="recovery_test_count_down">seconds, Start factory reset</string>
     <string name="recovery_test_insert_sdcard_tips">Please insert the SD card!</string>

@@ -18,7 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ayst.stresstest.test.CameraTestFragment2">
+    tools:context="com.ayst.stresstest.test.CameraTestFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -33,9 +33,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"

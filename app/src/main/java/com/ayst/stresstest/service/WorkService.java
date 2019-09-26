@@ -154,6 +154,7 @@ public class WorkService extends Service {
         if (null == sUsbRootFile) {
             sUsbRootFile = createUsbRootFile(this);
             if (null == sUsbRootFile) {
+                Log.w(TAG, "checkRecoveryState, No usb storage device found.");
                 return false;
             }
         }

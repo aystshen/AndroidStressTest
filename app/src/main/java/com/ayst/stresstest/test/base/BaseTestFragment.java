@@ -224,10 +224,8 @@ public abstract class BaseTestFragment extends Fragment {
     protected void updateImpl() {
         // Updating progressbar.
         mProgressbar.setVisibility(isAvailable() ? View.VISIBLE : View.INVISIBLE);
-        if (isRunning()) {
-            if (mProgressbar.getProgressDrawable() != mResultDrawable.get(mResult)) {
-                mProgressbar.setProgressDrawable(mResultDrawable.get(mResult));
-            }
+        if (mProgressbar.getProgressDrawable() != mResultDrawable.get(mResult)) {
+            mProgressbar.setProgressDrawable(mResultDrawable.get(mResult));
         }
 
         // Updating other.
@@ -263,6 +261,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Set the title
+     *
      * @param text String
      */
     protected void setTitle(String text) {
@@ -271,6 +270,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Set the title by resource id
+     *
      * @param textId Resource id
      */
     protected void setTitle(@StringRes int textId) {
@@ -279,6 +279,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Set the content
+     *
      * @param contentView
      */
     protected void setContentView(View contentView) {
@@ -287,6 +288,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Set the full content
+     *
      * @param contentView
      */
     protected void setFullContentView(View contentView) {
@@ -295,6 +297,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Set test type
+     *
      * @param type TestType
      */
     protected void setType(TestType type) {
@@ -303,6 +306,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Set failure threshold
+     *
      * @param fail
      * @param poor
      */
@@ -369,6 +373,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Is running?
+     *
      * @return
      */
     public boolean isRunning() {
@@ -377,6 +382,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Set Available or unavailable
+     *
      * @param available
      */
     public void setAvailable(boolean available) {
@@ -386,6 +392,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Available or unavailable?
+     *
      * @return
      */
     public boolean isAvailable() {
@@ -394,6 +401,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Is support?
+     *
      * @return
      */
     public abstract boolean isSupport();
@@ -455,6 +463,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Shows a {@link Toast} on the UI thread.
+     *
      * @param resId The message to show.
      */
     protected void showToast(int resId) {
@@ -463,6 +472,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Shows a {@link Toast} on the UI thread.
+     *
      * @param text The message to show.
      */
     protected void showToast(String text) {
@@ -475,6 +485,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Pop-up the error dialog
+     *
      * @param strId
      */
     protected void showErrorDialog(int strId) {
@@ -483,6 +494,7 @@ public abstract class BaseTestFragment extends Fragment {
 
     /**
      * Pop-up the error dialog
+     *
      * @param msg
      */
     protected void showErrorDialog(String msg) {

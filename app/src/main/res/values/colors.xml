@@ -22,7 +22,7 @@
 
     <color name="transparent">#00000000</color>
     <color name="yellow">#ffc6e578</color>
-    <color name="green">#49d452</color>
+    <color name="green">#ff00ff00</color>
     <color name="green_50">#803d9909</color>
     <color name="orange">#fffa9d3e</color>
     <color name="gray">#ffc6c6c6</color>

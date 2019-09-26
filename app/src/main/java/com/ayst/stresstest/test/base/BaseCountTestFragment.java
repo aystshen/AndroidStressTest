@@ -53,12 +53,12 @@ public abstract class BaseCountTestFragment extends BaseTestFragment {
     }
 
     protected boolean next() {
+        mCurrentCount++;
         if (!isRunning() || mCurrentCount >= mTargetCount) {
             stop();
 
             return false;
         } else {
-            mCurrentCount++;
             update();
 
             Logger.t(TAG).d("Testing %d/%d", mCurrentCount, mTargetCount);
@@ -80,10 +80,12 @@ public abstract class BaseCountTestFragment extends BaseTestFragment {
                         String text = editText.getText().toString();
                         if (!TextUtils.isEmpty(text)) {
                             mTargetCount = Integer.valueOf(text);
-                            start();
-                        } else {
-                            showToast(getString(R.string.set_time_tips));
+                            if (mTargetCount > 0) {
+                                start();
+                                return;
+                            }
                         }
+                        showToast(getString(R.string.set_time_tips));
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

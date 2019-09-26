@@ -48,7 +48,8 @@
                 android:max="100"
                 android:minHeight="20dp"
                 android:progress="0"
-                android:background="@color/colorPrimaryDark" />
+                android:background="@color/colorPrimaryDark"
+                android:progressDrawable="@drawable/progressbar"/>
 
             <TextView
                 android:id="@+id/tv_title"

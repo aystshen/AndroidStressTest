@@ -56,30 +56,6 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp">
-
-            <CheckBox
-                android:id="@+id/chbox_wifi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reboot_test_check_wifi" />
-
-            <TextView
-                android:id="@+id/tv_wifi_state"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="FAIL"
-                android:textColor="@color/red"/>
-
-        </RelativeLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

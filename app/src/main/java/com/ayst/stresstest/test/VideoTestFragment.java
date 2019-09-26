@@ -210,7 +210,7 @@ public class VideoTestFragment extends BaseTimingTestFragment {
                     Uri uri = data.getData();
                     Log.d(TAG, "onActivityResult, File Uri: " + uri.toString());
                     // Get the path
-                    mPath = FileUtils.getPath(mActivity, uri);
+                    mPath = FileUtils.getFilePathByUri(mActivity, uri);
                     Log.d(TAG, "onActivityResult, File Path: " + mPath);
 
                     if (!TextUtils.isEmpty(mPath)) {

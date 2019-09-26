@@ -41,6 +41,7 @@ import com.ayst.stresstest.R;
 import com.ayst.stresstest.test.base.BaseCountTestFragment;
 import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.util.AppUtils;
+import com.ayst.stresstest.util.FileUtils;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
@@ -57,6 +58,15 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class RecoveryTestFragment extends BaseCountTestFragment {
+
+    private static File RECOVERY_DIR = new File("/cache/recovery");
+    private static File COMMAND_FILE = new File(RECOVERY_DIR, "command");
+
+    /* Used to save the current state.
+     * Must be prefixed with last, otherwise the restart file will be cleared.
+     */
+    public static File STATE_FILE = new File(RECOVERY_DIR, "last_recovery_test_state");
+
     public static final String EXTRA_RECOVERY_FLAG = "recovery_flag";
     public static final String EXTRA_RECOVERY_COUNT = "recovery_count";
     public static final String EXTRA_RECOVERY_MAX = "recovery_max";
@@ -81,7 +91,6 @@ public class RecoveryTestFragment extends BaseCountTestFragment {
     private int mCountDownTime;
     private boolean mIsWipeAll = false;
     private boolean mIsEraseFlash = false;
-    private UsbFile mUsbRootFile = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -174,14 +183,6 @@ public class RecoveryTestFragment extends BaseCountTestFragment {
         }
         mDelayTime = Integer.valueOf(mDelayEdt.getText().toString());
 
-        if (null == mUsbRootFile) {
-            mUsbRootFile = createUsbRootFile();
-            if (null == mUsbRootFile) {
-                showToast(R.string.recovery_test_insert_udisk_tips);
-                return;
-            }
-        }
-
         super.onStartClicked();
     }
 
@@ -273,34 +274,8 @@ public class RecoveryTestFragment extends BaseCountTestFragment {
             }
             Log.d(TAG, "recovery");
         } else {
-            stop();
+            showErrorDialog(R.string.recovery_test_save_state_failed);
         }
-    }
-
-    private UsbFile createUsbRootFile() {
-        UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(mActivity);
-
-        for (UsbMassStorageDevice device : devices) {
-
-            // before interacting with a device you need to call init()!
-            try {
-                device.init();
-            } catch (IOException e) {
-                e.printStackTrace();
-                continue;
-            }
-
-            // Only uses the first partition on the device
-            FileSystem currentFs = device.getPartitions().get(0).getFileSystem();
-            Log.d(TAG, "Capacity: " + currentFs.getCapacity());
-            Log.d(TAG, "Occupied Space: " + currentFs.getOccupiedSpace());
-            Log.d(TAG, "Free Space: " + currentFs.getFreeSpace());
-            Log.d(TAG, "Chunk size: " + currentFs.getChunkSize());
-
-            return currentFs.getRootDirectory();
-        }
-
-        return null;
     }
 
     private boolean saveState() {
@@ -313,48 +288,16 @@ public class RecoveryTestFragment extends BaseCountTestFragment {
         sb.append(EXTRA_RECOVERY_DELAY).append(":").append(mDelayTime).append("\n");
         String content = sb.toString();
 
-        if (null == mUsbRootFile) {
-            mUsbRootFile = createUsbRootFile();
-            if (null == mUsbRootFile) {
-                return false;
-            }
-        }
-
-        OutputStream fos = null;
         try {
-            UsbFile stateFile = null;
-            UsbFile[] files = mUsbRootFile.listFiles();
-
-            for (UsbFile file : files) {
-                if (TextUtils.equals("recovery_state", file.getName())) {
-                    Log.d(TAG, "saveState, found recovery_state file");
-                    stateFile = file;
-                    break;
-                }
-            }
-            if (null == stateFile) {
-                stateFile = mUsbRootFile.createFile("recovery_state");
-            }
-
-            fos = new UsbFileOutputStream(stateFile);
-            fos.write(content.getBytes());
-            fos.close();
-            return true;
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "saveState, error: " + e.getMessage());
-        } catch (IOException ie) {
-            Log.e(TAG, "saveState, error: " + ie.getMessage());
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    Log.e(TAG, "saveState, error: " + e.getMessage());
-                }
-            }
+            RECOVERY_DIR.mkdirs();
+            STATE_FILE.delete();
+            FileUtils.writeFile(STATE_FILE, content);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -363,9 +306,6 @@ public class RecoveryTestFragment extends BaseCountTestFragment {
      * @param arg to pass to the recovery utility.
      * @throws IOException if something goes wrong.
      */
-    private static File RECOVERY_DIR = new File("/cache/recovery");
-    private static File COMMAND_FILE = new File(RECOVERY_DIR, "command");
-
     private static void bootCommand(Context context, String arg) throws IOException {
         RECOVERY_DIR.mkdirs();  // In case we need it
         COMMAND_FILE.delete();  // In case it's not writable

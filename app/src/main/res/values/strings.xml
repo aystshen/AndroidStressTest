@@ -128,7 +128,7 @@
     <string name="recovery_test_wipe_all">Erase all data</string>
     <string name="recovery_test_count_down">seconds, Start factory reset</string>
     <string name="recovery_test_insert_sdcard_tips">Please insert the SD card!</string>
-    <string name="recovery_test_insert_udisk_tips">Please insert the UDisk!</string>
+    <string name="recovery_test_save_state_failed">Saving current state failed!</string>
     <string name="recovery_test_recovery_tips">Are you want to restore the factory settings test? After confirming, the factory settings will be restored after %d seconds.</string>
 
     <!--Timing boot Test-->

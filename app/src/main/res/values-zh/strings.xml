@@ -128,7 +128,7 @@
     <string name="recovery_test_wipe_all">擦除所有数据</string>
     <string name="recovery_test_count_down">秒后开始恢复出厂设置</string>
     <string name="recovery_test_insert_sdcard_tips">请插入SD卡！</string>
-    <string name="recovery_test_insert_udisk_tips">请先插入U盘！</string>
+    <string name="recovery_test_save_state_failed">保存当前状态失败！</string>
     <string name="recovery_test_recovery_tips">确定要恢复出厂设置测试吗？确定后将在 %d 秒后恢复出厂设置。</string>
 
     <!--Timing boot Test-->

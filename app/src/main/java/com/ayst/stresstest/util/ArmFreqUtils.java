@@ -198,7 +198,6 @@ public class ArmFreqUtils {
             throw new IOException();
         }
         return true;
-
     }
 
     private static String readFile(File file)

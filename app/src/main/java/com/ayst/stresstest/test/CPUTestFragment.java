@@ -206,15 +206,17 @@ public class CPUTestFragment extends BaseTimingTestFragment {
                 mDelayCnt += DELAY_CNT_STEP;
             }
 
-            int progress = mCurFreq * 100 / mMaxFreq;
-            mCurFreqTv.setText(mCurFreq + "");
-            mCurFreqPgr.setProgress(progress);
-            if (progress >= 70) {
-                mCurFreqPgr.setFinishedStrokeColor(getResources().getColor(R.color.red));
-            } else if (progress >= 50) {
-                mCurFreqPgr.setFinishedStrokeColor(getResources().getColor(R.color.orange));
-            } else {
-                mCurFreqPgr.setFinishedStrokeColor(getResources().getColor(R.color.colorAccent));
+            if (mCurFreq > 0 && mMaxFreq > 0) {
+                int progress = mCurFreq * 100 / mMaxFreq;
+                mCurFreqTv.setText(mCurFreq + "");
+                mCurFreqPgr.setProgress(progress);
+                if (progress >= 70) {
+                    mCurFreqPgr.setFinishedStrokeColor(getResources().getColor(R.color.red));
+                } else if (progress >= 50) {
+                    mCurFreqPgr.setFinishedStrokeColor(getResources().getColor(R.color.orange));
+                } else {
+                    mCurFreqPgr.setFinishedStrokeColor(getResources().getColor(R.color.colorAccent));
+                }
             }
         } else {
             mSettingsContainer.setVisibility(View.VISIBLE);
@@ -289,14 +291,16 @@ public class CPUTestFragment extends BaseTimingTestFragment {
 
         // CPU usage test
         } else {
-            String str = mFreqs.get(mFreqs.size() - 1);
-            mCurFreq = Integer.valueOf(str.split("M")[0]);
-            int value = mCurFreq * 1000;
-            try {
-                ArmFreqUtils.setCpuFreq(value);
-            } catch (Exception e) {
-                Log.e(TAG, "start, setCpuFreq failed: " + e.getMessage());
-                showToast(R.string.cpu_test_set_freq_fail);
+            if (null != mFreqs && !mFreqs.isEmpty()) {
+                String str = mFreqs.get(mFreqs.size() - 1);
+                mCurFreq = Integer.valueOf(str.split("M")[0]);
+                int value = mCurFreq * 1000;
+                try {
+                    ArmFreqUtils.setCpuFreq(value);
+                } catch (Exception e) {
+                    Log.e(TAG, "start, setCpuFreq failed: " + e.getMessage());
+                    showToast(R.string.cpu_test_set_freq_fail);
+                }
             }
 
             int index = mCpuRateSpinner.getSelectedItemPosition();

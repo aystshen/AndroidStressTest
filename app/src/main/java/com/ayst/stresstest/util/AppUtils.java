@@ -18,12 +18,14 @@ package com.ayst.stresstest.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -71,6 +73,19 @@ public class AppUtils {
 
     // Storage
     private static String sRootDir = "";
+
+    /**
+     * Start service
+     * @param context
+     * @param intent
+     */
+    public static void startService(Context context, Intent intent) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
+    }
 
     /**
      * Get application version name

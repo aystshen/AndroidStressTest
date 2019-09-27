@@ -22,6 +22,7 @@ import com.ayst.stresstest.test.base.BaseTestFragment;
 import com.ayst.stresstest.test.RebootTestFragment;
 import com.ayst.stresstest.test.TimingBootTestFragment;
 import com.ayst.stresstest.ui.MainActivity;
+import com.ayst.stresstest.util.AppUtils;
 import com.ayst.stresstest.util.SPUtils;
 
 import android.content.BroadcastReceiver;
@@ -48,7 +49,7 @@ public class RebootReceiver extends BroadcastReceiver {
                 Intent serviceIntent = new Intent(context, WorkService.class);
                 serviceIntent.putExtra("command", WorkService.COMMAND_CHECK_RECOVERY_STATE);
                 serviceIntent.putExtra("delay", 5000);
-                context.startService(serviceIntent);
+                AppUtils.startService(context, serviceIntent);
             }
         }
     }

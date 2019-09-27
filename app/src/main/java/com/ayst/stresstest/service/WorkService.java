@@ -16,15 +16,25 @@
 
 package com.ayst.stresstest.service;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+
 import androidx.annotation.Nullable;
+
 import android.util.Log;
+
+import com.ayst.stresstest.R;
 import com.ayst.stresstest.test.base.BaseTestFragment;
 import com.ayst.stresstest.test.RecoveryTestFragment;
 import com.ayst.stresstest.ui.MainActivity;
@@ -40,6 +50,9 @@ import java.io.IOException;
 
 public class WorkService extends Service {
     private final static String TAG = "WorkService";
+
+    public static final String ID = "com.ayst.stresstest.WorkService";
+    public static final String NAME = "AndroidStressTest";
 
     public static final int COMMAND_NULL = 0;
     public static final int COMMAND_CHECK_RECOVERY_STATE = 1;
@@ -64,6 +77,7 @@ public class WorkService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        startForeground();
         if (intent == null) {
             return Service.START_NOT_STICKY;
         }
@@ -177,5 +191,33 @@ public class WorkService extends Service {
         } catch (FileNotFoundException e) {
             Log.w(TAG, "No recovery state file found");
         }
+    }
+
+    /**
+     * From Android O (8.1), the startup service does not allow the use of context.startService(intent),
+     * but instead uses context.startForegroundService(intent), and the startForeground() interface
+     * must be called after starting the service, otherwise the Service will be forcibly terminated
+     * by the system.
+     */
+    private void startForeground() {
+        Notification.Builder builder = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel chan = new NotificationChannel(ID, NAME, NotificationManager.IMPORTANCE_HIGH);
+            chan.enableLights(true);
+            chan.setLightColor(Color.RED);
+            chan.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (manager != null) {
+                manager.createNotificationChannel(chan);
+            }
+            builder = new Notification.Builder(this, ID);
+        } else {
+            builder = new Notification.Builder(this.getApplicationContext());
+        }
+        Notification notification = builder.setContentTitle("Android Stress Test")
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setWhen(System.currentTimeMillis())
+                .build();
+        startForeground(1, notification);
     }
 }

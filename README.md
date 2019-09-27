@@ -9,21 +9,23 @@ This is an Android system stress test app that verifies the reliability of the m
 * Video test
 * WIFI test
 * Bluetooth test
-* Flight mode test
+* Airplane mode test
 * Restart test
 * Sleep test
 * Restore factory test
 * Time power-on/off test
+* Network test
+* Camera test
 
 ## Preview
-![image](screenshots/device-2018-08-09-175845.png)
+![image](screenshots/preview.png)
 
-![image](screenshots/device-2018-08-09-180308.png)
+![image](screenshots/record.gif)
 
 
 ## Using AndroidStressTest in your device
 1. Download
-2. System signature
+2. System Signature
 3. Installation
 
 System signature:

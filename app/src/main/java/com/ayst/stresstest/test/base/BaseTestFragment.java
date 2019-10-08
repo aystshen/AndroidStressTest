@@ -50,7 +50,7 @@ import com.ayst.stresstest.R;
 import java.util.HashMap;
 
 public abstract class BaseTestFragment extends Fragment {
-    protected static final String TAG = BaseTestFragment.class.getSimpleName();
+    protected String TAG;
 
     // Notify Handler Message for update ui
     protected static final int MSG_UPDATE = 1;
@@ -140,6 +140,7 @@ public abstract class BaseTestFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this.getActivity();
+        TAG = this.getClass().getSimpleName();
 
         mResultDrawable.put(Result.GOOD, new ClipDrawable(new ColorDrawable(Color.GREEN), Gravity.LEFT, ClipDrawable.HORIZONTAL));
         mResultDrawable.put(Result.FAIL, new ClipDrawable(new ColorDrawable(Color.YELLOW), Gravity.LEFT, ClipDrawable.HORIZONTAL));

@@ -11,7 +11,7 @@ public abstract class BaseCountTestWithTimerFragment extends BaseCountTestFragme
     private static final long DEFAULT_PERIOD = 10 * 1000; // Default 10s
 
     // Timer period
-    private long mPeriod = DEFAULT_PERIOD;
+    protected long mPeriod = DEFAULT_PERIOD;
 
     // Timer
     private Timer mTimer;

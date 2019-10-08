@@ -147,6 +147,8 @@
     <!--Camera Test-->
     <string name="camera_test_intro">The camera test will repeatedly open the camera for preview and take a photo. It will automatically check whether each preview and take photo is successful.</string>
     <string name="camera_test_select_camera">Select camera:</string>
+    <string name="camera_test_interval">Interval(≥15s):</string>
     <string name="camera_test_failure_count">Failure count：</string>
+    <string name="camera_test_interval_invalid_tips">Please set the valid interval!</string>
 
 </resources>

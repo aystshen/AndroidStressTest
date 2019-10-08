@@ -147,6 +147,8 @@
     <!--Camera Test-->
     <string name="camera_test_intro">摄像头测试将反复打开摄像头进行预览并拍照，测试过程中会自动检查每次预览和拍照是否成功。</string>
     <string name="camera_test_select_camera">被测摄像头：</string>
+    <string name="camera_test_interval">间隔时间（≥15秒）：</string>
     <string name="camera_test_failure_count">失败计数：</string>
+    <string name="camera_test_interval_invalid_tips">请设置正确的间隔时间！</string>
 
 </resources>

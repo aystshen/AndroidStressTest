@@ -52,6 +52,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -60,7 +61,9 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.legacy.app.FragmentCompat;
@@ -166,11 +169,15 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
      */
     private static final int STATE_WAITING_FOR_3A_CONVERGENCE = 3;
 
+    private static final int DEFAULT_INTERVAL = 15 * 1000;
+
     @BindView(R.id.spinner_camera)
     Spinner mCameraSpinner;
     @BindView(R.id.texture)
     AutoFitTextureView mTextureView;
     Unbinder unbinder;
+    @BindView(R.id.edt_interval)
+    EditText mIntervalEdt;
 
     /**
      * An additional thread for running tasks that shouldn't block the UI.  This is used for all
@@ -489,7 +496,7 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
 
         setTitle(R.string.camera_test);
         setType(TestType.TYPE_CAMERA_TEST);
-        setPeriod(15*1000);
+        setPeriod(DEFAULT_INTERVAL);
 
         View contentView = inflater.inflate(R.layout.fragment_camera_test, container, false);
         setContentView(contentView);
@@ -505,6 +512,8 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
             Log.e(TAG, "This device doesn't support Camera2 API.");
             return;
         }
+
+        mIntervalEdt.setText(DEFAULT_INTERVAL/1000+"");
 
         try {
             String[] cameras = mCameraManager.getCameraIdList();
@@ -567,6 +576,13 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
                 showToast("This device doesn't support Camera2 API.");
                 return;
             }
+
+            String intervalStr = mIntervalEdt.getText().toString();
+            if (TextUtils.isEmpty(intervalStr) || Integer.parseInt(intervalStr)*1000 < DEFAULT_INTERVAL) {
+                Toast.makeText(mActivity, R.string.camera_test_interval_invalid_tips, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            setPeriod(Integer.parseInt(intervalStr)*1000);
         }
 
         super.onStartClicked();
@@ -601,10 +617,10 @@ public class CameraTestFragment extends BaseCountTestWithTimerFragment
 
             try {
                 openCamera();
-                Thread.sleep(5000);
+                Thread.sleep(mPeriod/3);
 
                 takePicture();
-                Thread.sleep(5000);
+                Thread.sleep(mPeriod/3);
 
                 closeCamera();
             } catch (InterruptedException e) {

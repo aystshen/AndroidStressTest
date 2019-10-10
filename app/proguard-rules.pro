@@ -60,3 +60,5 @@
     <init>(java.lang.Throwable);
 }
 
+-keep class com.serenegiant.** { *; }
+

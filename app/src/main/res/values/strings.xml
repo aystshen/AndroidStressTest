@@ -44,6 +44,7 @@
     <string name="timing_boot_test">TIMING BOOT TEST</string>
     <string name="network_test">NETWORK TEST</string>
     <string name="camera_test">CAMERA TEST</string>
+    <string name="uvccamera_test">UVC CAMERA TEST</string>
 
     <!--permission-->
     <string name="request_permission">Failed to get camera permissions, the test will not work.</string>
@@ -150,5 +151,9 @@
     <string name="camera_test_interval">Interval(≥15s):</string>
     <string name="camera_test_failure_count">Failure count：</string>
     <string name="camera_test_interval_invalid_tips">Please set the valid interval!</string>
+
+    <!--UVCCamera Test-->
+    <string name="uvccamera_test_intro">Skip the Android Camera API, call the UVC Camera device file, repeatedly open the camera to preview and take a photo. It will automatically check whether each preview and photo is successful.</string>
+    <string name="uvccamera_test_disconnect_tips">The camera is disconnected!</string>
 
 </resources>

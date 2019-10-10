@@ -16,11 +16,38 @@ This is an Android system stress test app that verifies the reliability of the m
 * Time power-on/off test
 * Network test
 * Camera test
+* UVC Camera test
 
 ## Preview
 ![image](screenshots/preview.png)
 
 ![image](screenshots/record.gif)
+
+## Compile
+You need to use android-ndk-r14b when compiling libuvccamera. If you don't modify the code in libuvccamera, you can also use the pre-compiled library. You can modify it like this:  
+libuvccamera/build.gradle
+```
+tasks.withType(JavaCompile) {
+	//compileTask -> compileTask.dependsOn ndkBuild
+}
+```
+
+If you want to compile libuvccamera, you first need to download [android-ndk-r14b](https://dl.google.com/android/repository/android-ndk-r14b-windows-x86.zip?utm_source=androiddevtools&utm_medium=website), then you can configure local.properties like this:
+```
+ndk.dir=F\:\\android\\sdk\\ndk-bundle
+uvccamera.ndk.dir=F\:\\android\\android-ndk-r11b
+sdk.dir=F\:\\android\\sdk
+```
+
+Regarding the signature key you can configure local.properties like this:
+```
+keystore.path=xxx
+keystore.alias=xxx
+keystore.store_password=xxx
+keystore.key_password=xxx
+```
+
+
 
 
 ## Using AndroidStressTest in your device

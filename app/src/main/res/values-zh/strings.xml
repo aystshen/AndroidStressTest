@@ -44,6 +44,7 @@
     <string name="timing_boot_test">定时开关机测试</string>
     <string name="network_test">网络测试</string>
     <string name="camera_test">摄像头测试</string>
+    <string name="uvccamera_test">UVC摄像头测试</string>
 
     <!--permission-->
     <string name="request_permission">获取相机权限失败，该项测试将无法进行。</string>
@@ -150,5 +151,9 @@
     <string name="camera_test_interval">间隔时间（≥15秒）：</string>
     <string name="camera_test_failure_count">失败计数：</string>
     <string name="camera_test_interval_invalid_tips">请设置正确的间隔时间！</string>
+
+    <!--UVCCamera Test-->
+    <string name="uvccamera_test_intro">跳过Android Camera API，直接调用UVC Camera设备文件，反复打开摄像头进行预览并拍照，测试过程中会自动检查每次预览和拍照是否成功。</string>
+    <string name="uvccamera_test_disconnect_tips">当前摄像头已断开连接！</string>
 
 </resources>

@@ -15,3 +15,5 @@
  */
 
 include ':app'
+include ':libuvccamera'
+include ':usbCameraCommon'

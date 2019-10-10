@@ -32,6 +32,7 @@ allprojects {
         jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://raw.github.com/saki4510t/libcommon/master/repository/' }
     }
 }
 
@@ -47,6 +48,11 @@ ext {
     buildToolsVersion = "28.0.3"
     minSdkVersion = 21
     targetSdkVersion = 26
+
+    commonLibVersion= '2.12.4'
+
+    javaSourceCompatibility = JavaVersion.VERSION_1_8
+    javaTargetCompatibility = JavaVersion.VERSION_1_8
 
     keyStoreAlias = properties.getProperty("keystore.alias")
     keyStorePath = properties.getProperty("keystore.path")

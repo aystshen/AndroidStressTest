@@ -13,3 +13,6 @@
 .externalNativeBuild
 app/build/
 app/release/
+libuvccamera/build/
+libuvccamera/src/main/obj/
+usbCameraCommon/build/

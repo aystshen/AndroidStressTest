@@ -39,6 +39,7 @@ import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.test.TimingBootTestFragment;
 import com.ayst.stresstest.test.VideoTestFragment;
 import com.ayst.stresstest.test.WifiTestFragment;
+import com.ayst.stresstest.test.uvccamera.UVCCameraTestFragment;
 
 import java.util.ArrayList;
 
@@ -54,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
     private int mContainerIds[] = {R.id.container1, R.id.container2, R.id.container3,
             R.id.container4, R.id.container5, R.id.container6,
             R.id.container7, R.id.container8, R.id.container9,
-            R.id.container10, R.id.container11, R.id.container12};
+            R.id.container10, R.id.container11, R.id.container12,
+            R.id.container13};
     private ArrayList<TestType[]> mMutexTests = new ArrayList<>();
 
     @Override
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         mTestFragments.add(TestType.TYPE_TIMING_BOOT_TEST.ordinal(), new TimingBootTestFragment());
         mTestFragments.add(TestType.TYPE_NETWORK_TEST.ordinal(), new NetworkTestFragment());
         mTestFragments.add(TestType.TYPE_CAMERA_TEST.ordinal(), new CameraTestFragment());
+        mTestFragments.add(TestType.TYPE_UVCCAMERA_TEST.ordinal(), new UVCCameraTestFragment());
 
         for (int i = 0; i < mTestFragments.size(); i++) {
             mFragmentManager.beginTransaction().add(mContainerIds[i], mTestFragments.get(i)).commit();
@@ -112,7 +115,8 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         mMutexTests.add(TestType.TYPE_RECOVERY_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_REBOOT_TEST, TestType.TYPE_TIMING_BOOT_TEST});
         mMutexTests.add(TestType.TYPE_TIMING_BOOT_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_REBOOT_TEST, TestType.TYPE_RECOVERY_TEST});
         mMutexTests.add(TestType.TYPE_NETWORK_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
-        mMutexTests.add(TestType.TYPE_CAMERA_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
+        mMutexTests.add(TestType.TYPE_CAMERA_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_UVCCAMERA_TEST});
+        mMutexTests.add(TestType.TYPE_UVCCAMERA_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_CAMERA_TEST});
     }
 
     @Override

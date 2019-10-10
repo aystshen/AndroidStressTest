@@ -79,8 +79,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility javaSourceCompatibility
+        targetCompatibility javaTargetCompatibility
     }
 
     externalNativeBuild {
@@ -125,6 +125,13 @@ dependencies {
 
     // FlexboxLayout
     implementation 'com.google.android:flexbox:1.0.0'
+
+    // UVCCamera
+    implementation("com.serenegiant:common:${commonLibVersion}") {
+        exclude module: 'support-v4'
+    }
+    implementation project(':libuvccamera')
+    implementation project(':usbCameraCommon')
 }
 
 def releaseTime() {

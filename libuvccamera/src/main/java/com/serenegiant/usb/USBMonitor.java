@@ -882,6 +882,7 @@ public final class USBMonitor {
 	 * @param _info
 	 * @return
 	 */
+	@SuppressLint("NewApi")
 	public static UsbDeviceInfo updateDeviceInfo(final UsbManager manager, final UsbDevice device, final UsbDeviceInfo _info) {
 		final UsbDeviceInfo info = _info != null ? _info : new UsbDeviceInfo();
 		info.clear();

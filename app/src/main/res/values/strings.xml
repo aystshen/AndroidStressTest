@@ -15,7 +15,9 @@
   ~ limitations under the License.
   -->
 
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:tools="http://schemas.android.com/tools"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    tools:ignore="MissingTranslation">
 
     <string name="app_name">StressTest</string>
     <string name="sec">s</string>
@@ -153,7 +155,7 @@
     <string name="camera_test_interval_invalid_tips">Please set the valid interval!</string>
 
     <!--UVCCamera Test-->
-    <string name="uvccamera_test_intro">Skip the Android Camera API, call the UVC Camera device file, repeatedly open the camera to preview and take a photo. It will automatically check whether each preview and photo is successful.</string>
+    <string name="uvccamera_test_intro">Skip the Android Camera API, call the UVC Camera device file, repeatedly open the camera to preview and take a photo.</string>
     <string name="uvccamera_test_disconnect_tips">The camera is disconnected!</string>
 
 </resources>

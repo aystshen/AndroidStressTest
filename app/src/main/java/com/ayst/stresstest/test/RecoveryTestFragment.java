@@ -218,9 +218,14 @@ public class RecoveryTestFragment extends BaseCountTestFragment {
     public void stop() {
         mHandler.removeMessages(MSG_RECOVERY_COUNTDOWN);
         mCountdownTv.setVisibility(View.GONE);
-        saveState();
 
         super.stop();
+
+        /*
+         * Must be placed after super.stop because you want to
+         * save the new state to the file.
+         */
+        saveState();
     }
 
     @Override

@@ -15,4 +15,5 @@ app/build/
 app/release/
 libuvccamera/build/
 libuvccamera/src/main/obj/
+libuvccamera/src/main/libs/
 usbCameraCommon/build/

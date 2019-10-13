@@ -203,8 +203,10 @@ public class UVCCameraTestFragment extends BaseCountTestWithTimerFragment
 
         mErrorFlag = true;
         synchronized (mSync) {
-            mUSBMonitor.register();
-            mUSBMonitor.requestPermission(mCurUsbDevice);
+            if (null != mUSBMonitor) {
+                mUSBMonitor.register();
+                mUSBMonitor.requestPermission(mCurUsbDevice);
+            }
         }
 
         try {
@@ -215,7 +217,9 @@ public class UVCCameraTestFragment extends BaseCountTestWithTimerFragment
 
         releaseCamera();
         synchronized (mSync) {
-            mUSBMonitor.unregister();
+            if (null != mUSBMonitor) {
+                mUSBMonitor.unregister();
+            }
         }
 
         showCameraSurfaceView(false);

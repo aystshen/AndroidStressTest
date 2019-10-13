@@ -34,6 +34,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -235,7 +236,7 @@ public class UVCCameraTestFragment extends BaseCountTestWithTimerFragment
         });
     }
 
-    private synchronized void openCamera(final UsbControlBlock ctrlBlock) {
+    private synchronized boolean openCamera(final UsbControlBlock ctrlBlock) {
         try {
             final UVCCamera camera = new UVCCamera();
             camera.open(ctrlBlock);
@@ -253,7 +254,8 @@ public class UVCCameraTestFragment extends BaseCountTestWithTimerFragment
                     camera.setPreviewSize(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, UVCCamera.DEFAULT_PREVIEW_MODE);
                 } catch (final IllegalArgumentException e1) {
                     camera.destroy();
-                    return;
+                    Log.e(TAG, "setPreviewSize error: " + e1.getMessage());
+                    return false;
                 }
             }
 
@@ -268,8 +270,10 @@ public class UVCCameraTestFragment extends BaseCountTestWithTimerFragment
             }
         } catch (UnsupportedOperationException e) {
             Log.e(TAG, "openCamera error: " + e.getMessage());
-            mErrorFlag = true;
+            return false;
         }
+
+        return true;
     }
 
     private synchronized void releaseCamera() {
@@ -290,33 +294,70 @@ public class UVCCameraTestFragment extends BaseCountTestWithTimerFragment
         }
     }
 
-    public void capture(final String path) {
+    public boolean capture(final String path) {
         Log.i(TAG, "capture...");
         try {
             final Bitmap bitmap = mUVCCameraView.captureStillImage();
-            // get buffered output stream for saving a captured still image as a file on external storage.
-            // the file name is came from current time.
-            // You should use extension name as same as CompressFormat when calling Bitmap#compress.
-            final File outputFile = TextUtils.isEmpty(path)
-                    ? MediaMuxerWrapper.getCaptureFile(Environment.DIRECTORY_DCIM, ".png")
-                    : new File(path);
-            final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(outputFile));
-            try {
+            if (validBitmap(bitmap)) {
+                // get buffered output stream for saving a captured still image as a file on external storage.
+                // the file name is came from current time.
+                // You should use extension name as same as CompressFormat when calling Bitmap#compress.
+                final File outputFile = TextUtils.isEmpty(path)
+                        ? MediaMuxerWrapper.getCaptureFile(Environment.DIRECTORY_DCIM, ".png")
+                        : new File(path);
+                final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(outputFile));
                 try {
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-                    os.flush();
-                    MediaScannerConnection.scanFile(mActivity, new String[]{ path }, null, null);
-                } catch (final IOException e) {
-                    Log.e(TAG, "capture, Bitmap to png error: " + e.getMessage());
-                    mErrorFlag = true;
+                    try {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+                        os.flush();
+                        MediaScannerConnection.scanFile(mActivity, new String[]{path}, null, null);
+                    } catch (final IOException e) {
+                        Log.e(TAG, "capture, Bitmap to png error: " + e.getMessage());
+                        return false;
+                    }
+                } finally {
+                    os.close();
                 }
-            } finally {
-                os.close();
+            } else {
+                Log.e(TAG, "capture, bitmap is invalid");
+                return false;
             }
         } catch (final Exception e) {
             Log.e(TAG, "capture, error: " + e.getMessage());
-            mErrorFlag = true;
+            return false;
         }
+
+        return true;
+    }
+
+    /**
+     * Whether all the pixel data is the same by bitmap to determine
+     * whether it is a valid bitmap
+     * @param bitmap
+     * @return
+     */
+    private boolean validBitmap(Bitmap bitmap) {
+        if (null != bitmap && !bitmap.isRecycled()) {
+            int bytes = bitmap.getByteCount();
+            if (bytes > 0) {
+                ByteBuffer buf = ByteBuffer.allocate(bytes);
+                bitmap.copyPixelsToBuffer(buf);
+                byte[] byteArray = buf.array();
+                byte preByte = byteArray[0];
+                for (int i = 0; i < bytes; ) {
+                    if (byteArray[i] != preByte) {
+                        return true;
+                    }
+                    preByte = byteArray[i];
+                    i += bytes / 20;
+                }
+            } else {
+                Log.w(TAG, "validBitmap, Bitmap byte length is 0.");
+            }
+        } else {
+            Log.w(TAG, "validBitmap, Bitmap is null.");
+        }
+        return false;
     }
 
     private final OnDeviceConnectListener mOnDeviceConnectListener = new OnDeviceConnectListener() {
@@ -333,8 +374,11 @@ public class UVCCameraTestFragment extends BaseCountTestWithTimerFragment
                 && device.getProductId() == mCurUsbDevice.getProductId()) {
                 mErrorFlag = false;
                 releaseCamera();
-                openCamera(ctrlBlock);
-                capture("");
+                if (openCamera(ctrlBlock)) {
+                    mErrorFlag = !capture("");
+                } else {
+                    mErrorFlag = true;
+                }
             }
         }
 

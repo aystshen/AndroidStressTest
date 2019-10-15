@@ -52,7 +52,7 @@ android {
 }
 
 tasks.withType(JavaCompile) {
-	compileTask -> compileTask.dependsOn ndkBuild
+	//compileTask -> compileTask.dependsOn ndkBuild
 }
 
 String getNdkBuildPath() {

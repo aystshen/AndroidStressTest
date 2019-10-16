@@ -91,6 +91,7 @@
 
     <!--Sleep Test-->
     <string name="sleep_test_intro">The sleep test will cause the device to repeatedly sleep and wake up. </string>
+    <string name="sleep_test_check_network">Check network</string>
     <string name="sleep_test_wakeup_duration">Wake time:</string>
     <string name="sleep_test_sleep_duration">Sleep time:</string>
     <string name="sleep_test_set_wakeup_duration_tips">Please set the wake up time!</string>

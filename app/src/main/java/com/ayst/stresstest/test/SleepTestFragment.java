@@ -16,6 +16,7 @@
 
 package com.ayst.stresstest.test;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -30,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,6 +41,7 @@ import androidx.annotation.Nullable;
 import com.ayst.stresstest.R;
 import com.ayst.stresstest.test.base.BaseCountTestFragment;
 import com.ayst.stresstest.test.base.TestType;
+import com.ayst.stresstest.util.NetworkUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,12 +65,15 @@ public class SleepTestFragment extends BaseCountTestFragment {
     @BindView(R.id.container_time)
     LinearLayout mTimeContainer;
     Unbinder unbinder;
+    @BindView(R.id.chbox_check_network)
+    CheckBox mCheckNetworkCheckbox;
 
     private PowerManager mPowerManager;
     private AlarmManager mAlarmManager;
-    private long mWakeTime = 5000L;
+    private long mWakeTime = 10000L;
     private long mSleepTime = 10000L;
     private int mDefaultScreenOffTime = -1;
+    private boolean isCheckNetwork = false;
 
     private PowerManager mPm;
     private PowerManager.WakeLock mWakeLock;
@@ -84,7 +90,10 @@ public class SleepTestFragment extends BaseCountTestFragment {
                 | PowerManager.ON_AFTER_RELEASE, TAG);
         mWakeLock.acquire();
 
-        mActivity.registerReceiver(mSleepTestReceiver, new IntentFilter(ACTION_TEST_CASE_SLEEP));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_TEST_CASE_SLEEP);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        mActivity.registerReceiver(mSleepTestReceiver, filter);
 
         mSimpleDateFormat = new SimpleDateFormat(DATE_TO_STRING_PATTERN);
     }
@@ -123,17 +132,14 @@ public class SleepTestFragment extends BaseCountTestFragment {
         unbinder.unbind();
     }
 
-    private void setAlarm(Context context, long sleepTime, boolean repeat) {
+    private void setAlarm(Context context, long sleepTime) {
+        stopAlarm(context);
         if (null == mAlarmManager) {
             mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         }
-        PendingIntent intent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_TEST_CASE_SLEEP), 0);
 
-        if (repeat) {
-            mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, sleepTime + System.currentTimeMillis(), sleepTime, intent);
-        } else {
-            mAlarmManager.set(AlarmManager.RTC_WAKEUP, sleepTime + System.currentTimeMillis(), intent);
-        }
+        PendingIntent intent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_TEST_CASE_SLEEP), 0);
+        mAlarmManager.setExact(AlarmManager.RTC, sleepTime + System.currentTimeMillis(), intent);
     }
 
     private void stopAlarm(Context context) {
@@ -159,8 +165,10 @@ public class SleepTestFragment extends BaseCountTestFragment {
         }
         mWakeTime = Integer.parseInt(wakeupStr) * 1000;
         mSleepTime = Integer.parseInt(sleepStr) * 1000;
+        isCheckNetwork = mCheckNetworkCheckbox.isChecked();
 
-        Log.d(TAG, "onStartClicked, mWakeTime=" + mWakeTime + " mSleepTime=" + mSleepTime);
+        Log.d(TAG, "onStartClicked, mWakeTime=" + mWakeTime + " mSleepTime=" + mSleepTime
+                + " isCheckNetwork=" + isCheckNetwork);
 
         super.onStartClicked();
     }
@@ -169,9 +177,9 @@ public class SleepTestFragment extends BaseCountTestFragment {
     public void start() {
         stopAlarm(mActivity);
 
-        mDefaultScreenOffTime = Settings.System.getInt(mActivity.getContentResolver(), "screen_off_timeout", -1);
+        mDefaultScreenOffTime = Settings.System.getInt(mActivity.getContentResolver(), "screen_off_timeout", 5*60*1000);
         Settings.System.putInt(mActivity.getContentResolver(), "screen_off_timeout", (int) mWakeTime);
-        setAlarm(mActivity, mWakeTime + mSleepTime, false);
+        setAlarm(mActivity, mWakeTime + mSleepTime);
 
         if (null != mWakeLock) {
             mWakeLock.release();
@@ -206,23 +214,49 @@ public class SleepTestFragment extends BaseCountTestFragment {
 
     private BroadcastReceiver mSleepTestReceiver = new BroadcastReceiver() {
 
+        @SuppressLint("InvalidWakeLockTag")
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "SleepTestReceiver onReceive...");
+            String action = intent.getAction();
+            Log.d(TAG, "SleepTestReceiver onReceive, action=" + action);
 
-            mSleepTimeTv.setText(mSimpleDateFormat.format(new Date(mEnterSleepTime)));
-            mWakeupTimeTv.setText(mSimpleDateFormat.format(new Date(System.currentTimeMillis())));
-            mEnterSleepTime = System.currentTimeMillis() + mWakeTime;
+            if (ACTION_TEST_CASE_SLEEP.equals(action)) {
+                mSleepTimeTv.setText(mSimpleDateFormat.format(new Date(mEnterSleepTime)));
+                mWakeupTimeTv.setText(mSimpleDateFormat.format(new Date(System.currentTimeMillis())));
+                mEnterSleepTime = System.currentTimeMillis() + mWakeTime;
 
-            if (null == mPowerManager) {
-                mPowerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            }
-            mPowerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.FULL_WAKE_LOCK, "ScreenOnTimer").acquire(mWakeTime);
+                if (null == mPowerManager) {
+                    mPowerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                }
+                mPowerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.FULL_WAKE_LOCK, "ScreenOnTimer").acquire(mWakeTime);
 
-            if (next()) {
-                setAlarm(mActivity, mWakeTime + mSleepTime, false);
+                if (isCheckNetwork) {
+                    mNetworkActivate = false;
+                    mThreadHandler.removeCallbacks(mCheckNetworkRunnable);
+                    mThreadHandler.postDelayed(mCheckNetworkRunnable, mWakeTime-3000);
+                }
+
+                if (next()) {
+                    setAlarm(mActivity, mWakeTime + mSleepTime);
+                }
+            } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+                if (isCheckNetwork) {
+                    mThreadHandler.removeCallbacks(mCheckNetworkRunnable);
+                    if (!mNetworkActivate) {
+                        markFailure();
+                    }
+                }
             }
         }
+    };
 
+    private boolean mNetworkActivate = false;
+    private Runnable mCheckNetworkRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Log.i(TAG, "Check network...");
+            mNetworkActivate = NetworkUtils.isAvailableByDns("www.baidu.com");
+            Log.i(TAG, "Check network, activate=" + mNetworkActivate);
+        }
     };
 }

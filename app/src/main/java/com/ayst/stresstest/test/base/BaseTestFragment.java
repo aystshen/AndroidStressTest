@@ -27,6 +27,7 @@ import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
@@ -46,6 +47,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.service.WorkService;
 
 import java.util.HashMap;
 
@@ -103,6 +105,8 @@ public abstract class BaseTestFragment extends Fragment {
     // Notice the Activity state
     protected OnFragmentInteractionListener mListener;
 
+    protected Handler mThreadHandler;
+
     // Running state
     public class State {
         public static final int RUNNING = 1;
@@ -141,6 +145,10 @@ public abstract class BaseTestFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mActivity = this.getActivity();
         TAG = this.getClass().getSimpleName();
+
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+        mThreadHandler = new Handler(handlerThread.getLooper());
 
         mResultDrawable.put(Result.GOOD, new ClipDrawable(new ColorDrawable(Color.GREEN), Gravity.LEFT, ClipDrawable.HORIZONTAL));
         mResultDrawable.put(Result.FAIL, new ClipDrawable(new ColorDrawable(Color.YELLOW), Gravity.LEFT, ClipDrawable.HORIZONTAL));
@@ -425,6 +433,7 @@ public abstract class BaseTestFragment extends Fragment {
     protected void handleMsg(Message msg) {
 
     }
+
 
     /**
      * Pop-up set test time or number of dialog

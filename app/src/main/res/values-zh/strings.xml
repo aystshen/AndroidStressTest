@@ -89,6 +89,7 @@
 
     <!--Sleep Test-->
     <string name="sleep_test_intro">休眠测试将使设备反复休眠和唤醒，测试时需要人工观察休眠与唤醒是否正常。</string>
+    <string name="sleep_test_check_network">检查网络连接</string>
     <string name="sleep_test_wakeup_duration">唤醒时间：</string>
     <string name="sleep_test_sleep_duration">睡眠时间：</string>
     <string name="sleep_test_set_wakeup_duration_tips">请设置唤醒时间！</string>

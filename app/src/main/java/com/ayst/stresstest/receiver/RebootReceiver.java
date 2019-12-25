@@ -49,7 +49,8 @@ public class RebootReceiver extends BroadcastReceiver {
                 Intent serviceIntent = new Intent(context, WorkService.class);
                 serviceIntent.putExtra("command", WorkService.COMMAND_CHECK_RECOVERY_STATE);
                 serviceIntent.putExtra("delay", 5000);
-                AppUtils.startService(context, serviceIntent);
+                //AppUtils.startService(context, serviceIntent);
+                context.startService(intent);
             }
         }
     }

@@ -77,7 +77,7 @@ public class WorkService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startForeground();
+//        startForeground();
         if (intent == null) {
             return Service.START_NOT_STICKY;
         }

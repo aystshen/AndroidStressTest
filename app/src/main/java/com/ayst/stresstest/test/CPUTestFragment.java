@@ -107,8 +107,8 @@ public class CPUTestFragment extends BaseTimingTestFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sIntervalTimeList = this.getResources().getIntArray(R.array.cpu_random_freq_interval);
-        sCpuRateList = this.getResources().getIntArray(R.array.cpu_rate);
+        sIntervalTimeList = getResources().getIntArray(R.array.cpu_random_freq_interval);
+        sCpuRateList = getResources().getIntArray(R.array.cpu_rate);
     }
 
     @Override
@@ -263,7 +263,7 @@ public class CPUTestFragment extends BaseTimingTestFragment {
                 return;
             }
 
-        // Frequency conversion test
+            // Frequency conversion test
         } else if (mRandomFreqCheckbox.isChecked()) {
             int index = mIntervalSpinner.getSelectedItemPosition();
             if (index < 0 || index >= sIntervalTimeList.length) {
@@ -289,7 +289,7 @@ public class CPUTestFragment extends BaseTimingTestFragment {
                 }
             }, intervalTime, intervalTime);
 
-        // CPU usage test
+            // CPU usage test
         } else {
             if (null != mFreqs && !mFreqs.isEmpty()) {
                 String str = mFreqs.get(mFreqs.size() - 1);
@@ -335,9 +335,9 @@ public class CPUTestFragment extends BaseTimingTestFragment {
             }
         }
 
-        if (this.mCpuReaderThread == null) {
-            this.mCpuReaderThread = new ReaderThread();
-            this.mCpuReaderThread.start();
+        if (mCpuReaderThread == null) {
+            mCpuReaderThread = new ReaderThread();
+            mCpuReaderThread.start();
         }
 
         super.start();
@@ -345,15 +345,20 @@ public class CPUTestFragment extends BaseTimingTestFragment {
 
     @Override
     public void stop() {
-        if (this.mCpuReaderThread != null) {
-            this.mCpuReaderThread.cancel();
+        if (mRandomFreqTimer != null) {
+            mRandomFreqTimer.cancel();
+            mRandomFreqTimer = null;
+        }
+
+        if (mCpuReaderThread != null) {
+            mCpuReaderThread.cancel();
 
             try {
-                this.mCpuReaderThread.join();
+                mCpuReaderThread.join();
             } catch (InterruptedException ignored) {
             }
 
-            this.mCpuReaderThread = null;
+            mCpuReaderThread = null;
         }
 
         super.stop();
@@ -418,9 +423,9 @@ public class CPUTestFragment extends BaseTimingTestFragment {
         public void run() {
             while (true) {
                 if (!Thread.currentThread().isInterrupted()) {
-                    this.openCpuReaders();
-                    this.read();
-                    this.closeCpuReaders();
+                    openCpuReaders();
+                    read();
+                    closeCpuReaders();
 
                     try {
                         Thread.currentThread();
@@ -436,21 +441,21 @@ public class CPUTestFragment extends BaseTimingTestFragment {
         }
 
         public void cancel() {
-            this.interrupt();
+            interrupt();
         }
 
         private void openCpuReaders() {
-            if (this.totalCpuReader == null) {
+            if (totalCpuReader == null) {
                 try {
-                    this.totalCpuReader = new BufferedReader(new FileReader("/proc/stat"));
+                    totalCpuReader = new BufferedReader(new FileReader("/proc/stat"));
                 } catch (FileNotFoundException var3) {
                     Log.w(TAG, "Could not open '/proc/stat' - " + var3.getMessage());
                 }
             }
 
-            if (this.myPidCpuReader == null) {
+            if (myPidCpuReader == null) {
                 try {
-                    this.myPidCpuReader = new BufferedReader(new FileReader("/proc/"
+                    myPidCpuReader = new BufferedReader(new FileReader("/proc/"
                             + Process.myPid() + "/stat"));
                 } catch (FileNotFoundException var2) {
                     Log.w(TAG, "Could not open '/proc/" + Process.myPid() + "/stat' - "
@@ -462,12 +467,12 @@ public class CPUTestFragment extends BaseTimingTestFragment {
 
         private void read() {
             String[] cpuData;
-            if (this.totalCpuReader != null) {
+            if (totalCpuReader != null) {
                 try {
-                    cpuData = this.totalCpuReader.readLine().split("[ ]+", 9);
-                    this.jiffies = Long.parseLong(cpuData[1]) + Long.parseLong(cpuData[2])
+                    cpuData = totalCpuReader.readLine().split("[ ]+", 9);
+                    jiffies = Long.parseLong(cpuData[1]) + Long.parseLong(cpuData[2])
                             + Long.parseLong(cpuData[3]);
-                    this.totalJiffies = this.jiffies + Long.parseLong(cpuData[4])
+                    totalJiffies = jiffies + Long.parseLong(cpuData[4])
                             + Long.parseLong(cpuData[6]) + Long.parseLong(cpuData[7]);
                 } catch (IOException var8) {
                     Log.w("CpuUsageDataModule", "Failed reading total cpu data - "
@@ -475,10 +480,10 @@ public class CPUTestFragment extends BaseTimingTestFragment {
                 }
             }
 
-            if (this.myPidCpuReader != null) {
+            if (myPidCpuReader != null) {
                 try {
-                    cpuData = this.myPidCpuReader.readLine().split("[ ]+", 18);
-                    this.jiffiesMyPid = Long.parseLong(cpuData[13]) + Long.parseLong(cpuData[14])
+                    cpuData = myPidCpuReader.readLine().split("[ ]+", 18);
+                    jiffiesMyPid = Long.parseLong(cpuData[13]) + Long.parseLong(cpuData[14])
                             + Long.parseLong(cpuData[15]) + Long.parseLong(cpuData[16]);
                 } catch (IOException var7) {
                     Log.w("CpuUsageDataModule", "Failed reading my pid cpu data - "
@@ -486,31 +491,31 @@ public class CPUTestFragment extends BaseTimingTestFragment {
                 }
             }
 
-            if (this.totalJiffiesBefore > 0L) {
-                long totalDiff = this.totalJiffies - this.totalJiffiesBefore;
-                long jiffiesDiff = this.jiffies - this.jiffiesBefore;
-                long jiffiesMyPidDiff = this.jiffiesMyPid - this.jiffiesMyPidBefore;
+            if (totalJiffiesBefore > 0L) {
+                long totalDiff = totalJiffies - totalJiffiesBefore;
+                long jiffiesDiff = jiffies - jiffiesBefore;
+                long jiffiesMyPidDiff = jiffiesMyPid - jiffiesMyPidBefore;
                 mCurPercent = (int) getPercentInRange((double) (100.0F * (float) jiffiesDiff
                         / (float) totalDiff));
                 mCurMyPidPercent = (int) getPercentInRange((double) (100.0F * (float) jiffiesMyPidDiff
                         / (float) totalDiff));
             }
 
-            this.totalJiffiesBefore = this.totalJiffies;
-            this.jiffiesBefore = this.jiffies;
-            this.jiffiesMyPidBefore = this.jiffiesMyPid;
+            totalJiffiesBefore = totalJiffies;
+            jiffiesBefore = jiffies;
+            jiffiesMyPidBefore = jiffiesMyPid;
         }
 
         private void closeCpuReaders() {
             try {
-                if (this.totalCpuReader != null) {
-                    this.totalCpuReader.close();
-                    this.totalCpuReader = null;
+                if (totalCpuReader != null) {
+                    totalCpuReader.close();
+                    totalCpuReader = null;
                 }
 
-                if (this.myPidCpuReader != null) {
-                    this.myPidCpuReader.close();
-                    this.myPidCpuReader = null;
+                if (myPidCpuReader != null) {
+                    myPidCpuReader.close();
+                    myPidCpuReader = null;
                 }
             } catch (IOException ignored) {
             }

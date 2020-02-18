@@ -310,29 +310,34 @@ public class CPUTestFragment extends BaseTimingTestFragment {
                 return;
             }
 
-            int cores = ArmFreqUtils.getNumberOfCPUCores();
-            mCpuRate = sCpuRateList[index];
-            Log.d(TAG, "start, CPU cores: " + cores + ", CPU rate: " + mCpuRate);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    int cores = ArmFreqUtils.getNumberOfCPUCores();
+                    mCpuRate = sCpuRateList[index];
+                    Log.d(TAG, "start, CPU cores: " + cores + ", CPU rate: " + mCpuRate);
 
-            for (int i = 0; i < cores; i++) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int dec;
-                        while (isRunning()) {
-                            dec = mDelayCnt;
-                            while (dec > 0) {
-                                dec--;
+                    for (int i = 0; i < cores; i++) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int dec;
+                                while (isRunning()) {
+                                    dec = mDelayCnt;
+                                    while (dec > 0) {
+                                        dec--;
+                                    }
+                                    try {
+                                        Thread.sleep(1);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
-                            try {
-                                Thread.sleep(1);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        }).start();
                     }
-                }).start();
-            }
+                }
+            }, 1000);
         }
 
         if (mCpuReaderThread == null) {

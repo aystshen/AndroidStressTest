@@ -19,6 +19,9 @@ package com.ayst.stresstest.test;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.PowerManager;
@@ -51,10 +54,15 @@ public class RebootTestFragment extends BaseCountTestFragment {
     private static final String SP_REBOOT_MAX = "reboot_max";
     private static final String SP_REBOOT_DELAY = "reboot_delay";
     private static final String SP_REBOOT_SD = "reboot_sd";
+    private static final String SP_REBOOT_WIFI = "reboot_wifi";
 
     private final static int MSG_REBOOT_COUNTDOWN = 1001;
     private final static int DELAY_DEFAULT = 10; // Default 10s
 
+    @BindView(R.id.chbox_check_wifi)
+    CheckBox mWiFiCheckbox;
+    @BindView(R.id.tv_wifi_state)
+    TextView mWifiStateTv;
     @BindView(R.id.chbox_sdcard)
     CheckBox mSdcardCheckbox;
     @BindView(R.id.tv_sd_state)
@@ -68,6 +76,10 @@ public class RebootTestFragment extends BaseCountTestFragment {
     private int mDelayTime;
     private int mCountDownTime;
     private boolean isCheckSD = false;
+    private boolean isCheckWifi = false;
+
+    private ConnectivityManager mConnManager;
+    private WifiManager mWifiManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +90,9 @@ public class RebootTestFragment extends BaseCountTestFragment {
         mTargetCount = SPUtils.getInstance(mActivity).getData(SP_REBOOT_MAX, 0);
         mDelayTime = SPUtils.getInstance(mActivity).getData(SP_REBOOT_DELAY, DELAY_DEFAULT);
         isCheckSD = SPUtils.getInstance(mActivity).getData(SP_REBOOT_SD, false);
+        isCheckWifi = SPUtils.getInstance(mActivity).getData(SP_REBOOT_WIFI, false);
+
+        mWifiManager = (WifiManager) mActivity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }
 
     @Override
@@ -99,6 +114,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mWiFiCheckbox.setChecked(isCheckWifi);
         mSdcardCheckbox.setChecked(isCheckSD);
         mDelayEdt.setText(mDelayTime + "");
 
@@ -109,6 +125,18 @@ public class RebootTestFragment extends BaseCountTestFragment {
                     if (!AppUtils.isExternalStorageMounted()) {
                         showToast(R.string.reboot_test_insert_sdcard_tips);
                         buttonView.setChecked(false);
+                    }
+                }
+            }
+        });
+
+        mWiFiCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                if (isChecked) {
+                    if (!mWifiManager.isWifiEnabled() || !isWifiConnected(mActivity)) {
+                        showToast(R.string.wifi_test_connect_tips);
+                        view.setChecked(false);
                     }
                 }
             }
@@ -132,8 +160,14 @@ public class RebootTestFragment extends BaseCountTestFragment {
         if (isRunning()) {
             if (isCheckSD) {
                 if (!AppUtils.isExternalStorageMounted()) {
-                    mSdStateTv.setText("Check sdcard: Unmount");
+                    mSdStateTv.setText("FAIL");
                     mSdStateTv.setVisibility(View.VISIBLE);
+                    markFailure();
+                }
+            } else if (isCheckWifi) {
+                if (!isWifiConnected(mActivity)) {
+                    mWifiStateTv.setText("FAIL");
+                    mWifiStateTv.setVisibility(View.VISIBLE);
                     markFailure();
                 }
             }
@@ -166,6 +200,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
+                                isCheckWifi = mWiFiCheckbox.isChecked();
                                 isCheckSD = mSdcardCheckbox.isChecked();
                                 mCountDownTime = mDelayTime;
                                 mHandler.sendEmptyMessage(MSG_REBOOT_COUNTDOWN);
@@ -236,6 +271,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_MAX, mTargetCount);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_DELAY, mDelayTime);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_SD, isCheckSD);
+        SPUtils.getInstance(mActivity).saveData(SP_REBOOT_WIFI, isCheckWifi);
     }
 
     private void cleanState() {
@@ -244,5 +280,16 @@ public class RebootTestFragment extends BaseCountTestFragment {
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_MAX, 0);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_DELAY, DELAY_DEFAULT);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_SD, false);
+        SPUtils.getInstance(mActivity).saveData(SP_REBOOT_WIFI, false);
+    }
+
+    public boolean isWifiConnected(Context context) {
+        if (null == mConnManager) {
+            mConnManager = (ConnectivityManager) context.
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+        }
+        NetworkInfo wifiNetworkInfo = mConnManager.
+                getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        return ((wifiNetworkInfo != null) && wifiNetworkInfo.isConnected());
     }
 }

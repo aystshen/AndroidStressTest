@@ -23,6 +23,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,7 +127,7 @@ public class WifiListAdapter extends BaseAdapter {
             if (mInfo != null && mInfo.getSSID() != null && mState != null) {
                 ImageView imgConnected = (ImageView) view.findViewById(R.id.img_connected);
                 TextView subText = (TextView) view.findViewById(R.id.sub_text);
-                if (mInfo.getSSID().equals(scanResult.SSID) || mInfo.getSSID().equals("\"" + scanResult.SSID + "\"")) {
+                if (TextUtils.equals(mInfo.getBSSID(), scanResult.BSSID)) {
                     subText.setVisibility(View.VISIBLE);
                     if (mState == NetworkInfo.DetailedState.CONNECTED) {
                         imgConnected.setImageResource(R.drawable.ic_wifi_connected);

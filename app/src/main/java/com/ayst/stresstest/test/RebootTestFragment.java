@@ -51,6 +51,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
 
     public static final String SP_REBOOT_FLAG = "reboot_flag";
     private static final String SP_REBOOT_COUNT = "reboot_count";
+    private static final String SP_REBOOT_FAIL_COUNT = "reboot_fail_count";
     private static final String SP_REBOOT_MAX = "reboot_max";
     private static final String SP_REBOOT_DELAY = "reboot_delay";
     private static final String SP_REBOOT_SD = "reboot_sd";
@@ -75,6 +76,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
 
     private int mDelayTime;
     private int mCountDownTime;
+    private int mFailCnt = 0;
     private boolean isCheckSD = false;
     private boolean isCheckWifi = false;
 
@@ -87,6 +89,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
 
         mState = SPUtils.getInstance(mActivity).getData(SP_REBOOT_FLAG, State.STOP);
         mCurrentCount = SPUtils.getInstance(mActivity).getData(SP_REBOOT_COUNT, 0);
+        mFailCnt = SPUtils.getInstance(mActivity).getData(SP_REBOOT_FAIL_COUNT, 0);
         mTargetCount = SPUtils.getInstance(mActivity).getData(SP_REBOOT_MAX, 0);
         mDelayTime = SPUtils.getInstance(mActivity).getData(SP_REBOOT_DELAY, DELAY_DEFAULT);
         isCheckSD = SPUtils.getInstance(mActivity).getData(SP_REBOOT_SD, false);
@@ -113,6 +116,10 @@ public class RebootTestFragment extends BaseCountTestFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (mFailCnt > 0) {
+            markFailure(mFailCnt);
+        }
 
         mWiFiCheckbox.setChecked(isCheckWifi);
         mSdcardCheckbox.setChecked(isCheckSD);
@@ -158,19 +165,28 @@ public class RebootTestFragment extends BaseCountTestFragment {
 
     private void check() {
         if (isRunning()) {
-            if (isCheckSD) {
-                if (!AppUtils.isExternalStorageMounted()) {
-                    mSdStateTv.setText("FAIL");
-                    mSdStateTv.setVisibility(View.VISIBLE);
-                    markFailure();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isCheckSD) {
+                        if (!AppUtils.isExternalStorageMounted()) {
+                            mSdStateTv.setText("FAIL");
+                            mSdStateTv.setVisibility(View.VISIBLE);
+                            markFailure();
+                            return;
+                        }
+                    }
+
+                    if (isCheckWifi) {
+                        if (!isWifiConnected(mActivity)) {
+                            mWifiStateTv.setText("FAIL");
+                            mWifiStateTv.setVisibility(View.VISIBLE);
+                            markFailure();
+                        }
+                    }
                 }
-            } else if (isCheckWifi) {
-                if (!isWifiConnected(mActivity)) {
-                    mWifiStateTv.setText("FAIL");
-                    mWifiStateTv.setVisibility(View.VISIBLE);
-                    markFailure();
-                }
-            }
+            }, mDelayTime*1000/2);
+
 
             if (next()) {
                 mCountDownTime = mDelayTime;
@@ -268,6 +284,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
     private void saveState() {
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_FLAG, mState);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_COUNT, mCurrentCount);
+        SPUtils.getInstance(mActivity).saveData(SP_REBOOT_FAIL_COUNT, mFailureCount);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_MAX, mTargetCount);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_DELAY, mDelayTime);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_SD, isCheckSD);
@@ -277,6 +294,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
     private void cleanState() {
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_FLAG, State.STOP);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_COUNT, 0);
+        SPUtils.getInstance(mActivity).saveData(SP_REBOOT_FAIL_COUNT, 0);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_MAX, 0);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_DELAY, DELAY_DEFAULT);
         SPUtils.getInstance(mActivity).saveData(SP_REBOOT_SD, false);

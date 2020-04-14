@@ -369,7 +369,19 @@ public abstract class BaseTestFragment extends Fragment {
      * Mark a failure, the failure count
      */
     protected void markFailure() {
-        mFailureCount++;
+        markFailure(-1);
+    }
+
+    /**
+     * Mark a failure, the failure count
+     */
+    protected void markFailure(int count) {
+        if (count > 0) {
+            mFailureCount = count;
+        } else {
+            mFailureCount++;
+        }
+
         if (mFailureCount >= mPoorThreshold) {
             mResult = Result.POOR;
         } else if (mFailureCount >= mFailThreshold) {
@@ -377,6 +389,7 @@ public abstract class BaseTestFragment extends Fragment {
         } else {
             mResult = Result.GOOD;
         }
+
         update();
     }
 

@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Timer;
 
 import androidx.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -66,6 +67,11 @@ public class WifiTestFragment extends BaseCountTestWithTimerFragment {
     @BindView(R.id.container_running)
     FrameLayout mRunningContainer;
     Unbinder unbinder;
+
+    private static final int STATE_ENABLED = 1;
+    private static final int STATE_DISABLED = 2;
+    private int mCurState = STATE_DISABLED;
+    private int mPreState = STATE_DISABLED;
 
     private WifiInfo mWifiInfo;
     private List<ScanResult> mWifiList;
@@ -161,6 +167,9 @@ public class WifiTestFragment extends BaseCountTestWithTimerFragment {
             scan();
             mWifiList = mWifiManager.getScanResults();
             mWifiInfo = mWifiManager.getConnectionInfo();
+            mPreState = STATE_DISABLED;
+        } else {
+            mPreState = STATE_ENABLED;
         }
         mWifiAdapter = new WifiListAdapter(mActivity, mWifiList, mWifiInfo);
         mWifiLv.setAdapter(mWifiAdapter);
@@ -187,6 +196,7 @@ public class WifiTestFragment extends BaseCountTestWithTimerFragment {
     @Override
     protected boolean testOnce() {
         if (mWifiManager.isWifiEnabled()) {
+            mCurState = STATE_ENABLED;
             if (isCheckConnect) {
                 if (!isWifiConnected(mActivity)) {
                     markFailure();
@@ -197,9 +207,15 @@ public class WifiTestFragment extends BaseCountTestWithTimerFragment {
             Log.d(TAG, "run, WIFI is opened, try close WIFI now.");
 
         } else {
+            mCurState = STATE_DISABLED;
             mWifiManager.setWifiEnabled(true);
             Log.d(TAG, "run, WIFI is closed, try open WIFI now.");
         }
+
+        if (mCurState == mPreState) {
+            markFailure();
+        }
+        mPreState = mCurState;
 
         return true;
     }

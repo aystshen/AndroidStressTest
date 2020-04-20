@@ -185,7 +185,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
                         }
                     }
                 }
-            }, mDelayTime*1000/2);
+            }, (mDelayTime-1)*1000);
 
 
             if (next()) {
@@ -202,7 +202,14 @@ public class RebootTestFragment extends BaseCountTestFragment {
             showToast(R.string.reboot_test_delay_empty);
             return;
         }
-        mDelayTime = Integer.valueOf(mDelayEdt.getText().toString());
+
+        int delay = Integer.valueOf(mDelayEdt.getText().toString());
+        if (delay < DELAY_DEFAULT) {
+            showToast(String.format(getString(R.string.reboot_test_delay_invalid), DELAY_DEFAULT));
+            return;
+        }
+
+        mDelayTime = delay;
 
         super.onStartClicked();
     }

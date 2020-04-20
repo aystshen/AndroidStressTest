@@ -118,6 +118,7 @@
     <string name="reboot_test_connect_wifi_tips">Please connect to WiFi!</string>
     <string name="reboot_test_reboot_tips">Are you want to restart the test? After confirming, the system will be restarted after %d seconds.</string>
     <string name="reboot_test_delay_empty">Please set the delay!</string>
+    <string name="reboot_test_delay_invalid">Delay not less than %d s!</string>
 
     <!--Airplane mode Test-->
     <string name="airplane_mode_test_intro">The airplane mode test will turn the airplane mode on and off repeatedly while scanning the WiFi access point.</string>

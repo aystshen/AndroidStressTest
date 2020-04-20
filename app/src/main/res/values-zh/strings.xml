@@ -116,6 +116,7 @@
     <string name="reboot_test_connect_wifi_tips">请连接WiFi!</string>
     <string name="reboot_test_reboot_tips">确定要重启测试吗？确定后将在 %d 秒后重启系统。</string>
     <string name="reboot_test_delay_empty">请设置延时！</string>
+    <string name="reboot_test_delay_invalid">延时不小于 %d 秒！</string>
 
     <!--Airplane Mode Test-->
     <string name="airplane_mode_test_intro">飞行模式测试将反复打开、关闭飞行模式，同时扫描附近WiFi热点。</string>

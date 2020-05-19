@@ -3,7 +3,10 @@ package com.ayst.stresstest.util;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.util.Log;
+
+import java.util.concurrent.TimeUnit;
 
 public class AudioManager implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
 
@@ -75,6 +78,7 @@ public class AudioManager implements MediaPlayer.OnPreparedListener, MediaPlayer
             postError(e.getMessage());
         }
     }
+
     public void resume() {
         try {
             if (mPlayer != null && !mPlayer.isPlaying()) {

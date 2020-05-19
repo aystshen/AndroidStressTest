@@ -74,7 +74,6 @@ public class AudioTestFragment extends BaseTimingTestFragment {
     Unbinder unbinder;
 
     private String mPath;
-    private static float sCoverRodio = 0f;
     private ValueAnimator mCoverAnimator;
 
 
@@ -126,7 +125,11 @@ public class AudioTestFragment extends BaseTimingTestFragment {
 
             @Override
             public void onError(String message) {
+                mIvCenter.setSelected(false);
+                mErrorTv.setText(message);
                 pauseCoverAnimation();
+                markFailure();
+                playAudio();
             }
         });
 
@@ -163,7 +166,6 @@ public class AudioTestFragment extends BaseTimingTestFragment {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float current = (Float) animation.getAnimatedValue();
-                sCoverRodio = current;
                 mRlCover.setRotation(current);
             }
         });
@@ -250,7 +252,6 @@ public class AudioTestFragment extends BaseTimingTestFragment {
             showToast(R.string.audio_test_select_file_tips);
             return false;
         }
-        sCoverRodio = 0;
         AudioManager.getDefault()
                 .setLoop(true)
                 .playMusic(mPath);

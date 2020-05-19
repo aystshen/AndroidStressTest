@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright(c) 2018 Bob Shen <ayst.shen@foxmail.com>
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,6 +34,7 @@
     <string name="cpu_test">CPU测试</string>
     <string name="memory_test">内存测试</string>
     <string name="video_test">视频测试</string>
+    <string name="audio_test">音频测试</string>
     <string name="wifi_test">WiFi测试</string>
     <string name="bluetooth_test">蓝牙测试</string>
     <string name="airplane_mode_test">飞行模式测试</string>
@@ -102,6 +102,14 @@
     <string name="video_test_select_file_tips">请选择视频文件</string>
     <string name="video_test_select_file">选择视频文件</string>
     <string name="video_test_invalid_file">文件无效！</string>
+
+    <!--Audio Test-->
+    <string name="audio_test_intro">音频测试将反复播放指定音频文件，测试过程中请关注播放是否正常。</string>
+    <string name="audio_test_video_file">被测音频：</string>
+    <string name="audio_test_play_error">播放出错：</string>
+    <string name="audio_test_select_file_tips">请选择音频文件</string>
+    <string name="audio_test_select_file">选择音频文件</string>
+    <string name="audio_test_invalid_file">文件无效！</string>
 
     <!--Memory Test-->
     <string name="memory_test_intro">内存测试将内存占用率自动填充到选择的比例，验证系统在低内存下的稳定性。</string>

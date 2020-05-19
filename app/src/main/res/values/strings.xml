@@ -37,6 +37,7 @@
     <string name="cpu_test">CPU TEST</string>
     <string name="memory_test">MEMORY TEST</string>
     <string name="video_test">VIDEO TEST</string>
+    <string name="audio_test">AUDIO TEST</string>
     <string name="wifi_test">WIFI TEST</string>
     <string name="bluetooth_test">BLUETOOTH TEST</string>
     <string name="airplane_mode_test">AIRPLANE MODE TEST</string>
@@ -104,6 +105,14 @@
     <string name="video_test_select_file_tips">Please select a video!</string>
     <string name="video_test_select_file">Select video file</string>
     <string name="video_test_invalid_file">Invalid file!</string>
+
+    <!--Audio Test-->
+    <string name="audio_test_intro">The audio test will play the audio repeatedly. During the test, please observe to whether the playback is normal</string>
+    <string name="audio_test_video_file">Test audio：</string>
+    <string name="audio_test_play_error">Playback error:</string>
+    <string name="audio_test_select_file_tips">Please select a Audio!</string>
+    <string name="audio_test_select_file">Select audio file</string>
+    <string name="audio_test_invalid_file">Invalid file!</string>
 
     <!--Memory Test-->
     <string name="memory_test_intro">The memory test automatically malloc the memory usage to the selected percent, verifying the strong of the system under low memory.</string>

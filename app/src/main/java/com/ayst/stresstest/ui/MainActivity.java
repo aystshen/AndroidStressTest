@@ -21,24 +21,26 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.ayst.stresstest.R;
 import com.ayst.stresstest.test.AirplaneModeTestFragment;
-import com.ayst.stresstest.test.base.BaseTestFragment;
 import com.ayst.stresstest.test.BluetoothTestFragment;
 import com.ayst.stresstest.test.CPUTestFragment;
 import com.ayst.stresstest.test.CameraTestFragment;
 import com.ayst.stresstest.test.MemoryTestFragment;
 import com.ayst.stresstest.test.NetworkTestFragment;
+import com.ayst.stresstest.test.AudioTestFragment;
 import com.ayst.stresstest.test.RebootTestFragment;
 import com.ayst.stresstest.test.RecoveryTestFragment;
 import com.ayst.stresstest.test.SleepTestFragment;
-import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.test.TimingBootTestFragment;
 import com.ayst.stresstest.test.VideoTestFragment;
 import com.ayst.stresstest.test.WifiTestFragment;
+import com.ayst.stresstest.test.base.BaseTestFragment;
+import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.test.uvccamera.UVCCameraTestFragment;
 
 import java.util.ArrayList;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
             R.id.container4, R.id.container5, R.id.container6,
             R.id.container7, R.id.container8, R.id.container9,
             R.id.container10, R.id.container11, R.id.container12,
-            R.id.container13};
+            R.id.container13, R.id.container14};
     private ArrayList<TestType[]> mMutexTests = new ArrayList<>();
 
     @Override
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         mTestFragments.add(TestType.TYPE_NETWORK_TEST.ordinal(), new NetworkTestFragment());
         mTestFragments.add(TestType.TYPE_CAMERA_TEST.ordinal(), new CameraTestFragment());
         mTestFragments.add(TestType.TYPE_UVCCAMERA_TEST.ordinal(), new UVCCameraTestFragment());
+        mTestFragments.add(TestType.TYPE_RADIO_TEST.ordinal(), new AudioTestFragment());
 
         for (int i = 0; i < mTestFragments.size(); i++) {
             mFragmentManager.beginTransaction().add(mContainerIds[i], mTestFragments.get(i)).commit();
@@ -117,13 +120,14 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         mMutexTests.add(TestType.TYPE_NETWORK_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
         mMutexTests.add(TestType.TYPE_CAMERA_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_UVCCAMERA_TEST});
         mMutexTests.add(TestType.TYPE_UVCCAMERA_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_CAMERA_TEST});
+        mMutexTests.add(TestType.TYPE_RADIO_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        for (int i=0; i<mTestFragments.size(); i++) {
+        for (int i = 0; i < mTestFragments.size(); i++) {
             if (mTestFragments.get(i).isRunning()) {
                 TestType[] mutexTests = mMutexTests.get(i);
                 for (TestType mutexTest : mutexTests) {

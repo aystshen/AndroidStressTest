@@ -56,9 +56,9 @@ public class MemoryTestFragment extends BaseTimingTestFragment {
 
     private static int[] sMemoryFillPercentList = null;
 
-    private int mFreeMemory;
-    private int mUsedMemory;
-    private int mTotalMemory;
+    private long mFreeMemory;
+    private long mUsedMemory;
+    private long mTotalMemory;
     private int mFillPercent;
     private int mCountDown = 30;
 
@@ -144,11 +144,11 @@ public class MemoryTestFragment extends BaseTimingTestFragment {
 
         MemoryInfo systemMemInfo = new MemoryInfo();
         mAm.getMemoryInfo(systemMemInfo);
-        mFreeMemory = (int) systemMemInfo.availMem / 1024 / 1024;
-        mTotalMemory = (int) systemMemInfo.totalMem / 1024 / 1024;
+        mFreeMemory = systemMemInfo.availMem / 1024 / 1024;
+        mTotalMemory = systemMemInfo.totalMem / 1024 / 1024;
 
         mUsedMemory = mTotalMemory - mFreeMemory;
-        int progress = (mUsedMemory * 100) / mTotalMemory;
+        int progress = (int)((mUsedMemory * 100) / mTotalMemory);
         mArcProgress.setProgress(progress);
         if (progress >= 70) {
             mArcProgress.setFinishedStrokeColor(getResources().getColor(R.color.red));

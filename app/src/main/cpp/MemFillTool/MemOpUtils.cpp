@@ -39,10 +39,14 @@ JNIEXPORT jint JNICALL Java_com_ayst_stresstest_util_MemOpUtils_malloc
         (JNIEnv *, jclass, jint size) {
     if (count < MAX_SIZE) {
         p[count] = (int *) malloc(256 * 1024 * size * sizeof(int));
-        memset(p[count], 2, 256 * 1024 * size * sizeof(int));
-        count++;
-        LOGI("memfill, malloced memory size is %d", size);
-        return size;
+        if (p[count]) {
+            memset(p[count], 2, 256 * 1024 * size * sizeof(int));
+            count++;
+            LOGI("memfill, malloc memory size is %d", size);
+            return size;
+        } else {
+            LOGI("memfill, malloc memory error");
+        }
     } else {
         LOGE("memfill, count is MAX_SIZE");
     }

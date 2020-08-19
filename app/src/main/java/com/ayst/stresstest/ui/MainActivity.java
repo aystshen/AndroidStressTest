@@ -44,6 +44,7 @@ import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.test.uvccamera.UVCCameraTestFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.ButterKnife;
 import kr.co.namee.permissiongen.PermissionGen;
@@ -107,20 +108,20 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         }
 
         // 建立互斥表
-        mMutexTests.add(TestType.TYPE_CPU_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
-        mMutexTests.add(TestType.TYPE_MEMORY_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
-        mMutexTests.add(TestType.TYPE_VIDEO_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
-        mMutexTests.add(TestType.TYPE_AUDIO_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
-        mMutexTests.add(TestType.TYPE_WIFI_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST});
-        mMutexTests.add(TestType.TYPE_BT_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST});
-        mMutexTests.add(TestType.TYPE_AIRPLANE_MODE_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST});
-        mMutexTests.add(TestType.TYPE_REBOOT_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
-        mMutexTests.add(TestType.TYPE_SLEEP_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST, TestType.TYPE_REBOOT_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
-        mMutexTests.add(TestType.TYPE_RECOVERY_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_REBOOT_TEST, TestType.TYPE_TIMING_BOOT_TEST});
-        mMutexTests.add(TestType.TYPE_TIMING_BOOT_TEST.ordinal(), new TestType[]{TestType.TYPE_CPU_TEST, TestType.TYPE_MEMORY_TEST, TestType.TYPE_VIDEO_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_REBOOT_TEST, TestType.TYPE_RECOVERY_TEST});
-        mMutexTests.add(TestType.TYPE_NETWORK_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
-        mMutexTests.add(TestType.TYPE_CAMERA_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_UVCCAMERA_TEST});
-        mMutexTests.add(TestType.TYPE_UVCCAMERA_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_CAMERA_TEST});
+        mMutexTests.add(TestType.TYPE_CPU_TEST.ordinal(), createRebootMutex(null));
+        mMutexTests.add(TestType.TYPE_MEMORY_TEST.ordinal(), createRebootMutex(null));
+        mMutexTests.add(TestType.TYPE_VIDEO_TEST.ordinal(), createRebootMutex(null));
+        mMutexTests.add(TestType.TYPE_AUDIO_TEST.ordinal(), createRebootMutex(null));
+        mMutexTests.add(TestType.TYPE_WIFI_TEST.ordinal(), createRebootMutex(new TestType[]{TestType.TYPE_AIRPLANE_MODE_TEST}));
+        mMutexTests.add(TestType.TYPE_BT_TEST.ordinal(), createRebootMutex(new TestType[]{TestType.TYPE_AIRPLANE_MODE_TEST}));
+        mMutexTests.add(TestType.TYPE_AIRPLANE_MODE_TEST.ordinal(), createRebootMutex(new TestType[]{TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST}));
+        mMutexTests.add(TestType.TYPE_REBOOT_TEST.ordinal(), createSingleMutex(TestType.TYPE_REBOOT_TEST));
+        mMutexTests.add(TestType.TYPE_SLEEP_TEST.ordinal(), createSingleMutex(TestType.TYPE_SLEEP_TEST));
+        mMutexTests.add(TestType.TYPE_RECOVERY_TEST.ordinal(), createSingleMutex(TestType.TYPE_RECOVERY_TEST));
+        mMutexTests.add(TestType.TYPE_TIMING_BOOT_TEST.ordinal(), createSingleMutex(TestType.TYPE_TIMING_BOOT_TEST));
+        mMutexTests.add(TestType.TYPE_NETWORK_TEST.ordinal(), createRebootMutex(new TestType[]{TestType.TYPE_AIRPLANE_MODE_TEST, TestType.TYPE_WIFI_TEST}));
+        mMutexTests.add(TestType.TYPE_CAMERA_TEST.ordinal(), createRebootMutex(new TestType[]{TestType.TYPE_UVCCAMERA_TEST}));
+        mMutexTests.add(TestType.TYPE_UVCCAMERA_TEST.ordinal(), createRebootMutex(new TestType[]{TestType.TYPE_CAMERA_TEST}));
     }
 
     @Override
@@ -207,5 +208,45 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
                         dialog.cancel();
                     }
                 }).show();
+    }
+
+    /**
+     * Create a table that can only be run as a singleton.
+     *
+     * @param self Self test type
+     * @return Mutex table
+     */
+    private TestType[] createSingleMutex(TestType self) {
+        int index = 0;
+        TestType[] allValues = TestType.values();
+        TestType[] newValues = new TestType[allValues.length - 1];
+
+        for (TestType value : allValues) {
+            if (value != self) {
+                newValues[index++] = value;
+            }
+        }
+
+        return newValues;
+    }
+
+    /**
+     * Create a table containing reboot the system.
+     *
+     * @param sub Attached table
+     * @return Mutex table
+     */
+    private TestType[] createRebootMutex(TestType[] sub) {
+        TestType[] baseValues = new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST,
+                TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST};
+
+        if (sub != null && sub.length > 0) {
+            TestType[] newValues = new TestType[baseValues.length + sub.length];
+            System.arraycopy(baseValues, 0, newValues, 0, baseValues.length);
+            System.arraycopy(sub, 0, newValues, baseValues.length, sub.length);
+            return newValues;
+        }
+
+        return baseValues;
     }
 }

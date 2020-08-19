@@ -49,6 +49,7 @@ import butterknife.Unbinder;
 public class TimingBootTestFragment extends BaseCountTestFragment {
     public static final String SP_TIMING_BOOT_FLAG = "timing_boot_flag";
     private static final String SP_TIMING_BOOT_COUNT = "timing_boot_count";
+    private static final String SP_TIMING_BOOT_FAIL_COUNT = "timing_boot_fail_count";
     private static final String SP_TIMING_BOOT_MAX = "timing_boot_max";
     private static final String SP_TIMING_BOOT_SHUTDOWN_DELAY = "timing_boot_shutdown_delay";
     private static final String SP_TIMING_BOOT_STARTUP_DELAY = "timing_boot_startup_delay";
@@ -69,6 +70,7 @@ public class TimingBootTestFragment extends BaseCountTestFragment {
     private int mStartupDelayTime;
     private long mStartupTime;
     private int mCountDownTime;
+    private int mFailCnt = 0;
 
     private IMcuService mMcuService;
 
@@ -88,6 +90,7 @@ public class TimingBootTestFragment extends BaseCountTestFragment {
 
         mState = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_FLAG, State.STOP);
         mCurrentCount = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_COUNT, 0);
+        mFailCnt = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_FAIL_COUNT, 0);
         mTargetCount = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_MAX, 0);
         mShutdownDelayTime = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_SHUTDOWN_DELAY, 60);
         mStartupDelayTime = SPUtils.getInstance(mActivity).getData(SP_TIMING_BOOT_STARTUP_DELAY, 60);
@@ -112,6 +115,10 @@ public class TimingBootTestFragment extends BaseCountTestFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (mFailCnt > 0) {
+            markFailure(mFailCnt);
+        }
 
         mShutdownDelayEdt.setText(mShutdownDelayTime + "");
         mStartupDelayEdt.setText(mStartupDelayTime + "");
@@ -192,7 +199,7 @@ public class TimingBootTestFragment extends BaseCountTestFragment {
     public void stop() {
         mHandler.removeMessages(MSG_TIMING_BOOT_COUNTDOWN);
         mCountdownTv.setVisibility(View.GONE);
-        saveState();
+        cleanState();
 
         super.stop();
     }
@@ -251,10 +258,21 @@ public class TimingBootTestFragment extends BaseCountTestFragment {
     private void saveState() {
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_FLAG, mState);
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_COUNT, mCurrentCount);
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_FAIL_COUNT, mFailureCount);
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_MAX, mTargetCount);
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_SHUTDOWN_DELAY, mShutdownDelayTime);
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_STARTUP_DELAY, mStartupDelayTime);
         SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_STARTUP_TIME, System.currentTimeMillis() + mStartupDelayTime * 1000);
+    }
+
+    private void cleanState() {
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_FLAG, State.STOP);
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_COUNT, 0);
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_FAIL_COUNT, 0);
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_MAX, 0);
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_SHUTDOWN_DELAY, 60);
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_STARTUP_DELAY, 60);
+        SPUtils.getInstance(mActivity).saveData(SP_TIMING_BOOT_STARTUP_TIME, (long)0);
     }
 
     @Override

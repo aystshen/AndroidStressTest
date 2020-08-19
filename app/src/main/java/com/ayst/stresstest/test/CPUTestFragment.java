@@ -467,7 +467,6 @@ public class CPUTestFragment extends BaseTimingTestFragment {
                             + var2.getMessage());
                 }
             }
-
         }
 
         private void read() {

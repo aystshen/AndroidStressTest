@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         mTestFragments.add(TestType.TYPE_CPU_TEST.ordinal(), new CPUTestFragment());
         mTestFragments.add(TestType.TYPE_MEMORY_TEST.ordinal(), new MemoryTestFragment());
         mTestFragments.add(TestType.TYPE_VIDEO_TEST.ordinal(), new VideoTestFragment());
+        mTestFragments.add(TestType.TYPE_AUDIO_TEST.ordinal(), new AudioTestFragment());
         mTestFragments.add(TestType.TYPE_WIFI_TEST.ordinal(), new WifiTestFragment());
         mTestFragments.add(TestType.TYPE_BT_TEST.ordinal(), new BluetoothTestFragment());
         mTestFragments.add(TestType.TYPE_AIRPLANE_MODE_TEST.ordinal(), new AirplaneModeTestFragment());
@@ -100,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         mTestFragments.add(TestType.TYPE_NETWORK_TEST.ordinal(), new NetworkTestFragment());
         mTestFragments.add(TestType.TYPE_CAMERA_TEST.ordinal(), new CameraTestFragment());
         mTestFragments.add(TestType.TYPE_UVCCAMERA_TEST.ordinal(), new UVCCameraTestFragment());
-        mTestFragments.add(TestType.TYPE_RADIO_TEST.ordinal(), new AudioTestFragment());
 
         for (int i = 0; i < mTestFragments.size(); i++) {
             mFragmentManager.beginTransaction().add(mContainerIds[i], mTestFragments.get(i)).commit();
@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         mMutexTests.add(TestType.TYPE_CPU_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
         mMutexTests.add(TestType.TYPE_MEMORY_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
         mMutexTests.add(TestType.TYPE_VIDEO_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
+        mMutexTests.add(TestType.TYPE_AUDIO_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
         mMutexTests.add(TestType.TYPE_WIFI_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST});
         mMutexTests.add(TestType.TYPE_BT_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_AIRPLANE_MODE_TEST});
         mMutexTests.add(TestType.TYPE_AIRPLANE_MODE_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_WIFI_TEST, TestType.TYPE_BT_TEST});
@@ -120,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
         mMutexTests.add(TestType.TYPE_NETWORK_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
         mMutexTests.add(TestType.TYPE_CAMERA_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_UVCCAMERA_TEST});
         mMutexTests.add(TestType.TYPE_UVCCAMERA_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST, TestType.TYPE_CAMERA_TEST});
-        mMutexTests.add(TestType.TYPE_RADIO_TEST.ordinal(), new TestType[]{TestType.TYPE_REBOOT_TEST, TestType.TYPE_SLEEP_TEST, TestType.TYPE_RECOVERY_TEST, TestType.TYPE_TIMING_BOOT_TEST});
     }
 
     @Override

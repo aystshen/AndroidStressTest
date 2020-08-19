@@ -24,6 +24,7 @@ public enum TestType{
     TYPE_CPU_TEST,                  // CPU Test
     TYPE_MEMORY_TEST,               // Memory Test
     TYPE_VIDEO_TEST,                // Video Test
+    TYPE_AUDIO_TEST,                // Audio Test
     TYPE_WIFI_TEST,                 // Wifi Test
     TYPE_BT_TEST,                   // Bluetooth Test
     TYPE_AIRPLANE_MODE_TEST,        // Airplane mode Test
@@ -33,6 +34,5 @@ public enum TestType{
     TYPE_TIMING_BOOT_TEST,          // Timing boot Test
     TYPE_NETWORK_TEST,              // Network Test
     TYPE_CAMERA_TEST,               // Camera Test
-    TYPE_UVCCAMERA_TEST,            // UVCCamera Test
-    TYPE_RADIO_TEST                 // Radio Test
+    TYPE_UVCCAMERA_TEST             // UVCCamera Test
 }

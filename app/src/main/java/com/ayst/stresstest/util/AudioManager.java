@@ -3,14 +3,11 @@ package com.ayst.stresstest.util;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-import android.os.Handler;
 import android.util.Log;
 
-import java.util.concurrent.TimeUnit;
-
-public class AudioManager implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
-
-    private static final String TAG = AudioManager.class.getSimpleName();
+public class AudioManager implements MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnCompletionListener {
+    private static final String TAG = "AudioManager";
 
     private MediaPlayer mPlayer;
     private boolean isLoop;
@@ -131,7 +128,6 @@ public class AudioManager implements MediaPlayer.OnPreparedListener, MediaPlayer
         }
     }
 
-
     private OnPlayStatusListener mOnPlayStatusListener;
 
     public void setOnPlayStatusListener(OnPlayStatusListener onPlayStatusListener) {
@@ -139,7 +135,6 @@ public class AudioManager implements MediaPlayer.OnPreparedListener, MediaPlayer
     }
 
     public interface OnPlayStatusListener {
-
         void onReady();
 
         void onComplete();

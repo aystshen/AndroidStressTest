@@ -57,7 +57,6 @@ public class AudioTestFragment extends BaseTimingTestFragment {
     TextView mErrorTv;
     @BindView(R.id.audio_rl_cover)
     RelativeLayout mRlCover;
-
     @BindView(R.id.container_audio)
     LinearLayout mAudioContainer;
     @BindView(R.id.iv_center)
@@ -70,12 +69,10 @@ public class AudioTestFragment extends BaseTimingTestFragment {
     ImageView mIvNext;
     @BindView(R.id.pb_load)
     ProgressBar mPbLoad;
-
     Unbinder unbinder;
 
     private String mPath;
     private ValueAnimator mCoverAnimator;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +85,7 @@ public class AudioTestFragment extends BaseTimingTestFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setTitle(R.string.audio_test);
-        setType(TestType.TYPE_RADIO_TEST);
+        setType(TestType.TYPE_AUDIO_TEST);
 
         View contentView = inflater.inflate(R.layout.fragment_audio_test, container, false);
         setFullContentView(contentView);
@@ -110,7 +107,8 @@ public class AudioTestFragment extends BaseTimingTestFragment {
             mPathTv.setText(mPath);
         }
 
-        AudioManager.getDefault().setOnPlayStatusListener(new AudioManager.OnPlayStatusListener() {
+        AudioManager.getDefault().setOnPlayStatusListener(new AudioManager.
+                OnPlayStatusListener() {
             @Override
             public void onReady() {
                 resumeCoverAnimation();
@@ -207,7 +205,6 @@ public class AudioTestFragment extends BaseTimingTestFragment {
             super.onStartClicked();
         }
     }
-
 
     @Override
     public void start() {

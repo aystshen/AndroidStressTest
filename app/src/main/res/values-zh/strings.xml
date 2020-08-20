@@ -49,6 +49,9 @@
     <!--permission-->
     <string name="request_permission">获取相机权限失败，该项测试将无法进行。</string>
 
+    <!--MainActivity-->
+    <string name="app_intro">版本: %1$s\n作者: Bob Shen\n邮箱: ayst.shen@foxmail.com\n微信: ayst_shen\n项目: https://github.com/aystshen/AndroidStressTest</string>
+
     <!--Bluetooth Test-->
     <string name="bt_test_intro">蓝牙测试将反复打开、关闭、并扫描附近蓝牙设备，支持经典蓝牙和低功耗蓝牙。</string>
     <string name="bt_test_check_devices">无法搜索到设备视为失败</string>

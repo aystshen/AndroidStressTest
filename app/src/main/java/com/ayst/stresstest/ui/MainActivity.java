@@ -22,17 +22,18 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ayst.stresstest.R;
 import com.ayst.stresstest.test.AirplaneModeTestFragment;
+import com.ayst.stresstest.test.AudioTestFragment;
 import com.ayst.stresstest.test.BluetoothTestFragment;
 import com.ayst.stresstest.test.CPUTestFragment;
 import com.ayst.stresstest.test.CameraTestFragment;
 import com.ayst.stresstest.test.MemoryTestFragment;
 import com.ayst.stresstest.test.NetworkTestFragment;
-import com.ayst.stresstest.test.AudioTestFragment;
 import com.ayst.stresstest.test.RebootTestFragment;
 import com.ayst.stresstest.test.RecoveryTestFragment;
 import com.ayst.stresstest.test.SleepTestFragment;
@@ -42,15 +43,19 @@ import com.ayst.stresstest.test.WifiTestFragment;
 import com.ayst.stresstest.test.base.BaseTestFragment;
 import com.ayst.stresstest.test.base.TestType;
 import com.ayst.stresstest.test.uvccamera.UVCCameraTestFragment;
+import com.ayst.stresstest.util.AppUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.co.namee.permissiongen.PermissionGen;
 
 public class MainActivity extends AppCompatActivity implements BaseTestFragment.OnFragmentInteractionListener {
     private static final String TAG = "MainActivity";
+
+    @BindView(R.id.tv_intro)
+    TextView mAppIntro;
 
     private FragmentManager mFragmentManager;
 
@@ -88,6 +93,9 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
     }
 
     private void initView() {
+        mAppIntro.setText(String.format(getString(R.string.app_intro),
+                AppUtils.getVersionName(this)));
+
         mTestFragments.add(TestType.TYPE_CPU_TEST.ordinal(), new CPUTestFragment());
         mTestFragments.add(TestType.TYPE_MEMORY_TEST.ordinal(), new MemoryTestFragment());
         mTestFragments.add(TestType.TYPE_VIDEO_TEST.ordinal(), new VideoTestFragment());

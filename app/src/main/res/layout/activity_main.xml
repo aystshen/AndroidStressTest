@@ -26,71 +26,100 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.flexbox.FlexboxLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            app:alignContent="stretch"
-            app:alignItems="stretch"
-            app:flexWrap="wrap">
+            android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container1"
-                style="@style/CardView.TestItem" />
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexWrap="wrap">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container2"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container1"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container3"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container2"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container4"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container3"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container5"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container4"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container6"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container5"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container7"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container6"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container8"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container7"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container9"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container8"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container10"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container9"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container11"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container10"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container12"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container11"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container13"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container12"
+                    style="@style/CardView.TestItem" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/container14"
-                style="@style/CardView.TestItem" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container13"
+                    style="@style/CardView.TestItem" />
 
-        </com.google.android.flexbox.FlexboxLayout>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container14"
+                    style="@style/CardView.TestItem" />
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/tv_intro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </ScrollView>
 

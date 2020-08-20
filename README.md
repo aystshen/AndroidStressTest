@@ -1,6 +1,6 @@
 # AndroidStressTest
 
-[![](https://img.shields.io/badge/downloads-apk-brightgreen.svg)](http://d.7short.com/6wlj)
+[![](https://img.shields.io/badge/downloads-apk-brightgreen.svg)](https://www.pgyer.com/oyhn)
 
 This is an Android system stress test app that verifies the reliability of the main modules of the system. It is suitable for Android hardware manufacturers and supports the stress test of the following modules:
 

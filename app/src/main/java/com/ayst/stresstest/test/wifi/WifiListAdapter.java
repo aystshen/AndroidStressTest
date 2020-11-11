@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.wifi;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

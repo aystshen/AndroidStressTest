@@ -18,7 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ayst.stresstest.test.NetworkTestFragment">
+    tools:context="com.ayst.stresstest.test.network.NetworkTestFragment">
 
     <LinearLayout
         android:orientation="vertical"

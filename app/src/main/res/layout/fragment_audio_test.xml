@@ -19,7 +19,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:background="@drawable/ic_audio_bg"
-    tools:context="com.ayst.stresstest.test.AudioTestFragment"
+    tools:context="com.ayst.stresstest.test.audio.AudioTestFragment"
     tools:layout_height="210dp"
     tools:layout_width="290dp">
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.memory;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;

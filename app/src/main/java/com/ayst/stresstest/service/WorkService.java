@@ -36,7 +36,7 @@ import android.util.Log;
 
 import com.ayst.stresstest.R;
 import com.ayst.stresstest.test.base.BaseTestFragment;
-import com.ayst.stresstest.test.RecoveryTestFragment;
+import com.ayst.stresstest.test.recovery.RecoveryTestFragment;
 import com.ayst.stresstest.ui.MainActivity;
 
 import java.io.BufferedReader;

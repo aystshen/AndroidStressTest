@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.camera;
 
 import android.content.Context;
 import android.util.AttributeSet;

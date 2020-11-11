@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.audio;
 
 import android.animation.ValueAnimator;
 import android.content.ActivityNotFoundException;

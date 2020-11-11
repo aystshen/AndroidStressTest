@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.sleep;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;

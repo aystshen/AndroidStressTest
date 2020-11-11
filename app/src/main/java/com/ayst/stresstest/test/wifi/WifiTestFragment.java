@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.wifi;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -44,7 +44,6 @@ import com.ayst.stresstest.test.base.TestType;
 import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.util.List;
-import java.util.Timer;
 
 import androidx.annotation.Nullable;
 

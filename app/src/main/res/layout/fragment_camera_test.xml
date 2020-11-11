@@ -18,7 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ayst.stresstest.test.CameraTestFragment">
+    tools:context="com.ayst.stresstest.test.camera.CameraTestFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -80,7 +80,7 @@
 
     </LinearLayout>
 
-    <com.ayst.stresstest.test.AutoFitTextureView
+    <com.ayst.stresstest.test.camera.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"

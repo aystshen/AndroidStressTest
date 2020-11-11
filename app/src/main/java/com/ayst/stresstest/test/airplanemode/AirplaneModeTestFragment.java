@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.airplanemode;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,6 +42,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.ayst.stresstest.R;
+import com.ayst.stresstest.test.wifi.WifiListAdapter;
 import com.ayst.stresstest.test.base.BaseCountTestWithTimerFragment;
 import com.ayst.stresstest.test.base.TestType;
 import com.github.ybq.android.spinkit.SpinKitView;

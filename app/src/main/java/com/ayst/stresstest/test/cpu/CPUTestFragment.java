@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.cpu;
 
 import android.os.Bundle;
 import android.os.Message;

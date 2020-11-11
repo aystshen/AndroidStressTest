@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ayst.stresstest.test;
+package com.ayst.stresstest.test.recovery;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;

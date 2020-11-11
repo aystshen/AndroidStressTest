@@ -19,10 +19,9 @@ package com.ayst.stresstest.receiver;
 
 import com.ayst.stresstest.service.WorkService;
 import com.ayst.stresstest.test.base.BaseTestFragment;
-import com.ayst.stresstest.test.RebootTestFragment;
-import com.ayst.stresstest.test.TimingBootTestFragment;
+import com.ayst.stresstest.test.reboot.RebootTestFragment;
+import com.ayst.stresstest.test.timingboot.TimingBootTestFragment;
 import com.ayst.stresstest.ui.MainActivity;
-import com.ayst.stresstest.util.AppUtils;
 import com.ayst.stresstest.util.SPUtils;
 
 import android.content.BroadcastReceiver;

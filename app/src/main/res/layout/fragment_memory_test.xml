@@ -21,7 +21,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    tools:context="com.ayst.stresstest.test.MemoryTestFragment">
+    tools:context="com.ayst.stresstest.test.memory.MemoryTestFragment">
 
     <FrameLayout
         android:id="@+id/frameLayout"

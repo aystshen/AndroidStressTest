@@ -80,7 +80,7 @@ task ndkClean(type: Exec, description: 'clean JNI libraries') {
 	commandLine ndkBuildPath, 'clean', '-C', file('src/main').absolutePath
 }
 
-clean.dependsOn 'ndkClean'
+//clean.dependsOn 'ndkClean'
 
 dependencies {
     implementation fileTree(dir: new File(buildDir, 'libs'), include: '*.jar')

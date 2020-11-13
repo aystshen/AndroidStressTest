@@ -68,6 +68,7 @@ public class DDRTestFragment extends BaseTimingTestFragment {
     TextView mResultTv;
     Unbinder unbinder;
 
+    private static boolean isRooted = false;
     private static String sSuffix = ARM32_SUFFIX;
     private Thread mStressAppTestThread = null;
     private Handler mHandler = new LogHandler(Looper.getMainLooper());
@@ -108,6 +109,9 @@ public class DDRTestFragment extends BaseTimingTestFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ShellUtils.CommandResult result = ShellUtils.execCmd("ls -l", true);
+        isRooted = (result.result >=0 && TextUtils.isEmpty(result.errorMsg));
 
         if (TextUtils.isEmpty(AppUtils.getProperty(
                 "ro.product.cpu.abilist64", ""))) {
@@ -191,7 +195,7 @@ public class DDRTestFragment extends BaseTimingTestFragment {
 
     @Override
     public boolean isSupport() {
-        return true;
+        return isRooted;
     }
 
     private boolean binExist(String name) {

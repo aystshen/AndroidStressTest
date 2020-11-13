@@ -32,6 +32,7 @@ import com.ayst.stresstest.test.audio.AudioTestFragment;
 import com.ayst.stresstest.test.bluetooth.BluetoothTestFragment;
 import com.ayst.stresstest.test.cpu.CPUTestFragment;
 import com.ayst.stresstest.test.camera.CameraTestFragment;
+import com.ayst.stresstest.test.ddr.DDRTestFragment;
 import com.ayst.stresstest.test.memory.MemoryTestFragment;
 import com.ayst.stresstest.test.network.NetworkTestFragment;
 import com.ayst.stresstest.test.reboot.RebootTestFragment;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
             R.id.container4, R.id.container5, R.id.container6,
             R.id.container7, R.id.container8, R.id.container9,
             R.id.container10, R.id.container11, R.id.container12,
-            R.id.container13, R.id.container14};
+            R.id.container13, R.id.container14, R.id.container15};
     private ArrayList<TestType[]> mMutexTests = new ArrayList<>();
 
     @Override
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
 
         mTestFragments.add(TestType.TYPE_CPU_TEST.ordinal(), new CPUTestFragment());
         mTestFragments.add(TestType.TYPE_MEMORY_TEST.ordinal(), new MemoryTestFragment());
+        mTestFragments.add(TestType.TYPE_DDR_TEST.ordinal(), new DDRTestFragment());
         mTestFragments.add(TestType.TYPE_VIDEO_TEST.ordinal(), new VideoTestFragment());
         mTestFragments.add(TestType.TYPE_AUDIO_TEST.ordinal(), new AudioTestFragment());
         mTestFragments.add(TestType.TYPE_WIFI_TEST.ordinal(), new WifiTestFragment());
@@ -117,7 +119,8 @@ public class MainActivity extends AppCompatActivity implements BaseTestFragment.
 
         // 建立互斥表
         mMutexTests.add(TestType.TYPE_CPU_TEST.ordinal(), createRebootMutex(null));
-        mMutexTests.add(TestType.TYPE_MEMORY_TEST.ordinal(), createRebootMutex(null));
+        mMutexTests.add(TestType.TYPE_MEMORY_TEST.ordinal(), createRebootMutex(new TestType[]{TestType.TYPE_DDR_TEST}));
+        mMutexTests.add(TestType.TYPE_DDR_TEST.ordinal(), createRebootMutex(new TestType[]{TestType.TYPE_MEMORY_TEST}));
         mMutexTests.add(TestType.TYPE_VIDEO_TEST.ordinal(), createRebootMutex(null));
         mMutexTests.add(TestType.TYPE_AUDIO_TEST.ordinal(), createRebootMutex(null));
         mMutexTests.add(TestType.TYPE_WIFI_TEST.ordinal(), createRebootMutex(new TestType[]{TestType.TYPE_AIRPLANE_MODE_TEST}));

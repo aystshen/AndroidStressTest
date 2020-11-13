@@ -35,7 +35,8 @@
 
     <!--Title-->
     <string name="cpu_test">CPU TEST</string>
-    <string name="memory_test">MEMORY TEST</string>
+    <string name="memory_test">LOW MEMORY TEST</string>
+    <string name="ddr_test">DDR TEST</string>
     <string name="video_test">VIDEO TEST</string>
     <string name="audio_test">AUDIO TEST</string>
     <string name="wifi_test">WIFI TEST</string>
@@ -118,7 +119,7 @@
     <string name="audio_test_invalid_file">Invalid file!</string>
 
     <!--Memory Test-->
-    <string name="memory_test_intro">The memory test automatically malloc the memory usage to the selected percent, verifying the strong of the system under low memory.</string>
+    <string name="memory_test_intro">Low memory test automatically malloc the memory usage to the selected percent, verifying the strong of the system under low memory.</string>
     <string name="memory_test_fill_percent">Fill percent:</string>
 
     <!--Reboot Test-->
@@ -172,4 +173,7 @@
     <string name="uvccamera_test_intro">Skip the Android Camera API, call the UVC Camera device file, repeatedly open the camera to preview and take a photo.</string>
     <string name="uvccamera_test_disconnect_tips">The camera is disconnected!</string>
 
+    <!--DDR Test-->
+    <string name="ddr_test_intro">It tries to maximize randomized traffic to memory from processor and I/O, with the intent of creating a realistic high load situation in order to test the existing hardware devices in a computer.</string>
+    <string name="ddr_test_install_error">The stressapptest installation is abnormal and the test cannot be run!</string>
 </resources>

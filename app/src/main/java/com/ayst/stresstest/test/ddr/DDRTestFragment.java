@@ -16,6 +16,7 @@
 
 package com.ayst.stresstest.test.ddr;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,6 +43,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -70,6 +72,7 @@ public class DDRTestFragment extends BaseTimingTestFragment {
 
     private static boolean isRooted = false;
     private static String sSuffix = ARM32_SUFFIX;
+    private static int sMemory = 256;
     private Thread mStressAppTestThread = null;
     private Handler mHandler = new LogHandler(Looper.getMainLooper());
 
@@ -111,13 +114,31 @@ public class DDRTestFragment extends BaseTimingTestFragment {
         super.onCreate(savedInstanceState);
 
         ShellUtils.CommandResult result = ShellUtils.execCmd("ls -l", true);
-        isRooted = (result.result >=0 && TextUtils.isEmpty(result.errorMsg));
+        isRooted = (result.result >= 0 && TextUtils.isEmpty(result.errorMsg));
 
         if (TextUtils.isEmpty(AppUtils.getProperty(
                 "ro.product.cpu.abilist64", ""))) {
             sSuffix = ARM32_SUFFIX;
         } else {
             sSuffix = ARM64_SUFFIX;
+        }
+
+        switch (getTotalRam()) {
+            case 1:
+                sMemory = 128;
+                break;
+            case 2:
+                sMemory = 256;
+                break;
+            case 3:
+                sMemory = 256;
+                break;
+            case 4:
+                sMemory = 512;
+                break;
+            default:
+                sMemory = 256;
+                break;
         }
     }
 
@@ -256,6 +277,28 @@ public class DDRTestFragment extends BaseTimingTestFragment {
         return false;
     }
 
+    public int getTotalRam() {
+        String path = "/proc/meminfo";
+        String firstLine = "";
+        int totalRam = 2; // default: 2GB
+        try {
+            FileReader fileReader = new FileReader(path);
+            BufferedReader br = new BufferedReader(fileReader, 8192);
+            firstLine = br.readLine().split("\\s+")[1];
+            br.close();
+        } catch (Exception e) {
+            Log.e(TAG, "getTotalRam, error: " + e.getMessage());
+        }
+        if (!TextUtils.isEmpty(firstLine)) {
+            totalRam = (int) Math.ceil((Float.valueOf(Float.parseFloat(firstLine) / (1024 * 1024))
+                    .doubleValue()));
+        }
+
+        Log.i(TAG, "getTotalRam, total ram: " + totalRam + "GB");
+
+        return totalRam;
+    }
+
     private Runnable mStressAppTestRunnable = new Runnable() {
         @Override
         public void run() {
@@ -267,7 +310,7 @@ public class DDRTestFragment extends BaseTimingTestFragment {
                 dos = new DataOutputStream(process.getOutputStream());
 
                 String command = "/data/" + STRESS_APP_TEST + "  -s " + (mTargetTime - 10)
-                        + " -i 4 -C 4 -W --stop_on_errors -M 256\n";
+                        + " -i 4 -C 4 -W --stop_on_errors -M " + sMemory + "\n";
                 dos.write(command.getBytes(Charset.forName("utf-8")));
                 dos.flush();
 

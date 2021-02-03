@@ -16,7 +16,9 @@
 
 package com.ayst.stresstest;
 
+import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
 
@@ -43,6 +45,7 @@ public class StressTestApplication extends Application {
     private static final String TAG = "StressTestApplication";
 
     public static Typeface sMIUIBoldTextType = null;
+    private ActivityManager mAm;
 
     @Override
     public void onCreate() {
@@ -76,6 +79,17 @@ public class StressTestApplication extends Application {
 //                .position(Position.BOTTOM_START)
 //                .build()
 //                .install();
+
+        mAm = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
     }
 
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+
+        ActivityManager.MemoryInfo systemMemInfo = new ActivityManager.MemoryInfo();
+        mAm.getMemoryInfo(systemMemInfo);
+        Log.w(TAG, "onTrimMemory, level=" + level
+                + " availMem=" + systemMemInfo.availMem/1024 + "kB");
+    }
 }

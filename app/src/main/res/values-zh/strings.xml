@@ -121,8 +121,9 @@
 
     <!--Reboot Test-->
     <string name="reboot_test_intro">重启测试验证设备开机过程可靠性，如果重启中断说明测试失败。</string>
-    <string name="reboot_test_check_sdcard">重启后检查SD卡状态</string>
-    <string name="reboot_test_check_wifi">重启后检查WiFi连接状态</string>
+    <string name="reboot_test_check_sdcard">检查SD卡</string>
+    <string name="reboot_test_check_wifi">检查WiFi</string>
+    <string name="reboot_test_capture">拍照</string>
     <string name="reboot_test_count_down">秒后开始重启系统</string>
     <string name="reboot_test_insert_sdcard_tips">请插入SD卡!</string>
     <string name="reboot_test_connect_wifi_tips">请连接WiFi!</string>

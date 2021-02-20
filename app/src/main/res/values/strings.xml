@@ -124,8 +124,9 @@
 
     <!--Reboot Test-->
     <string name="reboot_test_intro">"Reboot the test to verify the device's power-on reliability. If the reboot is interrupted, the test fails."</string>
-    <string name="reboot_test_check_sdcard">Check the sdcard status after rebooting</string>
-    <string name="reboot_test_check_wifi">Check the WiFi connection status after rebooting</string>
+    <string name="reboot_test_check_sdcard">Check sdcard</string>
+    <string name="reboot_test_check_wifi">Check WiFi</string>
+    <string name="reboot_test_capture">Capture</string>
     <string name="reboot_test_count_down">seconds, reboot</string>
     <string name="reboot_test_insert_sdcard_tips">Please insert the sdcard!</string>
     <string name="reboot_test_connect_wifi_tips">Please connect to WiFi!</string>

@@ -189,43 +189,43 @@ public class RebootTestFragment extends BaseCountTestFragment {
                             markFailure();
                         }
                     }
-                }
-            }, (mDelayTime - 1) * 1000);
 
-            if (isCapture) {
-                Log.i(TAG, "check, take picture");
-                CameraPresenter camera = new CameraPresenter(mActivity, mTextureView);
-                try {
-                    camera.init();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(3000);
-                                showCameraSurfaceView(true);
+                    if (isCapture) {
+                        Log.i(TAG, "check, take picture");
+                        CameraPresenter camera = new CameraPresenter(mActivity, mTextureView);
+                        try {
+                            camera.init();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        showCameraSurfaceView(true);
 
-                                camera.openCamera();
-                                Thread.sleep(3000);
+                                        camera.openCamera();
+                                        Thread.sleep(3000);
 
-                                camera.takePicture();
-                                Thread.sleep(3000);
+                                        camera.takePicture();
+                                        Thread.sleep(3000);
 
-                                camera.closeCamera();
-                                camera.destroy();
-                                showCameraSurfaceView(false);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                                        camera.closeCamera();
+                                        camera.destroy();
+                                        showCameraSurfaceView(false);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                        } catch (Exception e) {
+                            Log.e(TAG, "check, take picture fail, " + e.getMessage());
+                            camera.destroy();
                         }
-                    }).start();
-                } catch (Exception e) {
-                    Log.e(TAG, "check, take picture fail, " + e.getMessage());
-                    camera.destroy();
+                    }
                 }
-            }
+            }, (mDelayTime - 8) * 1000);
 
             if (next()) {
                 mCountDownTime = mDelayTime;
+                saveState();
                 mHandler.sendEmptyMessage(MSG_REBOOT_COUNTDOWN);
             }
         }
@@ -263,6 +263,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
                                 isCheckSD = mSdcardCheckbox.isChecked();
                                 isCapture = mCaptureCheckbox.isChecked();
                                 mCountDownTime = mDelayTime;
+                                saveState();
                                 mHandler.sendEmptyMessage(MSG_REBOOT_COUNTDOWN);
                             }
                         })
@@ -318,8 +319,6 @@ public class RebootTestFragment extends BaseCountTestFragment {
     }
 
     private void reboot() {
-        saveState();
-
         PowerManager pManager = (PowerManager) mActivity.getSystemService(Context.POWER_SERVICE);
         pManager.reboot(null);
         Log.d(TAG, "reboot");

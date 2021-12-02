@@ -225,7 +225,6 @@ public class RebootTestFragment extends BaseCountTestFragment {
 
             if (next()) {
                 mCountDownTime = mDelayTime;
-                saveState();
                 mHandler.sendEmptyMessage(MSG_REBOOT_COUNTDOWN);
             }
         }
@@ -263,7 +262,6 @@ public class RebootTestFragment extends BaseCountTestFragment {
                                 isCheckSD = mSdcardCheckbox.isChecked();
                                 isCapture = mCaptureCheckbox.isChecked();
                                 mCountDownTime = mDelayTime;
-                                saveState();
                                 mHandler.sendEmptyMessage(MSG_REBOOT_COUNTDOWN);
                             }
                         })
@@ -311,6 +309,7 @@ public class RebootTestFragment extends BaseCountTestFragment {
                     mHandler.sendEmptyMessageDelayed(MSG_REBOOT_COUNTDOWN, 1000);
                 } else {
                     mCountdownTv.setVisibility(View.GONE);
+                    saveState();
                     reboot();
                 }
 

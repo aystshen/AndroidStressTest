@@ -23,6 +23,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -53,7 +54,9 @@ import butterknife.Unbinder;
 public class SleepTestFragment extends BaseCountTestFragment {
     private static final String ACTION_TEST_CASE_SLEEP = "com.topband.stresstest.sleep.ACTION_TEST_CASE_SLEEP";
 
-    public static String DATE_TO_STRING_PATTERN = "MM-dd HH:mm:ss";
+    public final static String DATE_TO_STRING_PATTERN = "MM-dd HH:mm:ss";
+    private final static int TIME_DEVIATION = 3000;
+
     @BindView(R.id.edt_wakeup_time)
     EditText mWakeupEdt;
     @BindView(R.id.edt_sleep_time)
@@ -139,7 +142,14 @@ public class SleepTestFragment extends BaseCountTestFragment {
         }
 
         PendingIntent intent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_TEST_CASE_SLEEP), 0);
-        mAlarmManager.setExact(AlarmManager.RTC, sleepTime + System.currentTimeMillis(), intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //mAlarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(sleepTime + System.currentTimeMillis(), intent), intent);
+            mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, sleepTime + System.currentTimeMillis(), intent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, sleepTime + System.currentTimeMillis(), intent);
+        } else {
+            mAlarmManager.set(AlarmManager.RTC_WAKEUP, sleepTime + System.currentTimeMillis(), intent);
+        }
     }
 
     private void stopAlarm(Context context) {
@@ -221,6 +231,13 @@ public class SleepTestFragment extends BaseCountTestFragment {
             Log.d(TAG, "SleepTestReceiver onReceive, action=" + action);
 
             if (ACTION_TEST_CASE_SLEEP.equals(action)) {
+                long diffTime = (System.currentTimeMillis() - mEnterSleepTime);
+                Log.d(TAG, "check, diffTime=" + diffTime);
+                if (Math.abs(diffTime) > mSleepTime + TIME_DEVIATION) {
+                    Log.d(TAG, "check, alarm error:　" + diffTime);
+                    markFailure();
+                }
+
                 mSleepTimeTv.setText(mSimpleDateFormat.format(new Date(mEnterSleepTime)));
                 mWakeupTimeTv.setText(mSimpleDateFormat.format(new Date(System.currentTimeMillis())));
                 mEnterSleepTime = System.currentTimeMillis() + mWakeTime;

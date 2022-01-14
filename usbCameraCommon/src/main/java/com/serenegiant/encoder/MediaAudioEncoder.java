@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import android.annotation.SuppressLint;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaCodec;
@@ -112,6 +113,7 @@ public class MediaAudioEncoder extends MediaEncoder implements IAudioEncoder {
 	 * Thread to capture audio data from internal mic as uncompressed 16bit PCM data
 	 * and write them to the MediaCodec encoder
 	 */
+	@SuppressLint("MissingPermission")
     private class AudioThread extends Thread {
     	@Override
     	public void run() {
